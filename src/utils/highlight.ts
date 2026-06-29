@@ -1,3 +1,5 @@
+import { findMatchRanges as coreFindMatchRanges } from '@/utils/matchCore';
+
 const LETTER_RE =
   /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
 
@@ -14,21 +16,7 @@ export function supportsCssHighlightApi(): boolean {
 }
 
 export function findMatchRanges(text: string, term: string): Array<[number, number]> {
-  const ranges: Array<[number, number]> = [];
-  const normalizedText = text.toLowerCase();
-  const normalizedTerm = term.toLowerCase().trim();
-
-  if (!normalizedTerm) return ranges;
-
-  let index = 0;
-  while (index < text.length) {
-    const found = normalizedText.indexOf(normalizedTerm, index);
-    if (found === -1) break;
-    ranges.push([found, found + normalizedTerm.length]);
-    index = found + normalizedTerm.length;
-  }
-
-  return ranges;
+  return coreFindMatchRanges(text, term);
 }
 
 function isWholeWord(text: string, start: number, end: number): boolean {

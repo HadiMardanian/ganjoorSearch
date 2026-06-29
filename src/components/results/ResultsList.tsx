@@ -18,6 +18,20 @@ interface ResultsListProps {
   totalPages: number;
 }
 
+function SearchGuide() {
+  return (
+    <div className="mt-4 rounded-xl bg-stone-50 p-4 text-right text-sm leading-7 text-stone-700">
+      <p className="font-medium text-stone-800">راهنمای جستجو</p>
+      <ul className="mt-2 list-inside list-disc space-y-1">
+        <li>یک کلمه یا عبارت کوتاه وارد کنید (مثلاً «جام»).</li>
+        <li>برای عبارت دقیق از گیومه استفاده کنید: «جام می».</li>
+        <li>چند کلمه با فاصله = هر کدام جداگانه جستجو می‌شود.</li>
+        <li>پس از تغییر شاعر، دوباره «جستجو» را بزنید.</li>
+      </ul>
+    </div>
+  );
+}
+
 export function ResultsList({
   results,
   searchTerm,
@@ -46,7 +60,10 @@ export function ResultsList({
     return (
       <div className="rounded-2xl border border-dashed border-stone-300 bg-white px-6 py-16 text-center">
         <p className="text-lg text-stone-800">نتیجه‌ای یافت نشد.</p>
-        <p className="mt-2 text-sm text-stone-600">لطفاً کلمهٔ دیگری را امتحان کنید.</p>
+        <p className="mt-2 text-sm text-stone-600">
+          لطفاً کلمهٔ دیگری را امتحان کنید یا فیلترها را تغییر دهید.
+        </p>
+        <SearchGuide />
       </div>
     );
   }
@@ -54,14 +71,18 @@ export function ResultsList({
   if (results.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-stone-300 bg-white px-6 py-16 text-center text-stone-600">
-        برای شروع، یک کلمه جستجو کنید.
+        <p>برای شروع، یک کلمه جستجو کنید.</p>
+        <SearchGuide />
       </div>
     );
   }
 
   return (
     <div>
-      <div className="mb-4 space-y-1 text-center text-sm text-stone-700">
+      <div
+        className="mb-4 space-y-1 text-center text-sm text-stone-700"
+        aria-live="polite"
+      >
         {totalCount > 0 ? (
           <p>تعداد کل نتایج: {formatPersianNumber(totalCount)} قطعه</p>
         ) : null}
@@ -77,7 +98,12 @@ export function ResultsList({
         </p>
       </div>
 
-      <div ref={parentRef} className="max-h-[70vh] overflow-auto rounded-2xl">
+      <div
+        ref={parentRef}
+        className="max-h-[70vh] overflow-auto rounded-2xl"
+        role="list"
+        aria-label="نتایج جستجو"
+      >
         <div
           style={{
             height: `${virtualizer.getTotalSize()}px`,
@@ -90,6 +116,7 @@ export function ResultsList({
             return (
               <div
                 key={result.poemId}
+                role="listitem"
                 data-index={virtualItem.index}
                 ref={virtualizer.measureElement}
                 style={{

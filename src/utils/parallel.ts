@@ -6,8 +6,6 @@ export function createLimiter(concurrency = DEFAULT_CONCURRENCY) {
   return pLimit(concurrency);
 }
 
-export const poemFetchLimiter = createLimiter(DEFAULT_CONCURRENCY);
-
 export async function mapWithConcurrency<T, R>(
   items: T[],
   concurrency: number,

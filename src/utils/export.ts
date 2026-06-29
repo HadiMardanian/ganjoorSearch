@@ -1,7 +1,12 @@
 import { GANJOOR_SITE } from '@/api/client';
+import { formatDisplayTitle } from '@/utils/displayTitle';
+import { excerptLinesForExport } from '@/utils/searchExcerpt';
 import type { GroupedResult, ViewMode } from '@/types/ganjoor';
 
 export type ExportFormat = 'csv' | 'excel';
+
+export const VERSE_EXPORT_HEADERS = ['عنوان', 'بیت۱', 'بیت۲', 'لینک'] as const;
+export const FULL_EXPORT_HEADERS = ['عنوان', 'متن', 'لینک'] as const;
 
 export function escapeCsv(value: string): string {
   if (value.includes('"') || value.includes(',') || value.includes('\n')) {
@@ -68,16 +73,35 @@ function getPoemText(result: GroupedResult): string {
     .join('\n');
 }
 
+function displayTitle(result: GroupedResult): string {
+  return formatDisplayTitle(result.fullTitle || result.poemTitle);
+}
+
 export function buildVerseExportRows(results: GroupedResult[]): string[][] {
   const rows: string[][] = [];
 
   for (const result of results) {
-    for (const couplet of result.matchingCouplets) {
-      const lines = couplet.verses.map((verse) => verse.text || '');
+    const lines = excerptLinesForExport(result.excerpt);
+
+    if (lines.length === 0) {
+      if (result.titleOnlyMatch) {
+        rows.push([
+          displayTitle(result),
+          result.excerpt.find((part) => part.type === 'note')?.text ?? displayTitle(result),
+          '',
+          result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : '',
+        ]);
+      }
+      continue;
+    }
+
+    for (let i = 0; i < lines.length; i += 2) {
+      const line1 = lines[i] ?? '';
+      const line2 = lines[i + 1] ?? line1;
       rows.push([
-        result.fullTitle || result.poemTitle,
-        lines[0] ?? '',
-        lines[1] ?? '',
+        displayTitle(result),
+        line1,
+        line2,
         result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : '',
       ]);
     }
@@ -89,7 +113,7 @@ export function buildVerseExportRows(results: GroupedResult[]): string[][] {
 export function buildFullExportRows(results: GroupedResult[]): string[][] {
   return results
     .map((result) => [
-      result.fullTitle || result.poemTitle,
+      displayTitle(result),
       getPoemText(result),
       result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : '',
     ])
@@ -134,17 +158,15 @@ export function exportResults(
   results: GroupedResult[],
   mode: ViewMode,
   format: ExportFormat = 'csv',
-) {
+): { success: boolean; rowCount: number } {
   const headers =
-    mode === 'verse'
-      ? ['title', 'line1', 'line2', 'url']
-      : ['title', 'poem', 'url'];
+    mode === 'verse' ? [...VERSE_EXPORT_HEADERS] : [...FULL_EXPORT_HEADERS];
 
   const rows = mode === 'verse' ? buildVerseExportRows(results) : buildFullExportRows(results);
 
-  if (rows.length === 0) return false;
+  if (rows.length === 0) return { success: false, rowCount: 0 };
 
-  const baseName = mode === 'verse' ? 'verse-results' : 'ghazal-results';
+  const baseName = mode === 'verse' ? 'verse-results' : 'full-results';
   const filename =
     format === 'excel' ? `${baseName}.xls` : `${baseName}.csv`;
 
@@ -154,5 +176,5 @@ export function exportResults(
     downloadCsv(filename, headers, rows);
   }
 
-  return true;
+  return { success: true, rowCount: rows.length };
 }

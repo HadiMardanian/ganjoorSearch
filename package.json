@@ -1,14 +1,15 @@
 {
   "name": "ganjoorsearch",
   "private": true,
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
-    "verify": "node scripts/verify.mjs"
+    "test:unit": "vitest run",
+    "verify": "node scripts/verify.mjs && npm run test:unit"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.66.9",
@@ -25,6 +26,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "tailwindcss": "^4.0.7",
     "typescript": "~5.7.3",
-    "vite": "^6.1.0"
+    "vite": "^6.1.0",
+    "vitest": "^3.0.5"
   }
 }

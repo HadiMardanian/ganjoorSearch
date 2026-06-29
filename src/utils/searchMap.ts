@@ -1,6 +1,16 @@
 import type { GroupedResult, Poem, Verse } from '@/types/ganjoor';
-import { buildSearchExcerpt } from '@/utils/searchExcerpt';
-import { textIncludesTerm } from '@/utils/normalize';
+import { buildPoetImageUrl } from '@/api/client';
+import {
+  buildSearchExcerpt,
+  buildTitleMatchNote,
+  getQueryFromTerm,
+} from '@/utils/searchExcerpt';
+import {
+  findMatchingLineIndices,
+  parseQuery,
+  textMatches,
+  titleMatches,
+} from '@/utils/matchCore';
 
 function getCoupletIndex(verse: Verse): number {
   return verse.coupletIndex ?? Math.floor(verse.vOrder / 2);
@@ -31,17 +41,14 @@ function buildVersesFromLines(poemId: number, lines: string[]): Verse[] {
   return lines.map((text, index) => syntheticVerse(poemId, index, text));
 }
 
-function buildMatchingCouplets(verses: Verse[], term: string) {
-  const matchingLineIndices = new Set<number>();
+function buildMatchingCouplets(verses: Verse[], query: ReturnType<typeof parseQuery>) {
+  const matchingLineIndices = findMatchingLineIndices(
+    verses.map((verse) => verse.text || ''),
+    query,
+  );
 
-  verses.forEach((verse, index) => {
-    if (textIncludesTerm(verse.text, term)) {
-      matchingLineIndices.add(index);
-    }
-  });
-
-  if (matchingLineIndices.size === 0 && verses.length > 0) {
-    matchingLineIndices.add(0);
+  if (matchingLineIndices.size === 0) {
+    return [];
   }
 
   const coupletIndices = new Set<number>();
@@ -60,22 +67,37 @@ function buildMatchingCouplets(verses: Verse[], term: string) {
 }
 
 export function mapSearchHitsToGrouped(items: Poem[], term: string): GroupedResult[] {
+  const query = getQueryFromTerm(term);
+
   return items.map((poem) => {
     const lines = linesFromPoem(poem);
     const allVerses = buildVersesFromLines(poem.id, lines);
     const plainText = poem.plainText ?? lines.join('\n');
+    const fullTitle = poem.fullTitle || poem.title || 'بدون عنوان';
+    const bodyMatch = textMatches(plainText, query);
+    const titleOnlyMatch = !bodyMatch && titleMatches(fullTitle, query);
+
+    const excerpt = titleOnlyMatch
+      ? buildTitleMatchNote(fullTitle)
+      : buildSearchExcerpt(plainText, term);
+
+    const poet = poem.category?.poet;
 
     return {
       poemId: poem.id,
       poemTitle: poem.title || 'بدون عنوان',
-      fullTitle: poem.fullTitle || poem.title || 'بدون عنوان',
-      fullUrl: poem.fullUrl || `/hafez/ghazal/sh${poem.id}`,
+      fullTitle,
+      fullUrl: poem.fullUrl || '',
       urlSlug: poem.urlSlug,
+      poetId: poet?.id,
+      poetName: poet?.name,
+      poetImageUrl: buildPoetImageUrl(poet?.imageUrl),
       allVerses,
       plainText,
       htmlText: poem.htmlText,
-      excerpt: buildSearchExcerpt(plainText, term),
-      matchingCouplets: buildMatchingCouplets(allVerses, term),
+      excerpt,
+      matchingCouplets: buildMatchingCouplets(allVerses, query),
+      titleOnlyMatch,
     };
   });
 }

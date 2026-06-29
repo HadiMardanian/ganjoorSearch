@@ -7,11 +7,9 @@ import type {
 } from '@/types/ganjoor';
 import { mapSearchHitsToGrouped } from '@/utils/searchMap';
 import { parsePagingHeaders } from '@/utils/paging';
-import { mapWithConcurrency } from '@/utils/parallel';
 import { apiFetch, buildApiUrl } from './client';
 
 const EXPORT_PAGE_SIZE = 200;
-const EXPORT_PAGE_CONCURRENCY = 4;
 
 export async function fetchPoets(signal?: AbortSignal): Promise<Poet[]> {
   const data = await apiFetch<Poet[]>(buildApiUrl('/poets'), signal);
@@ -131,40 +129,44 @@ export async function fetchAllSearchResults(
     onProgress?: (loaded: number, total: number) => void;
   } = {},
 ): Promise<GroupedResult[]> {
-  const first = await searchPoems(term, {
-    poetId: options.poetId,
-    categoryId: options.categoryId,
-    page: 1,
-    pageSize: EXPORT_PAGE_SIZE,
-    signal: options.signal,
-  });
+  const allResults: GroupedResult[] = [];
+  let page = 1;
+  let totalPages = 1;
+  let hasMore = true;
 
-  options.onProgress?.(1, Math.max(first.totalPages, 1));
+  while (hasMore) {
+    const response = await searchPoems(term, {
+      poetId: options.poetId,
+      categoryId: options.categoryId,
+      page,
+      pageSize: EXPORT_PAGE_SIZE,
+      signal: options.signal,
+    });
 
-  if (first.totalPages <= 1) {
-    return first.results;
+    allResults.push(...response.results);
+
+    if (response.totalPages > 0) {
+      totalPages = response.totalPages;
+      hasMore = page < totalPages;
+      options.onProgress?.(page, totalPages);
+      page += 1;
+      continue;
+    }
+
+    hasMore = response.hasMore;
+    options.onProgress?.(page, page + (hasMore ? 1 : 0));
+
+    if (!hasMore) break;
+    page += 1;
+
+    if (page > 500) {
+      throw new Error('تعداد صفحات نتایج از حد مجاز بیشتر است.');
+    }
   }
 
-  const remainingPages = Array.from(
-    { length: first.totalPages - 1 },
-    (_, index) => index + 2,
-  );
+  return allResults;
+}
 
-  const pageResults = await mapWithConcurrency(
-    remainingPages,
-    EXPORT_PAGE_CONCURRENCY,
-    async (page) => {
-      const response = await searchPoems(term, {
-        poetId: options.poetId,
-        categoryId: options.categoryId,
-        page,
-        pageSize: EXPORT_PAGE_SIZE,
-        signal: options.signal,
-      });
-      options.onProgress?.(page, first.totalPages);
-      return response.results;
-    },
-  );
-
-  return first.results.concat(...pageResults);
+export async function fetchPoem(url: string, signal?: AbortSignal): Promise<Poem> {
+  return apiFetch<Poem>(buildApiUrl('/poem', { url }), signal);
 }
