@@ -10,6 +10,40 @@ export interface Category {
   id: number;
   title: string;
   fullUrl?: string;
+  urlSlug?: string;
+  description?: string;
+  children?: Category[];
+  poemCount?: number;
+}
+
+export interface PoemSummary {
+  id: number;
+  title: string;
+  urlSlug?: string;
+  fullUrl?: string;
+  excerpt?: string;
+  fullTitle?: string;
+}
+
+export interface CategoryDetail extends Category {
+  children: Category[];
+  poems: PoemSummary[];
+}
+
+export interface PoetDetail {
+  id: number;
+  name: string;
+  fullName?: string;
+  description?: string;
+  imageUrl?: string;
+  fullUrl?: string;
+  rootCatId?: number;
+  nickname?: string;
+}
+
+export interface PoetWithCatalog {
+  poet: PoetDetail;
+  rootCategory: CategoryDetail;
 }
 
 export interface Verse {

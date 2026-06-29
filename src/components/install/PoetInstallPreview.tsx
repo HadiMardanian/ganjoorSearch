@@ -15,8 +15,8 @@ interface PoetInstallPreviewProps {
 
 const benefits = [
   'آیکون با عکس شاعر روی صفحهٔ اصلی',
-  'باز شدن مستقیم روی همان شاعر',
-  'کار آفلاین برای پوستهٔ اپ',
+  'مرور و مطالعهٔ آثار مثل اپ گنجور',
+  'جستجو در اشعار همان شاعر',
 ];
 
 export function PoetInstallPreview({
