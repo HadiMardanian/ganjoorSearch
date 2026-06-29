@@ -13,6 +13,7 @@ interface ResultCardProps {
   result: GroupedResult;
   searchTerm: string;
   viewMode: ViewMode;
+  onOpenPoem?: () => void;
 }
 
 function getPoemText(result: GroupedResult): string {
@@ -39,6 +40,7 @@ export const ResultCard = memo(function ResultCard({
   result,
   searchTerm,
   viewMode,
+  onOpenPoem,
 }: ResultCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -120,14 +122,24 @@ export const ResultCard = memo(function ResultCard({
             />
           ) : null}
           <h3 className="text-base font-semibold leading-relaxed sm:text-lg">
-            <a
-              href={poemUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-accent hover:underline"
-            >
-              {title}
-            </a>
+            {onOpenPoem ? (
+              <button
+                type="button"
+                className="text-accent text-right hover:underline"
+                onClick={onOpenPoem}
+              >
+                {title}
+              </button>
+            ) : (
+              <a
+                href={poemUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent hover:underline"
+              >
+                {title}
+              </a>
+            )}
           </h3>
         </div>
         <a
@@ -136,7 +148,7 @@ export const ResultCard = memo(function ResultCard({
           rel="noopener noreferrer"
           className="text-muted inline-flex shrink-0 items-center gap-1 text-sm font-medium hover:text-accent hover:underline"
         >
-          مشاهده در گنجور
+          {onOpenPoem ? 'گنجور' : 'مشاهده در گنجور'}
           <ExternalLink size={14} />
         </a>
       </div>

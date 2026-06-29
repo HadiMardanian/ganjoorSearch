@@ -41,7 +41,7 @@ export function buildPoetManifest(
     description: `جستجوی اشعار ${poetName} با گنجورسرچ`,
     lang: 'fa',
     dir: 'rtl',
-    start_url: `${BASE}?poet=${poet.id}&source=pwa`,
+    start_url: `${BASE}?poet=${poet.id}&source=pwa&tab=browse`,
     scope: BASE,
     display: 'standalone',
     background_color: '#f7f4ef',

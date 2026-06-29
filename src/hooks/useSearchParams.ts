@@ -11,7 +11,7 @@ export interface SearchState {
   viewMode: ViewMode;
   source: 'pwa' | null;
   tab: PoetAppTab;
-  browseCatId: number | null;
+  browsePath: number[];
   poemUrl: string | null;
   poemListPage: number;
 }
@@ -24,10 +24,23 @@ const DEFAULT_STATE: SearchState = {
   viewMode: 'verse',
   source: null,
   tab: 'browse',
-  browseCatId: null,
+  browsePath: [],
   poemUrl: null,
   poemListPage: 1,
 };
+
+export function parseBrowsePath(raw: string | null): number[] {
+  if (!raw) return [];
+  return raw
+    .split('/')
+    .map((part) => Number(part.trim()))
+    .filter((id) => Number.isFinite(id) && id > 0);
+}
+
+export function formatBrowsePath(path: number[]): string | null {
+  if (path.length === 0) return null;
+  return path.join('/');
+}
 
 function readFromUrl(): SearchState {
   if (typeof window === 'undefined') return DEFAULT_STATE;
@@ -38,19 +51,26 @@ function readFromUrl(): SearchState {
   const cat = params.get('cat');
   const page = Number(params.get('page') ?? '1');
   const mode = params.get('mode');
-  const browseCat = params.get('bcat');
   const poemListPage = Number(params.get('plist') ?? '1');
 
   const poetNum = poet ? Number(poet) : NaN;
   const catNum = cat ? Number(cat) : NaN;
-  const browseCatNum = browseCat ? Number(browseCat) : NaN;
 
   const sourceParam = params.get('source');
   const tabParam = params.get('tab');
   const term = params.get('q') ?? '';
 
   const tab: PoetAppTab =
-    tabParam === 'search' || term ? 'search' : 'browse';
+    tabParam === 'search' || (term && tabParam !== 'browse') ? 'search' : 'browse';
+
+  let browsePath = parseBrowsePath(params.get('bpath'));
+  if (browsePath.length === 0) {
+    const legacyBcat = params.get('bcat');
+    if (legacyBcat) {
+      const id = Number(legacyBcat);
+      if (Number.isFinite(id) && id > 0) browsePath = [id];
+    }
+  }
 
   return {
     term,
@@ -61,15 +81,14 @@ function readFromUrl(): SearchState {
     viewMode: mode === 'full' ? 'full' : 'verse',
     source: sourceParam === 'pwa' ? 'pwa' : null,
     tab,
-    browseCatId:
-      browseCat && Number.isFinite(browseCatNum) ? browseCatNum : null,
+    browsePath,
     poemUrl: params.get('poem'),
     poemListPage:
       Number.isFinite(poemListPage) && poemListPage > 0 ? poemListPage : 1,
   };
 }
 
-function writeToUrl(state: SearchState) {
+function buildUrl(state: SearchState): string {
   const params = new URLSearchParams();
 
   if (state.term) params.set('q', state.term);
@@ -79,13 +98,27 @@ function writeToUrl(state: SearchState) {
   if (state.viewMode !== 'verse') params.set('mode', state.viewMode);
   if (state.source === 'pwa') params.set('source', 'pwa');
   if (state.tab === 'search') params.set('tab', 'search');
-  if (state.browseCatId != null) params.set('bcat', String(state.browseCatId));
+  if (state.tab === 'browse' && state.source === 'pwa') params.set('tab', 'browse');
+
+  const bpath = formatBrowsePath(state.browsePath);
+  if (bpath) params.set('bpath', bpath);
+
   if (state.poemUrl) params.set('poem', state.poemUrl);
   if (state.poemListPage > 1) params.set('plist', String(state.poemListPage));
 
   const query = params.toString();
-  const next = query ? `${window.location.pathname}?${query}` : window.location.pathname;
-  window.history.replaceState(null, '', next);
+  return query ? `${window.location.pathname}?${query}` : window.location.pathname;
+}
+
+function writeToUrl(state: SearchState, push = false) {
+  const next = buildUrl(state);
+  const current = `${window.location.pathname}${window.location.search}`;
+
+  if (push && next !== current) {
+    window.history.pushState(null, '', next);
+  } else {
+    window.history.replaceState(null, '', next);
+  }
 }
 
 export function useSearchState() {
@@ -100,12 +133,19 @@ export function useSearchState() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  const updateUrl = useCallback((state: SearchState) => {
-    writeToUrl(state);
+  const replaceUrl = useCallback((state: SearchState) => {
+    writeToUrl(state, false);
     setUrlState(state);
   }, []);
 
-  return { initial: urlState, urlState, updateUrl };
+  const pushUrl = useCallback((state: SearchState) => {
+    writeToUrl(state, true);
+    setUrlState(state);
+  }, []);
+
+  const updateUrl = replaceUrl;
+
+  return { initial: urlState, urlState, updateUrl, replaceUrl, pushUrl };
 }
 
 export function buildSearchState(
@@ -115,4 +155,9 @@ export function buildSearchState(
     ...DEFAULT_STATE,
     ...partial,
   };
+}
+
+export function activeBrowseCategoryId(path: number[]): number | null {
+  if (path.length === 0) return null;
+  return path[path.length - 1] ?? null;
 }

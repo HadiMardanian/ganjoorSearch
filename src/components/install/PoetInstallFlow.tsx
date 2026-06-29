@@ -97,11 +97,15 @@ export function PoetInstallFlow({
     }
   }
 
-  function handleIosDone() {
+  function handleIosInstalled() {
     if (selectedPoet) {
       onPoetInstalled(selectedPoet);
-      showToast(`برای ${selectedPoet.name} به صفحهٔ اصلی اضافه کنید.`, 'success');
+      showToast(`اپ ${selectedPoet.name} آماده است.`, 'success');
     }
+    onClose();
+  }
+
+  function handleIosDismiss() {
     onClose();
   }
 
@@ -117,6 +121,9 @@ export function PoetInstallFlow({
         className="surface-card flex h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl border shadow-2xl sm:h-[min(720px,90vh)] sm:rounded-3xl"
         onClick={(event) => event.stopPropagation()}
       >
+        <div className="flex justify-center pt-3 sm:hidden">
+          <span className="h-1.5 w-10 rounded-full bg-[var(--color-border)]" aria-hidden />
+        </div>
         <span id="poet-install-title" className="sr-only">
           نصب اپ شاعر دلخواه
         </span>
@@ -142,7 +149,8 @@ export function PoetInstallFlow({
         {step === 'ios' && selectedPoet && (
           <IosInstallGuide
             poet={selectedPoet}
-            onDone={handleIosDone}
+            onInstalled={handleIosInstalled}
+            onDismiss={handleIosDismiss}
             onBack={() => setStep('preview')}
           />
         )}
