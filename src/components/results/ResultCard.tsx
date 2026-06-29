@@ -125,7 +125,7 @@ export const ResultCard = memo(function ResultCard({
             {onOpenPoem ? (
               <button
                 type="button"
-                className="text-accent text-right hover:underline"
+                className="text-accent text-start hover:underline"
                 onClick={onOpenPoem}
               >
                 {title}

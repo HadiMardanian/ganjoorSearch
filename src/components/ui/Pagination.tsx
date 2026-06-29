@@ -75,7 +75,9 @@ export function Pagination({
             max={totalPages}
             value={jumpValue}
             onChange={(event) => setJumpValue(event.target.value)}
-            className="field-control w-20 px-2 py-1 text-center"
+            className="field-control page-jump-input w-20 px-2 py-1"
+            dir="ltr"
+            inputMode="numeric"
             disabled={disabled}
           />
           <Button type="submit" variant="secondary" disabled={disabled || !jumpValue}>
