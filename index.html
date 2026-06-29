@@ -15,6 +15,19 @@
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fa_IR" />
     <link rel="manifest" id="app-manifest" href="/ganjoorSearch/manifest.webmanifest" />
+    <script>
+      (function () {
+        var base = '/ganjoorSearch/';
+        var params = new URLSearchParams(location.search);
+        var poetId = null;
+        var pathMatch = location.pathname.match(/\/pwa\/(\d+)\/?/);
+        if (pathMatch) poetId = pathMatch[1];
+        else if (params.get('install') === '1' && params.get('poet')) poetId = params.get('poet');
+        if (!poetId) return;
+        var link = document.getElementById('app-manifest');
+        if (link) link.href = base + 'manifests/poet-' + poetId + '.webmanifest';
+      })();
+    </script>
     <meta name="theme-color" content="#9a3412" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>جستجوی اشعار فارسی</title>

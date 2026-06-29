@@ -102,7 +102,11 @@ export function usePoetApp(
         imageUrl: storedPoet.imageUrl,
       };
     }
-    return null;
+    return {
+      id: activePoetId,
+      name: 'شاعر',
+      fullName: 'شاعر',
+    };
   }, [activePoetId, poets, storedPoet]);
 
   useEffect(() => {

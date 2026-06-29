@@ -1,5 +1,6 @@
-import { ArrowRight, Check, Download, Smartphone } from 'lucide-react';
+import { ArrowRight, Check, Download, Loader2, RefreshCw, Smartphone } from 'lucide-react';
 import type { Poet } from '@/types/ganjoor';
+import { InstallPromptWaiting } from '@/components/install/InstallPromptWaiting';
 import { PoetAvatar } from '@/components/install/PoetAvatar';
 import { Button } from '@/components/ui/Button';
 
@@ -9,7 +10,10 @@ interface PoetInstallPreviewProps {
   isIos: boolean;
   alreadyInstalled?: boolean;
   installing?: boolean;
+  waitingForInstall?: boolean;
+  installWaitPhase?: 'manifest' | 'prompt';
   onInstall: () => void;
+  onReloadForInstall: () => void;
   onUseWithoutInstall: () => void;
   onIosGuide: () => void;
   onBack: () => void;
@@ -27,7 +31,10 @@ export function PoetInstallPreview({
   isIos,
   alreadyInstalled,
   installing,
+  waitingForInstall,
+  installWaitPhase = 'prompt',
   onInstall,
+  onReloadForInstall,
   onUseWithoutInstall,
   onIosGuide,
   onBack,
@@ -41,6 +48,7 @@ export function PoetInstallPreview({
           type="button"
           className="text-muted hover:text-[var(--color-ink)] mb-3 inline-flex items-center gap-1 text-sm"
           onClick={onBack}
+          disabled={installing}
         >
           <ArrowRight size={16} />
           بازگشت به گالری
@@ -48,7 +56,7 @@ export function PoetInstallPreview({
         <div className="flex flex-col items-center text-center">
           <PoetAvatar poet={poet} size="lg" className="mb-4" />
           <h2 className="text-2xl font-bold">{name}</h2>
-          <p className="text-muted mt-2 text-sm">جستجوی اشعار {name} روی گوشی</p>
+          <p className="text-muted mt-2 text-sm">نصب اپ جداگانه برای {name} روی گوشی</p>
         </div>
       </div>
 
@@ -69,7 +77,47 @@ export function PoetInstallPreview({
             <div className="surface-muted rounded-xl border p-4 text-sm">
               <p className="font-medium">اپ {name} قبلاً نصب شده</p>
               <p className="text-muted mt-2">
-                از آیکون صفحهٔ اصلی همان شاعر را باز کنید، یا شاعر دیگری را نصب کنید.
+                از آیکون صفحهٔ اصلی همان شاعر را باز کنید، یا شاعر دیگری را از گالری نصب کنید.
+              </p>
+            </div>
+          ) : waitingForInstall ? (
+            <InstallPromptWaiting poet={poet} phase={installWaitPhase} />
+          ) : canInstall ? (
+            <Button
+              type="button"
+              className="w-full py-3 text-base"
+              onClick={onInstall}
+              disabled={installing}
+            >
+              {installing ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
+                <Download size={18} />
+              )}
+              {installing ? 'در حال نصب…' : `نصب اپ ${name}`}
+            </Button>
+          ) : isIos ? (
+            <Button type="button" className="w-full py-3 text-base" onClick={onIosGuide}>
+              <Smartphone size={18} />
+              راهنمای افزودن به صفحهٔ اصلی
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              className="w-full py-3 text-base"
+              onClick={onReloadForInstall}
+              disabled={installing}
+            >
+              <RefreshCw size={18} />
+              آماده‌سازی نصب {name}
+            </Button>
+          )}
+
+          {!alreadyInstalled && !waitingForInstall && !canInstall && !isIos ? (
+            <div className="surface-muted rounded-xl border p-4 text-sm">
+              <p className="text-muted">
+                اگر دکمهٔ نصب ظاهر نشد، «آماده‌سازی نصب» را بزنید تا صفحه با مانیفست همان شاعر
+                دوباره بارگذاری شود.
               </p>
             </div>
           ) : null}
@@ -79,42 +127,15 @@ export function PoetInstallPreview({
             variant="secondary"
             className="w-full py-3 text-base"
             onClick={onUseWithoutInstall}
-            disabled={installing}
+            disabled={installing || waitingForInstall}
           >
-            شروع مرور آثار {name}
+            مرور در مرورگر (بدون نصب)
           </Button>
 
-          {canInstall && !alreadyInstalled ? (
-            <Button
-              type="button"
-              className="w-full py-3 text-base"
-              onClick={onInstall}
-              disabled={installing}
-            >
-              <Download size={18} />
-              {installing ? 'در حال نصب…' : `نصب اپ ${name}`}
+          {!alreadyInstalled && isIos ? null : !alreadyInstalled && canInstall ? (
+            <Button type="button" variant="secondary" className="w-full" onClick={onIosGuide}>
+              راهنمای iOS / Safari
             </Button>
-          ) : isIos && !alreadyInstalled ? (
-            <Button type="button" className="w-full py-3 text-base" onClick={onIosGuide}>
-              <Smartphone size={18} />
-              راهنمای افزودن به صفحهٔ اصلی
-            </Button>
-          ) : !alreadyInstalled ? (
-            <div className="surface-muted rounded-xl border p-4 text-sm">
-              <p className="font-medium">نصب از مرورگر</p>
-              <p className="text-muted mt-2">
-                در Chrome اندروید دکمهٔ نصب ظاهر می‌شود. در مرورگر دسکتاپ از منوی مرورگر
-                «نصب اپ» یا «Install app» را انتخاب کنید.
-              </p>
-              <Button
-                type="button"
-                variant="secondary"
-                className="mt-4 w-full"
-                onClick={onIosGuide}
-              >
-                راهنمای iOS / Safari
-              </Button>
-            </div>
           ) : null}
         </div>
       </div>
