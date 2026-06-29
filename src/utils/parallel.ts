@@ -1,6 +1,6 @@
 import pLimit from 'p-limit';
 
-const DEFAULT_CONCURRENCY = 8;
+const DEFAULT_CONCURRENCY = 5;
 
 export function createLimiter(concurrency = DEFAULT_CONCURRENCY) {
   return pLimit(concurrency);
