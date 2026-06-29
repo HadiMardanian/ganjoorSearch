@@ -45,10 +45,10 @@ export function formatResultRange(
   totalCount: number,
 ): string {
   if (totalCount <= 0 || pageCount <= 0) {
-    return `${formatPersianNumber(pageCount)} غزل در این صفحه`;
+    return `${formatPersianNumber(pageCount)} قطعه در این صفحه`;
   }
 
   const start = (page - 1) * pageSize + 1;
   const end = Math.min(page * pageSize, totalCount);
-  return `نمایش ${formatPersianNumber(start)}–${formatPersianNumber(end)} از ${formatPersianNumber(totalCount)} غزل`;
+  return `نمایش ${formatPersianNumber(start)}–${formatPersianNumber(end)} از ${formatPersianNumber(totalCount)} قطعه`;
 }

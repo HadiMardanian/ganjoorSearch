@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { CategoryFilter, PoetFilter, ViewMode } from '@/types/ganjoor';
+import type { PoetFilter, ViewMode } from '@/types/ganjoor';
 
 export interface SearchState {
   term: string;
   poetId: PoetFilter;
-  categoryId: CategoryFilter;
   page: number;
   viewMode: ViewMode;
 }
@@ -12,7 +11,6 @@ export interface SearchState {
 const DEFAULT_STATE: SearchState = {
   term: '',
   poetId: 'all',
-  categoryId: 'all',
   page: 1,
   viewMode: 'verse',
 };
@@ -23,18 +21,14 @@ function readFromUrl(): SearchState {
   const params = new URLSearchParams(window.location.search);
 
   const poet = params.get('poet');
-  const cat = params.get('cat');
   const page = Number(params.get('page') ?? '1');
   const mode = params.get('mode');
 
   const poetNum = poet ? Number(poet) : NaN;
-  const catNum = cat ? Number(cat) : NaN;
 
   return {
     term: params.get('q') ?? '',
     poetId: poet && poet !== 'all' && Number.isFinite(poetNum) ? poetNum : 'all',
-    categoryId:
-      cat && cat !== 'all' && Number.isFinite(catNum) ? catNum : 'all',
     page: Number.isFinite(page) && page > 0 ? page : 1,
     viewMode: mode === 'full' ? 'full' : 'verse',
   };
@@ -45,7 +39,6 @@ function writeToUrl(state: SearchState) {
 
   if (state.term) params.set('q', state.term);
   if (state.poetId !== 'all') params.set('poet', String(state.poetId));
-  if (state.categoryId !== 'all') params.set('cat', String(state.categoryId));
   if (state.page > 1) params.set('page', String(state.page));
   if (state.viewMode !== 'verse') params.set('mode', state.viewMode);
 

@@ -4,7 +4,7 @@ import { fetchAllSearchResults } from '@/api/ganjoor';
 import { exportResults, type ExportFormat } from '@/utils/export';
 import { formatPersianNumber } from '@/utils/paging';
 import { showToast } from '@/components/ui/Toast';
-import type { CategoryFilter, PoetFilter, ViewMode } from '@/types/ganjoor';
+import type { PoetFilter, ViewMode } from '@/types/ganjoor';
 import { Button } from '@/components/ui/Button';
 
 const EXPORT_WARN_THRESHOLD = 5000;
@@ -12,7 +12,6 @@ const EXPORT_WARN_THRESHOLD = 5000;
 interface ExportButtonsProps {
   term: string;
   poetId: PoetFilter;
-  categoryId: CategoryFilter;
   totalCount?: number;
   disabled?: boolean;
 }
@@ -20,7 +19,6 @@ interface ExportButtonsProps {
 export function ExportButtons({
   term,
   poetId,
-  categoryId,
   totalCount = 0,
   disabled,
 }: ExportButtonsProps) {
@@ -40,7 +38,7 @@ export function ExportButtons({
 
     if (totalCount > EXPORT_WARN_THRESHOLD) {
       const confirmed = window.confirm(
-        `این جستجو ${formatPersianNumber(totalCount)} غزل دارد. دریافت و export ممکن است چند دقیقه طول بکشد. ادامه می‌دهید؟`,
+        `این جستجو ${formatPersianNumber(totalCount)} قطعه دارد. دریافت و export ممکن است چند دقیقه طول بکشد. ادامه می‌دهید؟`,
       );
       if (!confirmed) return;
     }
@@ -53,7 +51,6 @@ export function ExportButtons({
     try {
       const results = await fetchAllSearchResults(term, {
         poetId,
-        categoryId,
         signal: controller.signal,
         onProgress: (loaded, total) => {
           setProgress({ loaded, total });
@@ -64,7 +61,7 @@ export function ExportButtons({
 
       if (totalCount > 0 && results.length < totalCount) {
         showToast(
-          `${formatPersianNumber(results.length)} از ${formatPersianNumber(totalCount)} غزل دریافت شد.`,
+          `${formatPersianNumber(results.length)} از ${formatPersianNumber(totalCount)} قطعه دریافت شد.`,
           'info',
         );
       }
@@ -80,7 +77,7 @@ export function ExportButtons({
       const countLabel =
         mode === 'verse'
           ? `${formatPersianNumber(rowCount)} ردیف بیت`
-          : `${formatPersianNumber(results.length)} غزل`;
+          : `${formatPersianNumber(results.length)} قطعه`;
       showToast(`فایل ${label} با ${countLabel} دانلود شد.`, 'success');
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') {
@@ -116,7 +113,7 @@ export function ExportButtons({
           onClick={() => handleExport('full', 'csv')}
         >
           <Download size={16} />
-          {exporting ? 'در حال آماده‌سازی…' : 'CSV — غزل کامل'}
+          {exporting ? 'در حال آماده‌سازی…' : 'CSV — متن کامل'}
         </Button>
         <Button
           variant="secondary"
@@ -132,7 +129,7 @@ export function ExportButtons({
           onClick={() => handleExport('full', 'excel')}
         >
           <FileSpreadsheet size={16} />
-          {exporting ? 'در حال آماده‌سازی…' : 'Excel — غزل کامل'}
+          {exporting ? 'در حال آماده‌سازی…' : 'Excel — متن کامل'}
         </Button>
       </div>
 

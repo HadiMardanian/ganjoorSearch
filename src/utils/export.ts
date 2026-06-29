@@ -1,4 +1,5 @@
 import { GANJOOR_SITE } from '@/api/client';
+import { formatDisplayTitle } from '@/utils/displayTitle';
 import type { GroupedResult, ViewMode } from '@/types/ganjoor';
 
 export type ExportFormat = 'csv' | 'excel';
@@ -71,6 +72,10 @@ function getPoemText(result: GroupedResult): string {
     .join('\n');
 }
 
+function displayTitle(result: GroupedResult): string {
+  return formatDisplayTitle(result.fullTitle || result.poemTitle);
+}
+
 export function buildVerseExportRows(results: GroupedResult[]): string[][] {
   const rows: string[][] = [];
 
@@ -78,8 +83,8 @@ export function buildVerseExportRows(results: GroupedResult[]): string[][] {
     if (result.matchingCouplets.length === 0) {
       if (result.titleOnlyMatch) {
         rows.push([
-          result.fullTitle || result.poemTitle,
-          result.excerpt.find((part) => part.type === 'note')?.text ?? result.fullTitle,
+          displayTitle(result),
+          result.excerpt.find((part) => part.type === 'note')?.text ?? displayTitle(result),
           '',
           result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : '',
         ]);
@@ -90,7 +95,7 @@ export function buildVerseExportRows(results: GroupedResult[]): string[][] {
     for (const couplet of result.matchingCouplets) {
       const lines = couplet.verses.map((verse) => verse.text || '');
       rows.push([
-        result.fullTitle || result.poemTitle,
+        displayTitle(result),
         lines[0] ?? '',
         lines[1] ?? lines[0] ?? '',
         result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : '',
@@ -104,7 +109,7 @@ export function buildVerseExportRows(results: GroupedResult[]): string[][] {
 export function buildFullExportRows(results: GroupedResult[]): string[][] {
   return results
     .map((result) => [
-      result.fullTitle || result.poemTitle,
+      displayTitle(result),
       getPoemText(result),
       result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : '',
     ])
@@ -157,7 +162,7 @@ export function exportResults(
 
   if (rows.length === 0) return { success: false, rowCount: 0 };
 
-  const baseName = mode === 'verse' ? 'verse-results' : 'ghazal-results';
+  const baseName = mode === 'verse' ? 'verse-results' : 'full-results';
   const filename =
     format === 'excel' ? `${baseName}.xls` : `${baseName}.csv`;
 

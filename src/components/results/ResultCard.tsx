@@ -1,6 +1,7 @@
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Check, Copy, ExternalLink } from 'lucide-react';
+import { formatDisplayTitle } from '@/utils/displayTitle';
 import { GANJOOR_SITE } from '@/api/client';
 import { fetchPoem } from '@/api/ganjoor';
 import { HighlightedText } from './HighlightedText';
@@ -100,6 +101,7 @@ export const ResultCard = memo(function ResultCard({
 
   const poemUrl = result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : GANJOOR_SITE;
   const copyKey = `${result.poemId}-${viewMode}`;
+  const title = formatDisplayTitle(result.fullTitle || result.poemTitle);
 
   return (
     <article className="fade-in rounded-2xl border border-stone-300 bg-white p-5 shadow-sm transition-shadow hover:shadow-md sm:p-6">
@@ -120,7 +122,7 @@ export const ResultCard = memo(function ResultCard({
               rel="noopener noreferrer"
               className="text-[#9a3412] hover:underline"
             >
-              {result.fullTitle}
+              {title}
             </a>
           </h3>
         </div>

@@ -150,46 +150,6 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
   );
 }
 
-interface CategorySelectProps {
-  categories: Array<{ id: number; title: string }>;
-  value: number | 'all';
-  onChange: (value: number | 'all') => void;
-  poetSelected: boolean;
-}
-
-export function CategorySelect({
-  categories,
-  value,
-  onChange,
-  poetSelected,
-}: CategorySelectProps) {
-  return (
-    <div className="w-full sm:w-44">
-      <label htmlFor="category-select" className="field-label">
-        قالب
-      </label>
-      <select
-        id="category-select"
-        className="field-control px-3 py-3 text-sm"
-        value={value === 'all' ? 'all' : String(value)}
-        onChange={(event) => {
-          const next = event.target.value;
-          onChange(next === 'all' ? 'all' : Number(next));
-        }}
-        disabled={!poetSelected}
-        aria-label="انتخاب قالب شعر"
-      >
-        <option value="all">همه قالب‌ها</option>
-        {categories.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.title}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
-
 interface SearchBarProps {
   value: string;
   onChange: (value: string) => void;
@@ -197,7 +157,6 @@ interface SearchBarProps {
   loading?: boolean;
   filtersDirty?: boolean;
   poetPicker: ReactNode;
-  categorySelect: ReactNode;
 }
 
 export function SearchBar({
@@ -207,7 +166,6 @@ export function SearchBar({
   loading,
   filtersDirty,
   poetPicker,
-  categorySelect,
 }: SearchBarProps) {
   return (
     <form
@@ -219,7 +177,6 @@ export function SearchBar({
     >
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
         {poetPicker}
-        {categorySelect}
         <div className="flex-1">
           <label htmlFor="search-input" className="field-label">
             کلمهٔ جستجو
@@ -243,7 +200,7 @@ export function SearchBar({
           </div>
           {filtersDirty ? (
             <p className="mt-2 text-xs text-amber-800">
-              فیلترها تغییر کرده‌اند — برای اعمال، «جستجو» را بزنید.
+              شاعر تغییر کرده — برای اعمال، «جستجو» را بزنید.
             </p>
           ) : null}
         </div>

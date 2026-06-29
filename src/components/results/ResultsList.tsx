@@ -26,7 +26,7 @@ function SearchGuide() {
         <li>یک کلمه یا عبارت کوتاه وارد کنید (مثلاً «جام»).</li>
         <li>برای عبارت دقیق از گیومه استفاده کنید: «جام می».</li>
         <li>چند کلمه با فاصله = هر کدام جداگانه جستجو می‌شود.</li>
-        <li>پس از تغییر شاعر یا قالب، دوباره «جستجو» را بزنید.</li>
+        <li>پس از تغییر شاعر، دوباره «جستجو» را بزنید.</li>
       </ul>
     </div>
   );
@@ -84,7 +84,7 @@ export function ResultsList({
         aria-live="polite"
       >
         {totalCount > 0 ? (
-          <p>تعداد کل نتایج: {formatPersianNumber(totalCount)} غزل</p>
+          <p>تعداد کل نتایج: {formatPersianNumber(totalCount)} قطعه</p>
         ) : null}
         <p>
           {formatResultRange(page, pageSize, results.length, totalCount)}
