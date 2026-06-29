@@ -193,10 +193,10 @@ export function ExportButtons({
         role="group"
         aria-label="محدودهٔ export"
       >
-        <span className="text-stone-600">خروجی:</span>
+        <span className="text-muted">خروجی:</span>
         <button
           type="button"
-          className={`rounded-full px-3 py-1 ${scope === 'all' ? 'bg-[#9a3412] text-white' : 'border border-stone-300 text-stone-700'}`}
+          className={`rounded-full px-3 py-1 ${scope === 'all' ? 'bg-[var(--color-accent)] text-white' : 'surface-card border text-muted'}`}
           onClick={() => setScope('all')}
           disabled={isBusy}
           aria-pressed={scope === 'all'}
@@ -205,7 +205,7 @@ export function ExportButtons({
         </button>
         <button
           type="button"
-          className={`rounded-full px-3 py-1 ${scope === 'page' ? 'bg-[#9a3412] text-white' : 'border border-stone-300 text-stone-700'}`}
+          className={`rounded-full px-3 py-1 ${scope === 'page' ? 'bg-[var(--color-accent)] text-white' : 'surface-card border text-muted'}`}
           onClick={() => setScope('page')}
           disabled={isBusy}
           aria-pressed={scope === 'page'}
@@ -234,7 +234,7 @@ export function ExportButtons({
       </div>
 
       {activeExport && (
-        <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-stone-600">
+        <div className="text-muted flex flex-wrap items-center justify-center gap-3 text-sm">
           <span>در حال تهیه {EXPORT_LABELS[activeExport]}…</span>
           {progress ? <span>{formatProgressText(progress)}</span> : <span>در حال دریافت نتایج…</span>}
           <Button variant="secondary" onClick={cancelExport}>

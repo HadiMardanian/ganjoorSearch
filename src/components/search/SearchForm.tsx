@@ -80,7 +80,7 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
         شاعر
       </label>
       <div
-        className="field-control flex items-center px-1 focus-within:border-[#9a3412] focus-within:shadow-[0_0_0_3px_rgb(154_52_18_/_15%)]"
+        className="field-control flex items-center px-1 focus-within:border-[var(--color-accent)] focus-within:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent)_15%,transparent)]"
         role="combobox"
         aria-expanded={open}
         aria-haspopup="listbox"
@@ -89,7 +89,7 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
         <input
           id="poet-picker-input"
           type="text"
-          className="w-full rounded-xl bg-transparent px-3 py-3 text-sm text-stone-900 outline-none placeholder:text-stone-500"
+          className="w-full rounded-xl bg-transparent px-3 py-3 text-sm outline-none placeholder:text-subtle"
           placeholder="همه شاعران"
           value={open ? query : selectedPoet?.name ?? ''}
           onChange={(event) => {
@@ -110,7 +110,7 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
         {(value !== 'all' || query) && !disabled && (
           <button
             type="button"
-            className="px-3 text-stone-500 hover:text-stone-800"
+            className="text-subtle hover:text-[var(--color-ink)]"
             onClick={() => {
               onChange('all');
               setQuery('');
@@ -127,10 +127,10 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
         <div
           id={listboxId}
           role="listbox"
-          className="absolute z-20 mt-2 max-h-60 w-full overflow-y-auto rounded-xl border border-stone-300 bg-white p-2 shadow-lg"
+          className="absolute z-20 mt-2 max-h-60 w-full overflow-y-auto rounded-xl border surface-card p-2 shadow-lg"
         >
           {options.length === 0 ? (
-            <p className="px-3 py-4 text-center text-sm text-stone-600">شاعری یافت نشد</p>
+            <p className="text-muted px-3 py-4 text-center text-sm">شاعری یافت نشد</p>
           ) : (
             options.map((option, index) => (
               <button
@@ -139,9 +139,9 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
                 type="button"
                 role="option"
                 aria-selected={value === option.id}
-                className={`w-full rounded-lg px-3 py-2 text-right text-sm text-stone-900 hover:bg-stone-100 ${
-                  value === option.id ? 'bg-orange-50 font-semibold text-[#9a3412]' : ''
-                } ${activeIndex === index ? 'ring-1 ring-[#9a3412]' : ''}`}
+                className={`w-full rounded-lg px-3 py-2 text-right text-sm hover:bg-[var(--color-surface)] ${
+                  value === option.id ? 'bg-[var(--color-accent-soft)] font-semibold text-accent' : ''
+                } ${activeIndex === index ? 'ring-1 ring-[var(--color-accent)]' : ''}`}
                 onClick={() => selectOption(option.id)}
               >
                 {option.name}
@@ -221,7 +221,7 @@ export function SearchBar({
 }: SearchBarProps) {
   return (
     <form
-      className="rounded-2xl border border-stone-300 bg-white p-4 shadow-md sm:p-5"
+      className="surface-card rounded-2xl border p-4 shadow-md sm:p-5"
       onSubmit={(event) => {
         event.preventDefault();
         onSearch();

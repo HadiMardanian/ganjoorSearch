@@ -31,7 +31,7 @@ export function showToast(message: string, type: ToastType = 'info') {
 const typeClasses: Record<ToastType, string> = {
   success: 'border-emerald-200 bg-emerald-50 text-emerald-900',
   error: 'border-rose-200 bg-rose-50 text-rose-900',
-  info: 'border-stone-200 bg-white text-stone-800',
+  info: 'surface-card border',
 };
 
 export function ToastContainer() {
@@ -61,7 +61,7 @@ export function ToastContainer() {
           <span className="text-sm">{item.message}</span>
           <button
             type="button"
-            className="text-stone-500 hover:text-stone-800"
+            className="text-subtle hover:text-[var(--color-ink)]"
             onClick={() => {
               toasts = toasts.filter((toast) => toast.id !== item.id);
               notify();

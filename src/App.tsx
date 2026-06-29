@@ -181,7 +181,7 @@ export default function App() {
     <div className="flex min-h-screen flex-col">
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:shadow-lg"
+        className="sr-only focus:not-sr-only focus:surface-card focus:absolute focus:start-4 focus:top-4 focus:z-50 focus:rounded-lg focus:px-4 focus:py-2 focus:shadow-lg"
       >
         پرش به محتوا
       </a>
@@ -250,7 +250,7 @@ export default function App() {
 
         <div className="mt-8">
           {searchQuery.isFetching && groupedResults.length === 0 && searched && (
-            <p className="mb-4 text-center text-sm text-stone-600">
+            <p className="text-muted mb-4 text-center text-sm">
               در حال جستجو در گنجور…
             </p>
           )}
@@ -298,7 +298,7 @@ export default function App() {
 
       <button
         type="button"
-        className={`fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-[#9a3412] text-white shadow-lg transition-all hover:bg-[#7c2d12] ${
+        className={`fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-accent)] text-white shadow-lg transition-all hover:bg-[var(--color-accent-hover)] ${
           showScrollTop ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

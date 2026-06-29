@@ -47,7 +47,7 @@ export function Pagination({
           صفحه قبل
         </Button>
 
-        <span className="min-w-32 text-center text-sm text-stone-700">
+        <span className="text-muted min-w-32 text-center text-sm">
           صفحه {formatPersianNumber(page)}
           {totalPages > 0 ? ` از ${formatPersianNumber(totalPages)}` : ''}
         </span>
@@ -65,7 +65,7 @@ export function Pagination({
 
       {totalPages > 3 ? (
         <form onSubmit={handleJump} className="flex items-center gap-2 text-sm">
-          <label htmlFor="page-jump" className="text-stone-600">
+          <label htmlFor="page-jump" className="text-muted">
             برو به صفحه
           </label>
           <input

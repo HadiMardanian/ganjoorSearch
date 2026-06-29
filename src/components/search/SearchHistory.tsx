@@ -12,9 +12,9 @@ export function SearchHistory({ entries, onSelect, onClear }: SearchHistoryProps
   if (entries.length === 0) return null;
 
   return (
-    <div className="mt-3 rounded-xl border border-stone-200 bg-stone-50 p-3">
+    <div className="surface-muted mt-3 rounded-xl border p-3">
       <div className="mb-2 flex items-center justify-between">
-        <p className="flex items-center gap-1 text-sm font-medium text-stone-800">
+        <p className="flex items-center gap-1 text-sm font-medium">
           <Clock size={14} />
           جستجوهای اخیر
         </p>
@@ -28,7 +28,7 @@ export function SearchHistory({ entries, onSelect, onClear }: SearchHistoryProps
           <button
             key={`${entry.term}-${entry.poetId}-${entry.categoryId}-${entry.timestamp}`}
             type="button"
-            className="rounded-full border border-stone-300 bg-white px-3 py-1 text-sm text-stone-800 hover:border-[#9a3412] hover:text-[#9a3412]"
+            className="surface-card rounded-full border px-3 py-1 text-sm hover:border-[var(--color-accent)] hover:text-accent"
             onClick={() => onSelect(entry)}
           >
             {entry.term}

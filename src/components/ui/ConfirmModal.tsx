@@ -48,20 +48,20 @@ export function ConfirmModal({
         aria-modal="true"
         aria-labelledby="confirm-modal-title"
         aria-describedby="confirm-modal-message"
-        className="w-full max-w-md rounded-2xl border border-stone-300 bg-white p-6 shadow-xl"
+        className="surface-card w-full max-w-md rounded-2xl border p-6 shadow-xl"
         onClick={(event) => event.stopPropagation()}
       >
-        <h2 id="confirm-modal-title" className="text-lg font-semibold text-stone-900">
+        <h2 id="confirm-modal-title" className="text-lg font-semibold">
           {title}
         </h2>
-        <p id="confirm-modal-message" className="mt-3 text-sm leading-7 text-stone-700">
+        <p id="confirm-modal-message" className="text-muted mt-3 text-sm leading-7">
           {message}
         </p>
         <div className="mt-6 flex justify-end gap-3">
           <button
             ref={cancelRef}
             type="button"
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#9a3412] bg-white px-4 py-2.5 text-sm font-medium text-[#9a3412] hover:bg-orange-50"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[var(--color-accent)] bg-[var(--color-card)] px-4 py-2.5 text-sm font-medium text-accent hover:bg-[var(--color-accent-soft)]"
             onClick={onCancel}
           >
             {cancelLabel}

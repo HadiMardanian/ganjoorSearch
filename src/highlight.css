@@ -1,6 +1,6 @@
 ::highlight(ganjoor-search) {
   background-color: transparent;
-  color: #b45309;
+  color: var(--color-highlight);
   font-weight: inherit;
   text-decoration: none;
 }

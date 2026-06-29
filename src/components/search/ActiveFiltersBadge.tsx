@@ -30,8 +30,10 @@ export function ActiveFiltersBadge({
   }
 
   return (
-    <p className="mb-4 text-center text-sm text-stone-600" aria-label="فیلترهای فعال">
-      <span className="rounded-full bg-stone-100 px-3 py-1">{parts.join(' · ')}</span>
+    <p className="text-muted mb-4 text-center text-sm" aria-label="فیلترهای فعال">
+      <span className="surface-muted text-muted rounded-full px-3 py-1">
+        {parts.join(' · ')}
+      </span>
     </p>
   );
 }

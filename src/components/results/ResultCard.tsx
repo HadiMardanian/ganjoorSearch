@@ -108,23 +108,23 @@ export const ResultCard = memo(function ResultCard({
   }, [copyText, poemUrl, title]);
 
   return (
-    <article className="fade-in rounded-2xl border border-stone-300 bg-white p-5 shadow-sm transition-shadow hover:shadow-md sm:p-6">
+    <article className="surface-card fade-in rounded-2xl border p-5 shadow-sm transition-shadow hover:shadow-md sm:p-6">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div className="flex min-w-0 flex-1 items-start gap-3">
           {result.poetImageUrl ? (
             <img
               src={result.poetImageUrl}
               alt={result.poetName ?? 'شاعر'}
-              className="h-12 w-12 shrink-0 rounded-full border border-stone-200 object-cover"
+              className="h-12 w-12 shrink-0 rounded-full border border-[var(--color-border)] object-cover"
               loading="lazy"
             />
           ) : null}
-          <h3 className="text-base font-semibold leading-relaxed text-stone-900 sm:text-lg">
+          <h3 className="text-base font-semibold leading-relaxed sm:text-lg">
             <a
               href={poemUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#9a3412] hover:underline"
+              className="text-accent hover:underline"
             >
               {title}
             </a>
@@ -134,7 +134,7 @@ export const ResultCard = memo(function ResultCard({
           href={poemUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-stone-600 hover:text-[#9a3412] hover:underline"
+          className="text-muted inline-flex shrink-0 items-center gap-1 text-sm font-medium hover:text-accent hover:underline"
         >
           مشاهده در گنجور
           <ExternalLink size={14} />
@@ -142,19 +142,19 @@ export const ResultCard = memo(function ResultCard({
       </div>
 
       {viewMode === 'verse' ? (
-        <div className="space-y-2 rounded-xl bg-stone-50 p-4">
+        <div className="surface-muted space-y-2 rounded-xl p-4">
           {result.excerpt.map((part, index) =>
             part.type === 'ellipsis' ? (
               <p
                 key={`${result.poemId}-ellipsis-${index}`}
-                className="text-center text-stone-400"
+                className="text-subtle text-center"
               >
                 ...
               </p>
             ) : part.type === 'note' ? (
               <p
                 key={`${result.poemId}-note-${index}`}
-                className="text-sm italic text-stone-600"
+                className="text-muted text-sm italic"
               >
                 {part.text}
               </p>
@@ -163,7 +163,7 @@ export const ResultCard = memo(function ResultCard({
                 key={`${result.poemId}-excerpt-${index}`}
                 text={part.text}
                 term={searchTerm}
-                className="verse-text block text-base text-stone-900"
+                className="verse-text block text-base"
               />
             ),
           )}
@@ -178,20 +178,20 @@ export const ResultCard = memo(function ResultCard({
                 key={`${result.poemId}-line-${index}`}
                 text={line}
                 term={searchTerm}
-                className="verse-text text-base text-stone-900"
+                className="verse-text text-base"
               />
             ))}
             {!expanded && displayLines.length > 6 && (
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[var(--color-card)] to-transparent" />
             )}
             {poemQuery.isFetching && expanded ? (
-              <p className="text-sm text-stone-500">در حال بارگذاری متن کامل…</p>
+              <p className="text-subtle text-sm">در حال بارگذاری متن کامل…</p>
             ) : null}
           </div>
           {displayLines.length > 6 && (
             <button
               type="button"
-              className="mt-3 rounded-full border border-[#9a3412] px-4 py-1.5 text-sm text-[#9a3412] hover:bg-orange-50"
+              className="mt-3 rounded-full border border-[var(--color-accent)] px-4 py-1.5 text-sm text-accent hover:bg-[var(--color-accent-soft)]"
               onClick={() => setExpanded((value) => !value)}
               aria-expanded={expanded}
             >

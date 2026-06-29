@@ -18,8 +18,8 @@ interface ResultsListProps {
 
 function SearchGuide() {
   return (
-    <div className="mt-4 rounded-xl bg-stone-50 p-4 text-right text-sm leading-7 text-stone-700">
-      <p className="font-medium text-stone-800">راهنمای جستجو</p>
+    <div className="surface-muted mt-4 rounded-xl p-4 text-right text-sm leading-7 text-muted">
+      <p className="font-medium">راهنمای جستجو</p>
       <ul className="mt-2 list-inside list-disc space-y-1">
         <li>یک کلمه یا عبارت کوتاه وارد کنید (مثلاً «جام»).</li>
         <li>برای عبارت دقیق از گیومه استفاده کنید: «جام می».</li>
@@ -47,9 +47,9 @@ export function ResultsList({
 
   if (searched && !loading && results.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-stone-300 bg-white px-6 py-16 text-center">
-        <p className="text-lg text-stone-800">نتیجه‌ای یافت نشد.</p>
-        <p className="mt-2 text-sm text-stone-600">
+      <div className="surface-card rounded-2xl border border-dashed px-6 py-16 text-center">
+        <p className="text-lg">نتیجه‌ای یافت نشد.</p>
+        <p className="text-muted mt-2 text-sm">
           لطفاً کلمهٔ دیگری را امتحان کنید یا فیلترها را تغییر دهید.
         </p>
         <SearchGuide />
@@ -59,7 +59,7 @@ export function ResultsList({
 
   if (results.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-stone-300 bg-white px-6 py-16 text-center text-stone-600">
+      <div className="surface-card rounded-2xl border border-dashed px-6 py-16 text-center text-muted">
         <p>برای شروع، یک کلمه جستجو کنید.</p>
         <SearchGuide />
       </div>
@@ -69,7 +69,7 @@ export function ResultsList({
   return (
     <div>
       <div
-        className="mb-4 space-y-1 text-center text-sm text-stone-700"
+        className="text-muted mb-4 space-y-1 text-center text-sm"
         aria-live="polite"
       >
         {totalCount > 0 ? (
@@ -82,7 +82,7 @@ export function ResultsList({
             : ''}
           {loading ? ' — در حال به‌روزرسانی...' : ''}
         </p>
-        <p className="text-xs text-stone-600">
+        <p className="text-subtle text-xs">
           {countMatchingBits(results)} بیت مطابق در همین صفحه
         </p>
       </div>

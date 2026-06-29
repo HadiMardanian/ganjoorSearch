@@ -2,6 +2,13 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.4.1] - 2026-06-29
+
+### Fixed
+- Dark theme: unified CSS variables for surfaces, text, borders, and highlights
+- Empty state, search guide, cards, and forms no longer show white boxes on dark background
+- Improved contrast for muted text, buttons, toasts, and gradients in dark mode
+
 ## [2.4.0] - 2026-06-29
 
 ### Added
