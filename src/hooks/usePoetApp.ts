@@ -7,6 +7,7 @@ import {
   computeIsPoetApp,
   computeLockPoet,
   resolveActivePoetId,
+  shouldStandaloneRedirectToStoredPoet,
 } from '@/utils/poetAppState';
 
 const STORAGE_KEY = 'ganjoorsearch-installed-poet';
@@ -62,22 +63,29 @@ export function usePoetApp(
   }, []);
 
   useEffect(() => {
-    if (!standalone || !storedPoet) return;
-    if (resolvedUrlPoetId === storedPoet.id && urlSource === 'pwa') return;
+    if (
+      !shouldStandaloneRedirectToStoredPoet({
+        standalone,
+        resolvedUrlPoetId,
+        storedPoet,
+      })
+    ) {
+      return;
+    }
 
     const base = import.meta.env.BASE_URL;
     const params = new URLSearchParams({
-      poet: String(storedPoet.id),
+      poet: String(storedPoet!.id),
       source: 'pwa',
       tab: 'browse',
     });
-    appendBrowseSessionToParams(storedPoet.id, params);
+    appendBrowseSessionToParams(storedPoet!.id, params);
     const target = `${base}?${params.toString()}`;
     const current = `${window.location.pathname}${window.location.search}`;
     if (current !== target) {
       window.location.replace(target);
     }
-  }, [standalone, storedPoet, resolvedUrlPoetId, urlSource]);
+  }, [standalone, storedPoet, resolvedUrlPoetId]);
 
   const activePoetId = resolveActivePoetId({
     urlPoetId,

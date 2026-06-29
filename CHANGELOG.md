@@ -2,6 +2,11 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.14.1] - 2026-06-29
+
+### Fixed
+- Multiple poet PWAs on one device: opening بیدل دهلوی (or any earlier install) no longer redirects to the last installed poet; manifest `start_url` (`?poet=`) is trusted over `localStorage`
+
 ## [2.14.0] - 2026-06-29
 
 ### Added

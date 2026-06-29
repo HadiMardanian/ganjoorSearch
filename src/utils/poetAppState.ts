@@ -42,3 +42,14 @@ export function computeLockPoet(options: {
     options.isPoetApp && (options.standalone || options.urlSource === 'pwa'),
   );
 }
+
+/** Standalone launch should trust manifest start_url (?poet=) over last-installed localStorage. */
+export function shouldStandaloneRedirectToStoredPoet(options: {
+  standalone: boolean;
+  resolvedUrlPoetId: number | null;
+  storedPoet: StoredPoet | null;
+}): boolean {
+  if (!options.standalone || !options.storedPoet) return false;
+  if (options.resolvedUrlPoetId != null) return false;
+  return true;
+}

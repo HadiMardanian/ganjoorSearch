@@ -3,6 +3,7 @@ import {
   computeIsPoetApp,
   computeLockPoet,
   resolveActivePoetId,
+  shouldStandaloneRedirectToStoredPoet,
 } from './poetAppState';
 
 describe('poetAppState', () => {
@@ -104,5 +105,25 @@ describe('poetAppState', () => {
         urlSource: null,
       }),
     ).toBe(false);
+  });
+
+  it('does not redirect standalone when URL already has a poet (multi-PWA)', () => {
+    expect(
+      shouldStandaloneRedirectToStoredPoet({
+        standalone: true,
+        resolvedUrlPoetId: 43,
+        storedPoet: { id: 15, name: 'فرخی سیستانی' },
+      }),
+    ).toBe(false);
+  });
+
+  it('redirects standalone without URL poet to stored fallback', () => {
+    expect(
+      shouldStandaloneRedirectToStoredPoet({
+        standalone: true,
+        resolvedUrlPoetId: null,
+        storedPoet: { id: 43, name: 'بیدل دهلوی' },
+      }),
+    ).toBe(true);
   });
 });
