@@ -1,69 +1,127 @@
-# جستجوی اشعار فارسی
+![GanjoorSearch — جستجوی هوشمند در گنجور](./docs/assets/banner.png)
 
-اپلیکیشن React برای جستجوی سریع و زیبای کلمات در اشعار فارسی، با استفاده از API عمومی [گنجور](https://ganjoor.net).
+# GanjoorSearch
 
-## ویژگی‌ها
+**Live demo:** [hadimardanian.github.io/ganjoorSearch](https://hadimardanian.github.io/ganjoorSearch)
 
-- جستجوی کلمه در اشعار با فیلتر شاعر و قالب
-- دو حالت نمایش: بیت matching / متن کامل
-- کش هوشمند با TanStack Query
-- export موازی صفحات برای جستجوهای بزرگ
-- لیست مجازی برای scroll روان
-- خروجی CSV و Excel (همه صفحات نتایج)
-- کپی متن و لینک به گنجور
-- RTL و UI فارسی
+A fast, Persian-first web app for searching classical Persian poetry via the public [Ganjoor](https://ganjoor.net) API. Filter by poet and poetic form, highlight matches, export results, and share search URLs.
 
-## نصب و اجرا
+---
+
+## English
+
+### Features
+
+- Search words or short phrases across Ganjoor’s corpus
+- Filter by **poet** and **poetic form** (قالب)
+- Two view modes: matching **verses** (excerpt) or **full poem**
+- Smart highlighting with Persian/Arabic normalization
+- Export to **CSV** or **Excel** (current page or all results)
+- Copy poem text, rich copy with Ganjoor link, copy search URL
+- Search history, dark mode, RTL UI
+- URL-synced state (`?q=&poet=&cat=&page=&mode=`)
+
+### Quick start
 
 ```bash
-git checkout main
-git pull
+git clone https://github.com/HadiMardanian/ganjoorSearch.git
+cd ganjoorSearch
 npm install
 npm run dev
 ```
 
-اپ در `http://localhost:5173/ganjoorSearch/` اجرا می‌شود.
+Open `http://localhost:5173/ganjoorSearch/`
 
-## Build
+### Scripts
 
-```bash
-npm run build
-npm run verify
-npm run preview
-```
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Development server |
+| `npm run build` | Typecheck + production build |
+| `npm run preview` | Preview `dist/` |
+| `npm run test:unit` | Vitest (no network) |
+| `npm run verify` | Live API checks + unit tests |
+| `npm run lint` | ESLint |
 
-خروجی در پوشه `dist/` قرار می‌گیرد. base path برای GitHub Pages: `/ganjoorSearch/`
+### Stack
 
-## استک فنی
+React 19 · TypeScript · Vite 6 · Tailwind CSS 4 · TanStack Query · Vitest
 
-- React 19 + TypeScript
-- Vite 6
-- Tailwind CSS 4
-- TanStack Query + React Virtual
-- API: `https://api.ganjoor.net`
+### CORS / production API
 
-## CORS
-
-در development از proxy داخلی Vite استفاده می‌شود. در production می‌توانید:
-
-- مستقیم به `https://api.ganjoor.net` (پیش‌فرض)
-- یا Worker پروکسی در [`workers/api-proxy.js`](workers/api-proxy.js):
+- **Development:** Vite proxy to `api.ganjoor.net`
+- **Production (default):** direct browser calls to `https://api.ganjoor.net`
+- **Optional:** deploy [`workers/api-proxy.js`](workers/api-proxy.js) and build with `VITE_API_BASE`
 
 ```bash
 cd workers && npx wrangler deploy
 VITE_API_BASE=https://your-worker.workers.dev npm run build
 ```
 
-## تست
+### Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) (Persian + English).
+
+### License
+
+Poetry data belongs to [Ganjoor](https://ganjoor.net). This project’s source code is open.
+
+---
+
+## فارسی
+
+### ویژگی‌ها
+
+- جستجوی کلمه یا عبارت کوتاه در سراسر اشعار گنجور
+- فیلتر بر اساس **شاعر** و **قالب** شعر
+- دو حالت نمایش: **بیت**های matching یا **متن کامل** شعر
+- هایلایت هوشمند با نرمال‌سازی حروف فارسی/عربی
+- خروجی **CSV** و **Excel** (صفحهٔ فعلی یا همهٔ نتایج)
+- کپی متن، کپی همراه لینک گنجور، کپی لینک جستجو
+- تاریخچهٔ جستجو، حالت تاریک، رابط RTL
+- همگام‌سازی با URL (`?q=&poet=&cat=&page=&mode=`)
+
+### نصب و اجرا
 
 ```bash
-npm run test:unit      # Vitest — بدون شبکه
-npm run verify         # integration + unit
-npm run verify:integration  # فقط API زنده گنجور
+git clone https://github.com/HadiMardanian/ganjoorSearch.git
+cd ganjoorSearch
+npm install
+npm run dev
 ```
 
-CI: deploy فقط `test:unit`؛ verify زنده هفتگی در workflow `integration.yml`.
+آدرس محلی: `http://localhost:5173/ganjoorSearch/`
 
-## لایسنس
+### دستورات
 
-داده‌های اشعار متعلق به پروژه گنجور است. کد این پروژه متن‌باز است.
+| دستور | توضیح |
+|-------|--------|
+| `npm run dev` | سرور توسعه |
+| `npm run build` | بررسی نوع + build تولید |
+| `npm run preview` | پیش‌نمایش `dist/` |
+| `npm run test:unit` | تست Vitest (بدون شبکه) |
+| `npm run verify` | تست API زنده + unit |
+| `npm run lint` | ESLint |
+
+### استک فنی
+
+React 19 · TypeScript · Vite 6 · Tailwind CSS 4 · TanStack Query · Vitest
+
+### CORS / API در production
+
+- **توسعه:** پروکسی Vite به `api.ganjoor.net`
+- **پیش‌فرض production:** فراخوانی مستقیم `https://api.ganjoor.net`
+- **اختیاری:** deploy [`workers/api-proxy.js`](workers/api-proxy.js) و build با `VITE_API_BASE`
+
+```bash
+cd workers && npx wrangler deploy
+VITE_API_BASE=https://your-worker.workers.dev npm run build
+```
+
+### مشارکت
+
+راهنمای کامل در [CONTRIBUTING.md](CONTRIBUTING.md) (فارسی + English).
+
+### لایسنس
+
+داده‌های اشعار متعلق به [گنجور](https://ganjoor.net) است. کد این پروژه متن‌باز است.
