@@ -1,4 +1,5 @@
 import type { GroupedResult, Poem, Verse } from '@/types/ganjoor';
+import { buildSearchExcerpt } from '@/utils/searchExcerpt';
 import { textIncludesTerm } from '@/utils/normalize';
 
 function getCoupletIndex(verse: Verse): number {
@@ -62,15 +63,18 @@ export function mapSearchHitsToGrouped(items: Poem[], term: string): GroupedResu
   return items.map((poem) => {
     const lines = linesFromPoem(poem);
     const allVerses = buildVersesFromLines(poem.id, lines);
+    const plainText = poem.plainText ?? lines.join('\n');
 
     return {
       poemId: poem.id,
       poemTitle: poem.title || 'بدون عنوان',
+      fullTitle: poem.fullTitle || poem.title || 'بدون عنوان',
       fullUrl: poem.fullUrl || `/hafez/ghazal/sh${poem.id}`,
       urlSlug: poem.urlSlug,
       allVerses,
-      plainText: poem.plainText,
+      plainText,
       htmlText: poem.htmlText,
+      excerpt: buildSearchExcerpt(plainText, term),
       matchingCouplets: buildMatchingCouplets(allVerses, term),
     };
   });

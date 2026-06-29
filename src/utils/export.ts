@@ -33,7 +33,7 @@ export function buildVerseExportRows(results: GroupedResult[]): string[][] {
     for (const couplet of result.matchingCouplets) {
       const lines = couplet.verses.map((verse) => verse.text || '');
       rows.push([
-        result.poemTitle,
+        result.fullTitle || result.poemTitle,
         lines[0] ?? '',
         lines[1] ?? '',
         result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : '',
@@ -47,7 +47,7 @@ export function buildVerseExportRows(results: GroupedResult[]): string[][] {
 export function buildFullExportRows(results: GroupedResult[]): string[][] {
   return results
     .map((result) => [
-      result.poemTitle,
+      result.fullTitle || result.poemTitle,
       getPoemText(result),
       result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : '',
     ])

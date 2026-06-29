@@ -2,7 +2,6 @@ import { memo, useMemo, useState } from 'react';
 import { Check, Copy, ExternalLink } from 'lucide-react';
 import { GANJOOR_SITE } from '@/api/client';
 import { HighlightedText } from './HighlightedText';
-import { VerseHighlight } from './VerseHighlight';
 import type { GroupedResult, ViewMode } from '@/types/ganjoor';
 import { Button } from '@/components/ui/Button';
 
@@ -30,11 +29,10 @@ export const ResultCard = memo(function ResultCard({
 
   const copyText = useMemo(() => {
     if (viewMode === 'verse') {
-      return result.matchingCouplets
-        .map((couplet) =>
-          couplet.verses.map((verse) => verse.text || '').join('\n'),
-        )
-        .join('\n\n');
+      return result.excerpt
+        .filter((part) => part.type === 'line')
+        .map((part) => part.text)
+        .join('\n');
     }
     return getPoemText(result);
   }, [result, viewMode]);
@@ -65,14 +63,21 @@ export const ResultCard = memo(function ResultCard({
   return (
     <article className="fade-in rounded-2xl border border-stone-300 bg-white p-5 shadow-sm transition-shadow hover:shadow-md sm:p-6">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-        <h3 className="text-lg font-semibold text-stone-900">
-          {result.poemTitle}
+        <h3 className="text-base font-semibold leading-relaxed text-stone-900 sm:text-lg">
+          <a
+            href={poemUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#9a3412] hover:underline"
+          >
+            {result.fullTitle}
+          </a>
         </h3>
         <a
           href={poemUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-sm font-medium text-[#9a3412] hover:underline"
+          className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-stone-600 hover:text-[#9a3412] hover:underline"
         >
           مشاهده در گنجور
           <ExternalLink size={14} />
@@ -80,18 +85,24 @@ export const ResultCard = memo(function ResultCard({
       </div>
 
       {viewMode === 'verse' ? (
-        <div className="space-y-4">
-          {result.matchingCouplets.map((couplet) => (
-            <div
-              key={`${result.poemId}-${couplet.coupletIndex}`}
-              className="rounded-xl border-r-4 border-[#9a3412] bg-stone-50 p-4"
-            >
-              <VerseHighlight verses={couplet.verses} searchTerm={searchTerm} />
-            </div>
-          ))}
-          <p className="text-center text-sm text-stone-500">
-            {result.matchingCouplets.length} بیت در این غزل یافت شد
-          </p>
+        <div className="space-y-2 rounded-xl bg-stone-50 p-4">
+          {result.excerpt.map((part, index) =>
+            part.type === 'ellipsis' ? (
+              <p
+                key={`${result.poemId}-ellipsis-${index}`}
+                className="text-center text-stone-400"
+              >
+                ...
+              </p>
+            ) : (
+              <HighlightedText
+                key={`${result.poemId}-excerpt-${index}`}
+                text={part.text}
+                term={searchTerm}
+                className="verse-text block text-base text-stone-900"
+              />
+            ),
+          )}
         </div>
       ) : (
         <div>

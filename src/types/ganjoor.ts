@@ -22,6 +22,7 @@ export interface Verse {
 export interface Poem {
   id: number;
   title: string;
+  fullTitle?: string;
   fullUrl?: string;
   urlSlug?: string;
   verses?: Verse[];
@@ -41,14 +42,18 @@ export interface SearchResult {
   coupletIndex: number;
 }
 
+import type { ExcerptPart } from '@/utils/searchExcerpt';
+
 export interface GroupedResult {
   poemId: number;
   poemTitle: string;
+  fullTitle: string;
   fullUrl: string;
   urlSlug?: string;
   allVerses: Verse[];
   plainText?: string;
   htmlText?: string;
+  excerpt: ExcerptPart[];
   matchingCouplets: Array<{
     coupletIndex: number;
     verses: Verse[];

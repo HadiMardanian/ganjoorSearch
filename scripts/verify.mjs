@@ -118,6 +118,40 @@ async function testSearchFilters() {
   );
 }
 
+function testSearchExcerpt() {
+  console.log('\nSearch excerpt');
+
+  const robaeeText =
+    'چون روز علم زند به نامت ماند\nچون یک شبه شد ماه به جامت ماند\nتقدیر به عزم تیز گامت ماند';
+  assert(
+    'excerpt context includes جامت line',
+    robaeeText.includes('جامت'),
+  );
+
+  const qasideText =
+    'می لعل پیش آر و پیش من آی\nبه یک دست جام و به یک دست چنگ\nاز آن می مرا ده که از عکس او';
+  assert(
+    'qaside text includes standalone جام',
+    qasideText.split('\n')[1].includes('جام'),
+  );
+}
+
+async function testFirstResultMeta() {
+  console.log('\nResult metadata');
+
+  const items = await (
+    await api('/poems/search?term=' + encodeURIComponent('جام') + '&PageNumber=1&PageSize=1')
+  ).json();
+
+  const first = items[0];
+  assert('API returns fullTitle', Boolean(first.fullTitle));
+  assert(
+    'fullTitle includes poet breadcrumb',
+    first.fullTitle.includes('»'),
+    first.fullTitle,
+  );
+}
+
 async function testExportPagination() {
   console.log('\nExport pagination');
 
@@ -151,8 +185,10 @@ async function main() {
   console.log('GanjoorSearch verify\n');
 
   testCsvEscape();
+  testSearchExcerpt();
   await testCategories();
   await testSearchFilters();
+  await testFirstResultMeta();
   await testExportPagination();
 
   console.log(`\n${passed} passed, ${failed} failed`);

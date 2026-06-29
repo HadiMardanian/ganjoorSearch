@@ -14,7 +14,7 @@ export function ViewModeToggle({ value, onChange }: ViewModeToggleProps) {
     >
       {(
         [
-          ['verse', 'نمایش بیت'],
+          ['verse', 'نمایش گنجور'],
           ['full', 'نمایش غزل کامل'],
         ] as const
       ).map(([mode, label]) => (
