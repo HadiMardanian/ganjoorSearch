@@ -10,12 +10,54 @@ export function escapeCsv(value: string): string {
   return value;
 }
 
-function escapeHtml(value: string): string {
+function escapeXml(value: string): string {
   return value
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+export function buildExcelSpreadsheet(headers: string[], rows: string[][]): string {
+  const headerCells = headers
+    .map(
+      (header) =>
+        `<Cell ss:StyleID="Header"><Data ss:Type="String">${escapeXml(header)}</Data></Cell>`,
+    )
+    .join('');
+
+  const dataRows = rows
+    .map((row) => {
+      const cells = row
+        .map((cell) => `<Cell><Data ss:Type="String">${escapeXml(cell)}</Data></Cell>`)
+        .join('');
+      return `<Row>${cells}</Row>`;
+    })
+    .join('');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+  </Style>
+  <Style ss:ID="Header">
+   <Font ss:Bold="1"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Results">
+  <Table>
+   <Row>${headerCells}</Row>
+   ${dataRows}
+  </Table>
+ </Worksheet>
+</Workbook>`;
 }
 
 function getPoemText(result: GroupedResult): string {
@@ -78,25 +120,12 @@ function downloadCsv(filename: string, headers: string[], rows: string[][]) {
 }
 
 function downloadExcel(filename: string, headers: string[], rows: string[][]) {
-  const tableRows = [
-    `<tr>${headers.map((header) => `<th>${escapeHtml(header)}</th>`).join('')}</tr>`,
-    ...rows.map(
-      (row) =>
-        `<tr>${row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`,
-    ),
-  ].join('');
-
-  const html = `<?xml version="1.0" encoding="UTF-8"?>
-<html xmlns:o="urn:schemas-microsoft-com:office:office"
-      xmlns:x="urn:schemas-microsoft-com:office:excel"
-      xmlns="http://www.w3.org/TR/REC-html40">
-<head><meta charset="UTF-8" /></head>
-<body><table>${tableRows}</table></body></html>`;
+  const xml = buildExcelSpreadsheet(headers, rows);
 
   downloadBlob(
     filename,
-    new Blob([`\uFEFF${html}`], {
-      type: 'application/vnd.ms-excel;charset=utf-8;',
+    new Blob(['\uFEFF', xml], {
+      type: 'application/vnd.ms-excel',
     }),
   );
 }

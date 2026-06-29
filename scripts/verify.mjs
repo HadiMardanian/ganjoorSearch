@@ -181,10 +181,66 @@ function testCsvEscape() {
   );
 }
 
+function escapeXml(value) {
+  return value
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+function buildExcelSpreadsheet(headers, rows) {
+  const headerCells = headers
+    .map(
+      (header) =>
+        `<Cell ss:StyleID="Header"><Data ss:Type="String">${escapeXml(header)}</Data></Cell>`,
+    )
+    .join('');
+
+  const dataRows = rows
+    .map((row) => {
+      const cells = row
+        .map((cell) => `<Cell><Data ss:Type="String">${escapeXml(cell)}</Data></Cell>`)
+        .join('');
+      return `<Row>${cells}</Row>`;
+    })
+    .join('');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+ <Worksheet ss:Name="Results">
+  <Table>
+   <Row>${headerCells}</Row>
+   ${dataRows}
+  </Table>
+ </Worksheet>
+</Workbook>`;
+}
+
+function testExcelExport() {
+  console.log('\nExcel export');
+
+  const xml = buildExcelSpreadsheet(
+    ['title', 'line1'],
+    [['حافظ » غزلیات', 'جام می‌ده و جامت می‌دهند']],
+  );
+
+  assert('uses SpreadsheetML workbook', xml.includes('<Workbook '));
+  assert('includes mso-application directive', xml.includes('progid="Excel.Sheet"'));
+  assert('escapes ampersands in cells', escapeXml('a & b') === 'a &amp; b');
+  assert('preserves Persian text', xml.includes('حافظ'));
+  assert('does not use HTML table export', !xml.includes('<table>'));
+}
+
 async function main() {
   console.log('GanjoorSearch verify\n');
 
   testCsvEscape();
+  testExcelExport();
   testSearchExcerpt();
   await testCategories();
   await testSearchFilters();
