@@ -356,13 +356,46 @@ export default function App() {
     }
   }
 
+  function resetToGeneralHome() {
+    setInput('');
+    setSearchTerm('');
+    setSearched(false);
+    setPoetId('all');
+    setAppliedPoetId('all');
+    setCategoryId('all');
+    setAppliedCategoryId('all');
+    setUrlSource(null);
+    setAppTab('search');
+    setBrowsePath([]);
+    setPoemUrl(null);
+    setPoemListPage(1);
+    setReaderPoetId(null);
+    setReaderTitle(undefined);
+    syncUrl({
+      term: '',
+      poetId: 'all',
+      categoryId: 'all',
+      source: null,
+      tab: 'search',
+      browsePath: [],
+      poemUrl: null,
+      poemListPage: 1,
+      page: 1,
+    });
+  }
+
   function handlePoetInstalled(poet: Poet) {
-    clearBrowseSession(poet.id);
     saveInstalledPoet({
       id: poet.id,
       name: poet.name || poet.fullName || 'شاعر',
       imageUrl: poet.imageUrl,
     });
+    trackEvent('poet_install', { poetId: poet.id });
+    resetToGeneralHome();
+  }
+
+  function handleBrowseWithoutInstall(poet: Poet) {
+    clearBrowseSession(poet.id);
     setInput('');
     setSearchTerm('');
     setSearched(false);
@@ -375,7 +408,6 @@ export default function App() {
     setBrowsePath([]);
     setPoemUrl(null);
     setPoemListPage(1);
-    trackEvent('poet_install', { poetId: poet.id });
     syncUrl({
       poetId: [poet.id],
       categoryId: 'all',
@@ -668,6 +700,7 @@ export default function App() {
           initialPoetId={poetAppPoet?.id}
           onClose={() => setInstallOpen(false)}
           onPoetInstalled={handlePoetInstalled}
+          onBrowseWithoutInstall={handleBrowseWithoutInstall}
         />
       </>
     );
@@ -711,6 +744,7 @@ export default function App() {
         poetsLoading={poetsQuery.isLoading}
         onClose={() => setInstallOpen(false)}
         onPoetInstalled={handlePoetInstalled}
+        onBrowseWithoutInstall={handleBrowseWithoutInstall}
       />
 
       <button

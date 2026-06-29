@@ -20,6 +20,11 @@ All notable changes to GanjoorSearch are documented here.
 ### Changed
 - `PoetFilter` / `CategoryFilter` are now `'all' | number[]` (comma-separated in URL)
 
+### Fixed
+- Poet PWA install no longer switches the browser tab into locked poet mode; main site returns to general search home
+- Installed poet is only activated in standalone PWA (or via «شروع مرور آثار» / `source=pwa` URL)
+- Search poet filter (`?poet=2`) no longer accidentally enters poet app shell in the browser
+
 ## [2.10.0] - 2026-06-29
 
 ### Added

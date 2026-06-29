@@ -14,9 +14,7 @@ export function resolveActivePoetId(options: {
   return (
     resolvedUrlPoetId ??
     (options.urlSource === 'pwa' ? options.urlPoetParam : null) ??
-    (options.standalone ? options.storedPoet?.id ?? null : null) ??
-    options.storedPoet?.id ??
-    null
+    (options.standalone ? options.storedPoet?.id ?? null : null)
   );
 }
 
@@ -30,9 +28,8 @@ export function computeIsPoetApp(options: {
   return Boolean(
     options.activePoetId &&
       (options.urlSource === 'pwa' ||
-        options.resolvedUrlPoetId != null ||
-        (options.standalone && options.storedPoet != null) ||
-        options.storedPoet?.id === options.activePoetId),
+        (options.standalone &&
+          (options.resolvedUrlPoetId != null || options.storedPoet != null))),
   );
 }
 
@@ -40,12 +37,8 @@ export function computeLockPoet(options: {
   isPoetApp: boolean;
   standalone: boolean;
   urlSource: 'pwa' | null;
-  resolvedUrlPoetId: number | null;
 }): boolean {
   return Boolean(
-    options.isPoetApp &&
-      (options.standalone ||
-        options.urlSource === 'pwa' ||
-        options.resolvedUrlPoetId != null),
+    options.isPoetApp && (options.standalone || options.urlSource === 'pwa'),
   );
 }

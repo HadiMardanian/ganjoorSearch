@@ -139,6 +139,7 @@ npm run dev
 | `npm run build:poet-assets` | تولید آیکون و manifest همهٔ شاعران |
 | `npm run preview` | پیش‌نمایش `dist/` |
 | `npm run test:unit` | تست Vitest (بدون شبکه) |
+| `npm run test:e2e` | Playwright (جستجو + اپ شاعر) |
 | `npm run verify` | تست API زنده + unit |
 | `npm run lint` | ESLint |
 

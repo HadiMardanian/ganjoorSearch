@@ -3,6 +3,11 @@ import type { Poet } from '@/types/ganjoor';
 import type { PoetFilter } from '@/types/ganjoor';
 import { appendBrowseSessionToParams } from '@/utils/browseSession';
 import { parseIdListParam, singleFilterId } from '@/utils/filterState';
+import {
+  computeIsPoetApp,
+  computeLockPoet,
+  resolveActivePoetId,
+} from '@/utils/poetAppState';
 
 const STORAGE_KEY = 'ganjoorsearch-installed-poet';
 
@@ -44,7 +49,7 @@ export function usePoetApp(
   const [storedPoet, setStoredPoet] = useState<StoredPoet | null>(() => readStoredPoet());
   const [standalone, setStandalone] = useState(isStandaloneDisplay);
 
-  const resolvedUrlPoetId = singleFilterId(urlPoetId);
+  const resolvedUrlPoetId = singleFilterId(urlPoetId) ?? null;
 
   useEffect(() => {
     function handleDisplayMode(event: MediaQueryListEvent) {
@@ -74,12 +79,13 @@ export function usePoetApp(
     }
   }, [standalone, storedPoet, resolvedUrlPoetId, urlSource]);
 
-  const activePoetId =
-    resolvedUrlPoetId ??
-    (urlSource === 'pwa' ? readPoetIdParam() : null) ??
-    (standalone ? storedPoet?.id ?? null : null) ??
-    storedPoet?.id ??
-    null;
+  const activePoetId = resolveActivePoetId({
+    urlPoetId,
+    urlSource,
+    urlPoetParam: readPoetIdParam(),
+    standalone,
+    storedPoet,
+  });
 
   const poet = useMemo(() => {
     if (!activePoetId) return null;
@@ -107,15 +113,19 @@ export function usePoetApp(
     setStoredPoet(next);
   }, [resolvedUrlPoetId, poet, standalone, storedPoet]);
 
-  const isPoetApp = Boolean(
-    activePoetId &&
-      (urlSource === 'pwa' ||
-        resolvedUrlPoetId != null ||
-        (standalone && storedPoet != null) ||
-        storedPoet?.id === activePoetId),
-  );
+  const isPoetApp = computeIsPoetApp({
+    activePoetId,
+    urlSource,
+    resolvedUrlPoetId,
+    standalone,
+    storedPoet,
+  });
 
-  const lockPoet = Boolean(isPoetApp && (standalone || urlSource === 'pwa' || resolvedUrlPoetId != null));
+  const lockPoet = computeLockPoet({
+    isPoetApp,
+    standalone,
+    urlSource,
+  });
 
   const saveInstalledPoet = useCallback((next: StoredPoet) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
