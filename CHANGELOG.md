@@ -2,6 +2,22 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.5.0] - 2026-06-29
+
+### Added
+- Poet-specific PWA install flow: gallery, preview, Android install button
+- Dynamic per-poet manifest with custom name, start URL, and icons
+- `usePwaInstall` hook for `beforeinstallprompt` and install detection
+- `usePoetApp` locked poet mode when launched from installed PWA (`?poet=&source=pwa`)
+- iOS three-step Add to Home Screen guide (`IosInstallGuide`)
+- Poet avatar with letter fallback; `scripts/generate-poet-icons.mjs` for build-time PNG icons
+- Service worker caches poet icons and manifest shell (v2)
+- Header CTA: «نصب اپ شاعر دلخواه» when app is not installed
+
+### Changed
+- Header shows poet branding in locked poet app mode
+- Poet picker hidden when poet is locked in installed PWA
+
 ## [2.4.1] - 2026-06-29
 
 ### Fixed

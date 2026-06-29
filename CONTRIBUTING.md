@@ -71,12 +71,51 @@ npm run verify:integration
 ```
 src/
   api/          Ganjoor client + React Query hooks
-  components/   UI, search form, results, export
-  hooks/        URL state, theme, search history
-  utils/        match, excerpt, export, paging
-scripts/        verify.mjs (live API integration)
+  components/   UI, search form, results, export, install/
+  hooks/        URL state, theme, search history, PWA install, poet app
+  utils/        match, excerpt, export, paging, poet manifest/icons
+scripts/        verify.mjs, generate-poet-icons.mjs
 workers/        optional CORS proxy (Cloudflare)
+public/icons/   prebuilt poet PWA icons (192/512 PNG)
 ```
+
+### Poet PWA — manual QA checklist
+
+Run through these on a real device or emulator before release.
+
+#### Android (Chrome)
+
+- [ ] Header shows «نصب اپ شاعر» when not installed
+- [ ] Open install flow → gallery loads poets with images / letter fallback
+- [ ] Select a poet (e.g. حافظ) → preview shows benefits and install button
+- [ ] Install completes → home screen icon uses poet image or fallback
+- [ ] Launch from icon → opens with poet locked, header shows poet name
+- [ ] Search works scoped to that poet; poet picker is hidden
+- [ ] «تغییر شاعر» opens gallery again
+
+#### iOS (Safari)
+
+- [ ] Install CTA visible in browser (not standalone)
+- [ ] Select poet → preview shows iOS guide (no auto-install button)
+- [ ] Three-step guide is readable in RTL
+- [ ] Share → Add to Home Screen → icon and name match poet
+- [ ] Launch from home screen → locked poet mode with correct header
+
+#### Regression
+
+- [ ] Default PWA / browser without poet still works (general search)
+- [ ] Dark mode OK in install modal and locked poet header
+- [ ] Offline: app shell loads from service worker after first visit
+
+#### Generate poet icons (maintainers)
+
+```bash
+npm install --save-dev sharp
+npm run generate:poet-icons          # top 30 poets
+npm run generate:poet-icons -- --all # all poets (large)
+```
+
+Icons are written to `public/icons/poets/{id}-192.png` and `{id}-512.png`.
 
 ### Commit messages
 
@@ -157,11 +196,41 @@ npm run verify:integration
 ```
 src/
   api/          کلاینت گنجور + React Query
-  components/   UI، فرم جستجو، نتایج، export
-  hooks/        state در URL، تم، تاریخچه جستجو
-  utils/        match، excerpt، export، paging
-scripts/        verify.mjs (تست integration با API زنده)
+  components/   UI، فرم جستجو، نتایج، export، install/
+  hooks/        state در URL، تم، تاریخچه، نصب PWA، اپ شاعر
+  utils/        match، excerpt، export، paging، manifest/icons شاعر
+scripts/        verify.mjs، generate-poet-icons.mjs
 workers/        پروکسی اختیاری CORS (Cloudflare)
+public/icons/   آیکون‌های ازپیش‌ساخته PWA شاعر (PNG 192/512)
+```
+
+### PWA شاعر — چک‌لیست QA دستی
+
+#### اندروید (Chrome)
+
+- [ ] دکمهٔ «نصب اپ شاعر» در هدر وقتی نصب نشده
+- [ ] گالری شاعران با عکس / fallback حرف اول
+- [ ] انتخاب شاعر → پیش‌نمایش و دکمه نصب
+- [ ] پس از نصب آیکون با عکس شاعر روی صفحهٔ اصلی
+- [ ] باز کردن از آیکون → حالت قفل‌شده روی همان شاعر
+
+#### iOS (Safari)
+
+- [ ] راهنمای سه‌مرحله‌ای Add to Home Screen
+- [ ] نام و آیکون شاعر در صفحهٔ اصلی درست
+- [ ] باز شدن از آیکون → UI اختصاصی شاعر
+
+#### رگرسیون
+
+- [ ] جستجوی عمومی بدون شاعر همچنان کار می‌کند
+- [ ] تم تیره در modal نصب و هدر شاعر
+- [ ] آفلاین: shell از service worker
+
+#### تولید آیکون شاعران
+
+```bash
+npm install --save-dev sharp
+npm run generate:poet-icons
 ```
 
 ### پیام commit

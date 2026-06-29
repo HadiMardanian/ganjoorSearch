@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ArrowUp, Link2 } from 'lucide-react';
+import { ArrowUp, Link2, RefreshCw } from 'lucide-react';
 import { useCategoriesQuery, usePoetsQuery, useSearchQuery } from '@/api/queries';
 import { ExportButtons } from '@/components/export/ExportButtons';
+import { PoetInstallFlow } from '@/components/install/PoetInstallFlow';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { ResultsList } from '@/components/results/ResultsList';
@@ -15,16 +16,20 @@ import {
 import { Pagination } from '@/components/ui/Pagination';
 import { showToast, ToastContainer } from '@/components/ui/Toast';
 import { ViewModeToggle } from '@/components/ui/ViewModeToggle';
+import { usePoetApp } from '@/hooks/usePoetApp';
+import { usePwaInstall } from '@/hooks/usePwaInstall';
 import { useSearchHistory } from '@/hooks/useSearchHistory';
 import { useSearchState } from '@/hooks/useSearchParams';
 import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/components/ui/Button';
-import type { CategoryFilter, PoetFilter, ViewMode } from '@/types/ganjoor';
+import type { CategoryFilter, Poet, PoetFilter, ViewMode } from '@/types/ganjoor';
+import { injectPoetManifest } from '@/utils/poetManifest';
 
 export default function App() {
   const { initial, urlState, updateUrl } = useSearchState();
   const { theme, setTheme } = useTheme();
   const { entries: historyEntries, addEntry, clearHistory } = useSearchHistory();
+  const { showInstallCta } = usePwaInstall();
 
   const [input, setInput] = useState(initial.term);
   const [poetId, setPoetId] = useState<PoetFilter>(initial.poetId);
@@ -36,8 +41,20 @@ export default function App() {
   );
   const [page, setPage] = useState(initial.page);
   const [viewMode, setViewMode] = useState<ViewMode>(initial.viewMode);
+  const [urlSource, setUrlSource] = useState<'pwa' | null>(initial.source);
   const [searched, setSearched] = useState(Boolean(initial.term));
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [installOpen, setInstallOpen] = useState(false);
+
+  const poetsQuery = usePoetsQuery();
+  const poets = poetsQuery.data ?? [];
+  const {
+    isPoetApp,
+    lockPoet,
+    poet: poetAppPoet,
+    saveInstalledPoet,
+    clearInstalledPoet,
+  } = usePoetApp(poets);
 
   const filtersDirty =
     searched &&
@@ -52,10 +69,24 @@ export default function App() {
     setAppliedCategoryId(urlState.categoryId);
     setPage(urlState.page);
     setViewMode(urlState.viewMode);
+    setUrlSource(urlState.source);
     setSearched(Boolean(urlState.term));
   }, [urlState]);
 
-  const poetsQuery = usePoetsQuery();
+  useEffect(() => {
+    if (!isPoetApp || !poetAppPoet) return;
+    if (poetId === poetAppPoet.id) return;
+    setPoetId(poetAppPoet.id);
+    setAppliedPoetId(poetAppPoet.id);
+    setCategoryId('all');
+    setAppliedCategoryId('all');
+  }, [isPoetApp, poetAppPoet, poetId]);
+
+  useEffect(() => {
+    if (!poetAppPoet || !lockPoet) return;
+    injectPoetManifest(poetAppPoet).catch(() => {});
+  }, [poetAppPoet, lockPoet]);
+
   const categoriesQuery = useCategoriesQuery(poetId);
   const searchQuery = useSearchQuery(
     searchTerm,
@@ -66,7 +97,6 @@ export default function App() {
   );
 
   const groupedResults = searchQuery.data?.results ?? [];
-  const poets = poetsQuery.data ?? [];
   const categories = categoriesQuery.data ?? [];
 
   const syncUrl = useCallback(
@@ -76,6 +106,7 @@ export default function App() {
       categoryId: CategoryFilter;
       page: number;
       viewMode: ViewMode;
+      source: 'pwa' | null;
     }> = {}) => {
       updateUrl({
         term: overrides.term ?? searchTerm,
@@ -83,9 +114,19 @@ export default function App() {
         categoryId: overrides.categoryId ?? appliedCategoryId,
         page: overrides.page ?? page,
         viewMode: overrides.viewMode ?? viewMode,
+        source: overrides.source ?? (lockPoet ? 'pwa' : urlSource),
       });
     },
-    [appliedCategoryId, appliedPoetId, page, searchTerm, updateUrl, viewMode],
+    [
+      appliedCategoryId,
+      appliedPoetId,
+      lockPoet,
+      page,
+      searchTerm,
+      updateUrl,
+      urlSource,
+      viewMode,
+    ],
   );
 
   useEffect(() => {
@@ -111,10 +152,17 @@ export default function App() {
   }, [categoriesQuery.error, poetId]);
 
   useEffect(() => {
+    if (isPoetApp && poetAppPoet) {
+      document.title = searchTerm
+        ? `جستجو: ${searchTerm} — ${poetAppPoet.name}`
+        : `${poetAppPoet.name} — گنجورسرچ`;
+      return;
+    }
+
     document.title = searchTerm
       ? `جستجو: ${searchTerm} — گنجورسرچ`
       : 'جستجوی اشعار فارسی';
-  }, [searchTerm]);
+  }, [isPoetApp, poetAppPoet, searchTerm]);
 
   useEffect(() => {
     function handleScroll() {
@@ -143,6 +191,7 @@ export default function App() {
   }
 
   function handlePoetChange(value: PoetFilter) {
+    if (lockPoet) return;
     setPoetId(value);
     setCategoryId('all');
   }
@@ -152,6 +201,11 @@ export default function App() {
     poetId: PoetFilter;
     categoryId: CategoryFilter;
   }) {
+    if (lockPoet && poetAppPoet && entry.poetId !== poetAppPoet.id) {
+      showToast(`در اپ ${poetAppPoet.name} فقط همان شاعر قابل جستجو است.`, 'info');
+      return;
+    }
+
     setInput(entry.term);
     setPoetId(entry.poetId);
     setCategoryId(entry.categoryId);
@@ -177,6 +231,27 @@ export default function App() {
     }
   }
 
+  function handlePoetInstalled(poet: Poet) {
+    saveInstalledPoet({
+      id: poet.id,
+      name: poet.name || poet.fullName || 'شاعر',
+      imageUrl: poet.imageUrl,
+    });
+    setPoetId(poet.id);
+    setAppliedPoetId(poet.id);
+    setCategoryId('all');
+    setAppliedCategoryId('all');
+    setUrlSource('pwa');
+    syncUrl({ poetId: poet.id, categoryId: 'all', source: 'pwa' });
+  }
+
+  function handleChangePoet() {
+    clearInstalledPoet();
+    setUrlSource(null);
+    syncUrl({ source: null, poetId: 'all', categoryId: 'all' });
+    setInstallOpen(true);
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <a
@@ -185,9 +260,24 @@ export default function App() {
       >
         پرش به محتوا
       </a>
-      <Header theme={theme} onThemeChange={setTheme} />
+      <Header
+        theme={theme}
+        onThemeChange={setTheme}
+        poetApp={isPoetApp ? poetAppPoet : null}
+        showInstallCta={showInstallCta && !isPoetApp}
+        onInstallClick={() => setInstallOpen(true)}
+      />
 
       <main id="main-content" className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6">
+        {lockPoet && poetAppPoet ? (
+          <div className="mb-4 flex justify-end">
+            <Button type="button" variant="ghost" className="text-sm" onClick={handleChangePoet}>
+              <RefreshCw size={16} />
+              تغییر شاعر / نصب شاعر دیگر
+            </Button>
+          </div>
+        ) : null}
+
         <SearchBar
           value={input}
           onChange={setInput}
@@ -195,12 +285,14 @@ export default function App() {
           loading={searchQuery.isFetching}
           filtersDirty={filtersDirty}
           poetPicker={
-            <PoetPicker
-              poets={poets}
-              value={poetId}
-              onChange={handlePoetChange}
-              disabled={poetsQuery.isLoading}
-            />
+            lockPoet ? null : (
+              <PoetPicker
+                poets={poets}
+                value={poetId}
+                onChange={handlePoetChange}
+                disabled={poetsQuery.isLoading}
+              />
+            )
           }
           categorySelect={
             <CategorySelect
@@ -295,6 +387,15 @@ export default function App() {
 
       <Footer />
       <ToastContainer />
+
+      <PoetInstallFlow
+        open={installOpen}
+        poets={poets}
+        poetsLoading={poetsQuery.isLoading}
+        initialPoetId={poetAppPoet?.id}
+        onClose={() => setInstallOpen(false)}
+        onPoetInstalled={handlePoetInstalled}
+      />
 
       <button
         type="button"
