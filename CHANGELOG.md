@@ -2,6 +2,29 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.14.0] - 2026-06-29
+
+### Added
+- General search: clicking a result opens in-app `PoemReader` (not only external ganjoor.net link)
+- Multi-poet and multi-category filters (`poet=1,2` / `cat=24,25`) with parallel API merge
+- Light analytics (`trackEvent`) gated by `VITE_ANALYTICS_ENDPOINT`
+- Poem recitation player in reader (Ganjoor `/poem/{id}/recitations` API)
+- Poet «درباره» bio section on browse home
+- Virtualized long poem lists (`@tanstack/react-virtual`)
+- Offline cache for recently browsed categories (`categoryOfflineCache`)
+- CI: Playwright E2E workflow + lint; `build:app` skips poet-asset regen on deploy
+- Manual workflow `regenerate-poet-assets.yml`
+- E2E: general search → reader → back with scroll restore
+- API research doc: [`docs/MULTI_FILTER_API.md`](docs/MULTI_FILTER_API.md)
+
+### Changed
+- `PoetFilter` / `CategoryFilter` are now `'all' | number[]` (comma-separated in URL)
+
+### Fixed
+- Poet PWA install no longer switches the browser tab into locked poet mode; main site returns to general search home
+- Installed poet is only activated in standalone PWA (or via «شروع مرور آثار» / `source=pwa` URL)
+- Search poet filter (`?poet=2`) no longer accidentally enters poet app shell in the browser
+
 ## [2.10.0] - 2026-06-29
 
 ### Added

@@ -1,5 +1,6 @@
 import type { PoetFilter } from '@/types/ganjoor';
 import type { StoredPoet } from '@/hooks/usePoetApp';
+import { singleFilterId } from '@/utils/filterState';
 
 export function resolveActivePoetId(options: {
   urlPoetId: PoetFilter;
@@ -8,17 +9,12 @@ export function resolveActivePoetId(options: {
   standalone: boolean;
   storedPoet: StoredPoet | null;
 }): number | null {
-  const resolvedUrlPoetId =
-    options.urlPoetId !== 'all' && typeof options.urlPoetId === 'number'
-      ? options.urlPoetId
-      : null;
+  const resolvedUrlPoetId = singleFilterId(options.urlPoetId) ?? null;
 
   return (
     resolvedUrlPoetId ??
     (options.urlSource === 'pwa' ? options.urlPoetParam : null) ??
-    (options.standalone ? options.storedPoet?.id ?? null : null) ??
-    options.storedPoet?.id ??
-    null
+    (options.standalone ? options.storedPoet?.id ?? null : null)
   );
 }
 
@@ -32,9 +28,8 @@ export function computeIsPoetApp(options: {
   return Boolean(
     options.activePoetId &&
       (options.urlSource === 'pwa' ||
-        options.resolvedUrlPoetId != null ||
-        (options.standalone && options.storedPoet != null) ||
-        options.storedPoet?.id === options.activePoetId),
+        (options.standalone &&
+          (options.resolvedUrlPoetId != null || options.storedPoet != null))),
   );
 }
 
@@ -42,12 +37,8 @@ export function computeLockPoet(options: {
   isPoetApp: boolean;
   standalone: boolean;
   urlSource: 'pwa' | null;
-  resolvedUrlPoetId: number | null;
 }): boolean {
   return Boolean(
-    options.isPoetApp &&
-      (options.standalone ||
-        options.urlSource === 'pwa' ||
-        options.resolvedUrlPoetId != null),
+    options.isPoetApp && (options.standalone || options.urlSource === 'pwa'),
   );
 }

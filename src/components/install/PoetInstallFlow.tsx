@@ -21,6 +21,7 @@ interface PoetInstallFlowProps {
   initialPoetId?: number | null;
   onClose: () => void;
   onPoetInstalled: (poet: Poet) => void;
+  onBrowseWithoutInstall: (poet: Poet) => void;
 }
 
 export function PoetInstallFlow({
@@ -30,6 +31,7 @@ export function PoetInstallFlow({
   initialPoetId,
   onClose,
   onPoetInstalled,
+  onBrowseWithoutInstall,
 }: PoetInstallFlowProps) {
   const { canInstall, isIos, promptInstall } = usePwaInstall();
   const [step, setStep] = useState<Step>('gallery');
@@ -107,22 +109,22 @@ export function PoetInstallFlow({
       await injectPoetManifest(selectedPoet);
       const outcome = await promptInstall();
 
-      activatedPoetRef.current = true;
       onPoetInstalled(selectedPoet);
+      restoreDefaultManifest();
       onClose();
 
       if (outcome === 'accepted') {
-        showToast(`اپ ${selectedPoet.name} نصب شد.`, 'success');
+        showToast(`اپ ${selectedPoet.name} نصب شد. از آیکون صفحهٔ اصلی باز کنید.`, 'success');
       } else if (outcome === 'dismissed') {
-        showToast('نصب لغو شد — می‌توانید از مرور آثار استفاده کنید.', 'info');
+        showToast('نصب لغو شد — می‌توانید «شروع مرور آثار» را بدون نصب امتحان کنید.', 'info');
       } else {
         showToast('از منوی مرورگر «نصب اپ» را انتخاب کنید.', 'info');
       }
     } catch {
-      activatedPoetRef.current = true;
       onPoetInstalled(selectedPoet);
+      restoreDefaultManifest();
       onClose();
-      showToast('خطا در نصب — اپ شاعر در مرورگر فعال است.', 'error');
+      showToast('خطا در نصب — دوباره تلاش کنید یا از مرور آثار استفاده کنید.', 'error');
     } finally {
       setInstalling(false);
       unlockPoetManifestForInstall();
@@ -132,16 +134,16 @@ export function PoetInstallFlow({
   function handleUseWithoutInstall() {
     if (!selectedPoet) return;
     activatedPoetRef.current = true;
-    onPoetInstalled(selectedPoet);
+    onBrowseWithoutInstall(selectedPoet);
     onClose();
     showToast(`مرور آثار ${selectedPoet.name} آماده است.`, 'success');
   }
 
   function handleIosInstalled() {
     if (selectedPoet) {
-      activatedPoetRef.current = true;
       onPoetInstalled(selectedPoet);
-      showToast(`اپ ${selectedPoet.name} آماده است.`, 'success');
+      restoreDefaultManifest();
+      showToast(`اپ ${selectedPoet.name} آماده است — از صفحهٔ اصلی باز کنید.`, 'success');
     }
     onClose();
   }

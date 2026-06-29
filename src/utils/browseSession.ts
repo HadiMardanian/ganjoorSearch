@@ -1,4 +1,5 @@
 import { formatBrowsePath } from '@/utils/browsePath';
+import { singleFilterId } from '@/utils/filterState';
 
 export type BrowseSessionTab = 'browse' | 'search';
 
@@ -87,7 +88,7 @@ export function appendBrowseSessionToParams(
 }
 
 export function mergeBrowseSessionIntoState<T extends {
-  poetId: number | 'all';
+  poetId: import('@/types/ganjoor').PoetFilter;
   source: 'pwa' | null;
   tab: BrowseSessionTab;
   browsePath: number[];
@@ -95,10 +96,11 @@ export function mergeBrowseSessionIntoState<T extends {
   poemUrl: string | null;
   term: string;
 }>(state: T): T {
-  if (state.source !== 'pwa' || typeof state.poetId !== 'number') return state;
+  const poetId = singleFilterId(state.poetId);
+  if (state.source !== 'pwa' || poetId == null) return state;
   if (!isDefaultPoetAppLaunch(state)) return state;
 
-  const session = readBrowseSession(state.poetId);
+  const session = readBrowseSession(poetId);
   if (!session) return state;
 
   return {

@@ -16,7 +16,8 @@ import {
   X,
 } from 'lucide-react';
 import { GANJOOR_SITE } from '@/api/client';
-import { fetchPoemWithOfflineFallback, usePoemDetailQuery } from '@/api/queries';
+import { fetchPoemWithOfflineFallback, usePoemDetailQuery, usePoemRecitationsQuery } from '@/api/queries';
+import { RecitationPlayer } from '@/components/browse/RecitationPlayer';
 import { Button } from '@/components/ui/Button';
 import { QueryErrorPanel } from '@/components/ui/QueryErrorPanel';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -69,6 +70,7 @@ export function PoemReader({
 
   const poem = poemQuery.data?.poem;
   const fromCache = poemQuery.data?.fromCache ?? false;
+  const recitationsQuery = usePoemRecitationsQuery(poem?.id ?? null, Boolean(poem?.id));
 
   const couplets = useMemo(() => {
     if (!poem) return [];
@@ -347,6 +349,10 @@ export function PoemReader({
               </a>
             </div>
           </header>
+
+          {recitationsQuery.data && recitationsQuery.data.length > 0 ? (
+            <RecitationPlayer recitations={recitationsQuery.data} />
+          ) : null}
 
           {showFind && findTerm.trim() && matchingLineIndices.size === 0 ? (
             <p className="text-muted mb-4 text-center text-sm">موردی در این شعر یافت نشد.</p>

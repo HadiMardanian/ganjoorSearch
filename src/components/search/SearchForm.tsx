@@ -1,13 +1,14 @@
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Search, X } from 'lucide-react';
-import type { Poet } from '@/types/ganjoor';
+import type { CategoryFilter, Poet, PoetFilter } from '@/types/ganjoor';
+import { toggleFilterId } from '@/utils/filterState';
 import { Button } from '@/components/ui/Button';
 
 interface PoetPickerProps {
   poets: Poet[];
-  value: number | 'all';
-  onChange: (value: number | 'all') => void;
+  value: PoetFilter;
+  onChange: (value: PoetFilter) => void;
   disabled?: boolean;
 }
 
@@ -18,7 +19,16 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
   const containerRef = useRef<HTMLDivElement>(null);
   const listboxId = 'poet-picker-listbox';
 
-  const selectedPoet = poets.find((poet) => poet.id === value);
+  const selectedIds = value === 'all' ? [] : value;
+
+  const selectedLabel = useMemo(() => {
+    if (value === 'all') return '';
+    if (value.length === 1) {
+      const poet = poets.find((item) => item.id === value[0]);
+      return poet?.name || poet?.fullName || '';
+    }
+    return `${value.length.toLocaleString('fa-IR')} شاعر`;
+  }, [poets, value]);
 
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -44,8 +54,17 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  function isSelected(optionId: number | 'all') {
+    if (optionId === 'all') return value === 'all';
+    return value !== 'all' && value.includes(optionId);
+  }
+
   function selectOption(optionId: number | 'all') {
-    onChange(optionId);
+    if (optionId === 'all') {
+      onChange('all');
+    } else {
+      onChange(toggleFilterId(value, optionId));
+    }
     setQuery('');
     setOpen(false);
     setActiveIndex(-1);
@@ -91,7 +110,7 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
           type="text"
           className="w-full rounded-xl bg-transparent px-3 py-3 text-sm outline-none placeholder:text-subtle"
           placeholder="همه شاعران"
-          value={open ? query : selectedPoet?.name ?? ''}
+          value={open ? query : selectedLabel}
           onChange={(event) => {
             setQuery(event.target.value);
             setOpen(true);
@@ -123,6 +142,24 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
         )}
       </div>
 
+      {selectedIds.length > 1 ? (
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {selectedIds.map((id) => {
+            const poet = poets.find((item) => item.id === id);
+            return (
+              <button
+                key={id}
+                type="button"
+                className="surface-muted rounded-full px-2.5 py-1 text-xs"
+                onClick={() => onChange(toggleFilterId(value, id))}
+              >
+                {poet?.name || 'شاعر'} ×
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
+
       {open && !disabled && (
         <div
           id={listboxId}
@@ -138,13 +175,14 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
                 id={`poet-option-${index}`}
                 type="button"
                 role="option"
-                aria-selected={value === option.id}
+                aria-selected={isSelected(option.id)}
                 className={`w-full rounded-lg px-3 py-2 text-start text-sm hover:bg-[var(--color-surface)] ${
-                  value === option.id ? 'bg-[var(--color-accent-soft)] font-semibold text-accent' : ''
+                  isSelected(option.id) ? 'bg-[var(--color-accent-soft)] font-semibold text-accent' : ''
                 } ${activeIndex === index ? 'ring-1 ring-[var(--color-accent)]' : ''}`}
                 onClick={() => selectOption(option.id)}
               >
                 {option.name}
+                {typeof option.id === 'number' && isSelected(option.id) ? ' ✓' : ''}
               </button>
             ))
           )}
@@ -156,8 +194,8 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
 
 interface CategorySelectProps {
   categories: Array<{ id: number; title: string }>;
-  value: number | 'all';
-  onChange: (value: number | 'all') => void;
+  value: CategoryFilter;
+  onChange: (value: CategoryFilter) => void;
   poetSelected: boolean;
   loading?: boolean;
 }
@@ -170,32 +208,56 @@ export function CategorySelect({
   loading = false,
 }: CategorySelectProps) {
   const disabled = !poetSelected || loading;
+  const selectedIds = value === 'all' ? [] : value;
+
+  function toggleCategory(id: number) {
+    onChange(toggleFilterId(value, id));
+  }
 
   return (
-    <div className="w-full sm:w-44">
-      <label htmlFor="category-select" className="field-label">
-        قالب
-      </label>
-      <select
-        id="category-select"
-        className="field-control px-3 py-3 text-sm"
-        value={value === 'all' ? 'all' : String(value)}
-        onChange={(event) => {
-          const next = event.target.value;
-          onChange(next === 'all' ? 'all' : Number(next));
-        }}
-        disabled={disabled}
-        aria-label="انتخاب قالب شعر"
+    <div className="w-full sm:w-52">
+      <span className="field-label">قالب</span>
+      <div
+        className={`field-control max-h-40 overflow-y-auto p-2 text-sm ${
+          disabled ? 'opacity-60' : ''
+        }`}
         aria-busy={loading}
       >
-        <option value="all">{loading ? 'در حال بارگذاری…' : 'همه قالب‌ها'}</option>
-        {!loading &&
-          categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.title}
-            </option>
-          ))}
-      </select>
+        {disabled ? (
+          <p className="text-muted px-2 py-2 text-xs">
+            {loading ? 'در حال بارگذاری…' : 'ابتدا یک شاعر انتخاب کنید'}
+          </p>
+        ) : (
+          <div className="space-y-1">
+            <label className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-[var(--color-surface)]">
+              <input
+                type="checkbox"
+                checked={value === 'all'}
+                onChange={() => onChange('all')}
+              />
+              <span>همه قالب‌ها</span>
+            </label>
+            {categories.map((category) => (
+              <label
+                key={category.id}
+                className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-[var(--color-surface)]"
+              >
+                <input
+                  type="checkbox"
+                  checked={value !== 'all' && value.includes(category.id)}
+                  onChange={() => toggleCategory(category.id)}
+                />
+                <span>{category.title}</span>
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+      {selectedIds.length > 1 ? (
+        <p className="text-muted mt-1 text-xs">
+          {selectedIds.length.toLocaleString('fa-IR')} قالب انتخاب شده
+        </p>
+      ) : null}
     </div>
   );
 }

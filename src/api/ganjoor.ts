@@ -1,13 +1,17 @@
 import type {
   Category,
   CategoryDetail,
+  CategoryFilter,
   GroupedResult,
   Poem,
+  PoemRecitation,
   Poet,
   PoetDetail,
+  PoetFilter,
   PoetWithCatalog,
   SearchResponse,
 } from '@/types/ganjoor';
+import { isAllFilter } from '@/utils/filterState';
 import { mapWithConcurrency } from '@/utils/parallel';
 import { mapSearchHitsToGrouped } from '@/utils/searchMap';
 import { parsePagingHeaders } from '@/utils/paging';
@@ -15,6 +19,93 @@ import { apiFetch, buildApiUrl } from './client';
 
 const EXPORT_PAGE_SIZE = 200;
 const PAGE_FETCH_CONCURRENCY = 4;
+const MAX_MULTI_FILTER_IDS = 5;
+
+function buildSearchCombos(
+  poetIds: PoetFilter,
+  categoryIds: CategoryFilter,
+): Array<{ poetId: number | 'all'; categoryId: number | 'all' }> {
+  if (isAllFilter(poetIds) && isAllFilter(categoryIds)) {
+    return [{ poetId: 'all', categoryId: 'all' }];
+  }
+
+  const poets = isAllFilter(poetIds)
+    ? (['all'] as const)
+    : poetIds.slice(0, MAX_MULTI_FILTER_IDS);
+  const cats = isAllFilter(categoryIds)
+    ? (['all'] as const)
+    : categoryIds.slice(0, MAX_MULTI_FILTER_IDS);
+
+  return poets.flatMap((poetId) =>
+    cats.map((categoryId) => ({
+      poetId: poetId === 'all' ? 'all' : poetId,
+      categoryId: categoryId === 'all' ? 'all' : categoryId,
+    })),
+  );
+}
+
+export async function searchPoemsMerged(
+  term: string,
+  options: {
+    poetIds?: PoetFilter;
+    categoryIds?: CategoryFilter;
+    page?: number;
+    pageSize?: number;
+    signal?: AbortSignal;
+  } = {},
+): Promise<SearchResponse> {
+  const poetIds = options.poetIds ?? 'all';
+  const categoryIds = options.categoryIds ?? 'all';
+  const combos = buildSearchCombos(poetIds, categoryIds);
+
+  if (combos.length === 1 && combos[0]!.poetId === 'all' && combos[0]!.categoryId === 'all') {
+    return searchPoems(term, {
+      page: options.page,
+      pageSize: options.pageSize,
+      signal: options.signal,
+    });
+  }
+
+  const responses = await Promise.all(
+    combos.map(({ poetId, categoryId }) =>
+      searchPoems(term, {
+        poetId,
+        categoryId,
+        page: options.page,
+        pageSize: options.pageSize,
+        signal: options.signal,
+      }),
+    ),
+  );
+
+  const seen = new Set<string>();
+  const merged: GroupedResult[] = [];
+  const pageSize = Math.min(Math.max(options.pageSize ?? 20, 1), 200);
+
+  for (const response of responses) {
+    for (const result of response.results) {
+      if (seen.has(result.fullUrl)) continue;
+      seen.add(result.fullUrl);
+      merged.push(result);
+      if (merged.length >= pageSize) break;
+    }
+    if (merged.length >= pageSize) break;
+  }
+
+  const page = Math.max(options.page ?? 1, 1);
+  const totalCount = responses.reduce((sum, item) => sum + item.totalCount, 0);
+  const hasMore = responses.some((item) => item.hasMore);
+  const totalPages = Math.max(...responses.map((item) => item.totalPages), 1);
+
+  return {
+    results: merged,
+    page,
+    hasMore,
+    pageSize,
+    totalCount,
+    totalPages,
+  };
+}
 
 export async function fetchPoets(signal?: AbortSignal): Promise<Poet[]> {
   const data = await apiFetch<Poet[]>(buildApiUrl('/poets'), signal);
@@ -138,8 +229,8 @@ export type ExportScope = 'all' | 'page';
 export async function fetchAllSearchResults(
   term: string,
   options: {
-    poetId?: number | 'all';
-    categoryId?: number | 'all';
+    poetIds?: PoetFilter;
+    categoryIds?: CategoryFilter;
     scope?: ExportScope;
     page?: number;
     signal?: AbortSignal;
@@ -148,11 +239,13 @@ export async function fetchAllSearchResults(
 ): Promise<GroupedResult[]> {
   const scope = options.scope ?? 'all';
   const page = Math.max(options.page ?? 1, 1);
+  const poetIds = options.poetIds ?? 'all';
+  const categoryIds = options.categoryIds ?? 'all';
 
   if (scope === 'page') {
-    const response = await searchPoems(term, {
-      poetId: options.poetId,
-      categoryId: options.categoryId,
+    const response = await searchPoemsMerged(term, {
+      poetIds,
+      categoryIds,
       page,
       pageSize: EXPORT_PAGE_SIZE,
       signal: options.signal,
@@ -169,9 +262,9 @@ export async function fetchAllSearchResults(
     return response.results;
   }
 
-  const first = await searchPoems(term, {
-    poetId: options.poetId,
-    categoryId: options.categoryId,
+  const first = await searchPoemsMerged(term, {
+    poetIds,
+    categoryIds,
     page: 1,
     pageSize: EXPORT_PAGE_SIZE,
     signal: options.signal,
@@ -200,9 +293,9 @@ export async function fetchAllSearchResults(
     remainingPages,
     PAGE_FETCH_CONCURRENCY,
     async (pageNumber) => {
-      const response = await searchPoems(term, {
-        poetId: options.poetId,
-        categoryId: options.categoryId,
+      const response = await searchPoemsMerged(term, {
+        poetIds,
+        categoryIds,
         page: pageNumber,
         pageSize: EXPORT_PAGE_SIZE,
         signal: options.signal,
@@ -226,15 +319,27 @@ export async function fetchAllSearchResults(
     .sort((a, b) => a.pageNumber - b.pageNumber)
     .forEach((batch) => allResults.push(...batch.results));
 
-  if (totalPages > 500) {
-    throw new Error('تعداد صفحات نتایج از حد مجاز بیشتر است.');
-  }
-
-  return allResults;
+  const seen = new Set<string>();
+  return allResults.filter((result) => {
+    if (seen.has(result.fullUrl)) return false;
+    seen.add(result.fullUrl);
+    return true;
+  });
 }
 
 export async function fetchPoem(url: string, signal?: AbortSignal): Promise<Poem> {
   return apiFetch<Poem>(buildApiUrl('/poem', { url }), signal);
+}
+
+export async function fetchPoemRecitations(
+  poemId: number,
+  signal?: AbortSignal,
+): Promise<PoemRecitation[]> {
+  const data = await apiFetch<PoemRecitation[]>(
+    buildApiUrl(`/poem/${poemId}/recitations`),
+    signal,
+  );
+  return Array.isArray(data) ? data.filter((item) => Boolean(item?.mp3Url)) : [];
 }
 
 export async function fetchPoetDetail(

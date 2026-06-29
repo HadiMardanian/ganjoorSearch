@@ -1,9 +1,12 @@
+import { useRef } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { PoemSummary } from '@/types/ganjoor';
 import { Pagination } from '@/components/ui/Pagination';
 import { Skeleton } from '@/components/ui/Skeleton';
 
 const PAGE_SIZE = 40;
+const VIRTUAL_THRESHOLD = 80;
 
 interface PoemListProps {
   title: string;
@@ -26,9 +29,18 @@ export function PoemList({
   onBack,
   showBack = true,
 }: PoemListProps) {
+  const parentRef = useRef<HTMLDivElement>(null);
   const totalPages = Math.max(1, Math.ceil(poems.length / PAGE_SIZE));
   const start = (page - 1) * PAGE_SIZE;
   const pagePoems = poems.slice(start, start + PAGE_SIZE);
+  const useVirtual = pagePoems.length >= VIRTUAL_THRESHOLD;
+
+  const virtualizer = useVirtualizer({
+    count: useVirtual ? pagePoems.length : 0,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 72,
+    overscan: 8,
+  });
 
   return (
     <section>
@@ -59,6 +71,34 @@ export function PoemList({
         </div>
       ) : pagePoems.length === 0 ? (
         <p className="text-muted py-8 text-center text-sm">قطعه‌ای یافت نشد.</p>
+      ) : useVirtual ? (
+        <div ref={parentRef} className="max-h-[70vh] overflow-y-auto">
+          <div
+            className="relative w-full"
+            style={{ height: `${virtualizer.getTotalSize()}px` }}
+          >
+            {virtualizer.getVirtualItems().map((item) => {
+              const poem = pagePoems[item.index]!;
+              return (
+                <button
+                  key={poem.id}
+                  type="button"
+                  className="surface-card hover:border-[var(--color-accent)] absolute start-0 top-0 flex min-h-[56px] w-full items-center gap-3 rounded-2xl border p-4 text-start transition-colors"
+                  style={{ transform: `translateY(${item.start}px)` }}
+                  onClick={() => onSelect(poem)}
+                >
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-semibold">{poem.title}</h3>
+                    {poem.excerpt ? (
+                      <p className="text-muted mt-2 line-clamp-2 text-sm leading-7">{poem.excerpt}</p>
+                    ) : null}
+                  </div>
+                  <ChevronLeft size={18} className="text-subtle shrink-0" />
+                </button>
+              );
+            })}
+          </div>
+        </div>
       ) : (
         <div className="space-y-3">
           {pagePoems.map((poem, index) => (

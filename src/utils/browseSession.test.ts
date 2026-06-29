@@ -54,7 +54,7 @@ describe('browseSession', () => {
 
     const merged = mergeBrowseSessionIntoState({
       term: '',
-      poetId: 2,
+      poetId: [2],
       source: 'pwa',
       tab: 'browse',
       browsePath: [],
@@ -77,7 +77,7 @@ describe('browseSession', () => {
 
     const merged = mergeBrowseSessionIntoState({
       term: '',
-      poetId: 2,
+      poetId: [2],
       source: 'pwa',
       tab: 'browse',
       browsePath: [9],
