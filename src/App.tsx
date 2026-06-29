@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, Link2 } from 'lucide-react';
 import { useCategoriesQuery, usePoetsQuery, useSearchQuery } from '@/api/queries';
 import { ExportButtons } from '@/components/export/ExportButtons';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { ResultsList } from '@/components/results/ResultsList';
+import { ActiveFiltersBadge } from '@/components/search/ActiveFiltersBadge';
+import { SearchHistory } from '@/components/search/SearchHistory';
 import {
   CategorySelect,
   PoetPicker,
@@ -13,11 +15,16 @@ import {
 import { Pagination } from '@/components/ui/Pagination';
 import { showToast, ToastContainer } from '@/components/ui/Toast';
 import { ViewModeToggle } from '@/components/ui/ViewModeToggle';
+import { useSearchHistory } from '@/hooks/useSearchHistory';
 import { useSearchState } from '@/hooks/useSearchParams';
+import { useTheme } from '@/hooks/useTheme';
+import { Button } from '@/components/ui/Button';
 import type { CategoryFilter, PoetFilter, ViewMode } from '@/types/ganjoor';
 
 export default function App() {
   const { initial, urlState, updateUrl } = useSearchState();
+  const { theme, setTheme } = useTheme();
+  const { entries: historyEntries, addEntry, clearHistory } = useSearchHistory();
 
   const [input, setInput] = useState(initial.term);
   const [poetId, setPoetId] = useState<PoetFilter>(initial.poetId);
@@ -59,6 +66,8 @@ export default function App() {
   );
 
   const groupedResults = searchQuery.data?.results ?? [];
+  const poets = poetsQuery.data ?? [];
+  const categories = categoriesQuery.data ?? [];
 
   const syncUrl = useCallback(
     (overrides: Partial<{
@@ -90,12 +99,26 @@ export default function App() {
   }, [searchQuery.error]);
 
   useEffect(() => {
+    if (poetsQuery.error) {
+      showToast('خطا در بارگذاری فهرست شاعران.', 'error');
+    }
+  }, [poetsQuery.error]);
+
+  useEffect(() => {
+    if (categoriesQuery.error && poetId !== 'all') {
+      showToast('خطا در بارگذاری قالب‌های شعر.', 'error');
+    }
+  }, [categoriesQuery.error, poetId]);
+
+  useEffect(() => {
+    document.title = searchTerm
+      ? `جستجو: ${searchTerm} — گنجورسرچ`
+      : 'جستجوی اشعار فارسی';
+  }, [searchTerm]);
+
+  useEffect(() => {
     function handleScroll() {
-      const nearTop = window.scrollY <= 200;
-      const nearBottom =
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 50;
-      setShowScrollTop(!nearTop && !nearBottom);
+      setShowScrollTop(window.scrollY > 200);
     }
 
     handleScroll();
@@ -115,6 +138,7 @@ export default function App() {
     setAppliedCategoryId(categoryId);
     setPage(1);
     setSearched(true);
+    addEntry({ term: trimmed, poetId, categoryId });
     syncUrl({ term: trimmed, poetId, categoryId, page: 1 });
   }
 
@@ -123,15 +147,45 @@ export default function App() {
     setCategoryId('all');
   }
 
+  function applyHistoryEntry(entry: {
+    term: string;
+    poetId: PoetFilter;
+    categoryId: CategoryFilter;
+  }) {
+    setInput(entry.term);
+    setPoetId(entry.poetId);
+    setCategoryId(entry.categoryId);
+    setSearchTerm(entry.term);
+    setAppliedPoetId(entry.poetId);
+    setAppliedCategoryId(entry.categoryId);
+    setPage(1);
+    setSearched(true);
+    syncUrl({
+      term: entry.term,
+      poetId: entry.poetId,
+      categoryId: entry.categoryId,
+      page: 1,
+    });
+  }
+
+  async function handleCopySearchLink() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      showToast('لینک جستجو کپی شد.', 'success');
+    } catch {
+      showToast('کپی لینک ممکن نشد.', 'error');
+    }
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:shadow-lg"
+        className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:shadow-lg"
       >
         پرش به محتوا
       </a>
-      <Header />
+      <Header theme={theme} onThemeChange={setTheme} />
 
       <main id="main-content" className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6">
         <SearchBar
@@ -142,7 +196,7 @@ export default function App() {
           filtersDirty={filtersDirty}
           poetPicker={
             <PoetPicker
-              poets={poetsQuery.data ?? []}
+              poets={poets}
               value={poetId}
               onChange={handlePoetChange}
               disabled={poetsQuery.isLoading}
@@ -150,33 +204,49 @@ export default function App() {
           }
           categorySelect={
             <CategorySelect
-              categories={categoriesQuery.data ?? []}
+              categories={categories}
               value={categoryId}
               onChange={setCategoryId}
               poetSelected={poetId !== 'all'}
+              loading={categoriesQuery.isFetching && poetId !== 'all'}
             />
           }
         />
 
-        <div className="mt-6 flex justify-center">
-          <ViewModeToggle
-            value={viewMode}
-            onChange={(mode) => {
-              setViewMode(mode);
-              syncUrl({ viewMode: mode });
-            }}
-          />
-        </div>
+        <SearchHistory
+          entries={historyEntries}
+          onSelect={applyHistoryEntry}
+          onClear={clearHistory}
+        />
 
-        <div className="mt-5">
-          <ExportButtons
-            term={searchTerm}
-            poetId={appliedPoetId}
-            categoryId={appliedCategoryId}
-            totalCount={searchQuery.data?.totalCount ?? 0}
-            disabled={searchQuery.isFetching || !searchTerm}
-          />
-        </div>
+        {searched ? (
+          <>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <ViewModeToggle
+                value={viewMode}
+                onChange={(mode) => {
+                  setViewMode(mode);
+                  syncUrl({ viewMode: mode });
+                }}
+              />
+              <Button variant="secondary" onClick={handleCopySearchLink}>
+                <Link2 size={16} />
+                کپی لینک جستجو
+              </Button>
+            </div>
+
+            <div className="mt-5">
+              <ExportButtons
+                term={searchTerm}
+                poetId={appliedPoetId}
+                categoryId={appliedCategoryId}
+                currentPageResults={groupedResults}
+                totalCount={searchQuery.data?.totalCount ?? 0}
+                disabled={searchQuery.isFetching || !searchTerm}
+              />
+            </div>
+          </>
+        ) : null}
 
         <div className="mt-8">
           {searchQuery.isFetching && groupedResults.length === 0 && searched && (
@@ -184,6 +254,17 @@ export default function App() {
               در حال جستجو در گنجور…
             </p>
           )}
+
+          {searched ? (
+            <ActiveFiltersBadge
+              term={searchTerm}
+              poetId={appliedPoetId}
+              categoryId={appliedCategoryId}
+              poets={poets}
+              categories={categories}
+            />
+          ) : null}
+
           <ResultsList
             results={groupedResults}
             searchTerm={searchTerm}

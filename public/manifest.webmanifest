@@ -1,0 +1,19 @@
+{
+  "name": "گنجورسرچ — جستجوی اشعار فارسی",
+  "short_name": "گنجورسرچ",
+  "description": "جستجو در اشعار فارسی با API گنجور",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "/ganjoorSearch/",
+  "display": "standalone",
+  "background_color": "#f7f4ef",
+  "theme_color": "#9a3412",
+  "icons": [
+    {
+      "src": "/ganjoorSearch/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

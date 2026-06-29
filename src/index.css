@@ -20,6 +20,10 @@ html {
   color-scheme: light;
 }
 
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -28,6 +32,46 @@ body {
   color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html[data-theme='dark'] body {
+  --color-cream: #1c1917;
+  --color-ink: #f5f5f4;
+  --color-card: #292524;
+  --color-muted: #a8a29e;
+  --color-border: #44403c;
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+}
+
+html[data-theme='dark'] .field-control {
+  background-color: #292524;
+  color: #f5f5f4;
+  border-color: #44403c;
+}
+
+html[data-theme='dark'] .field-control:disabled {
+  background-color: #1c1917;
+}
+
+html[data-theme='dark'] article,
+html[data-theme='dark'] header,
+html[data-theme='dark'] footer,
+html[data-theme='dark'] form {
+  background-color: #292524 !important;
+  border-color: #44403c !important;
+  color: #f5f5f4;
+}
+
+html[data-theme='dark'] .text-stone-900,
+html[data-theme='dark'] .text-stone-800,
+html[data-theme='dark'] .text-stone-700,
+html[data-theme='dark'] .text-stone-600 {
+  color: #e7e5e4 !important;
+}
+
+html[data-theme='dark'] .bg-stone-50 {
+  background-color: #1c1917 !important;
 }
 
 #root {

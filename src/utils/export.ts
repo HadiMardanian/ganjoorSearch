@@ -154,10 +154,27 @@ function downloadExcel(filename: string, headers: string[], rows: string[][]) {
   );
 }
 
+export function buildExportFilename(
+  term: string,
+  mode: ViewMode,
+  format: ExportFormat,
+): string {
+  const safe =
+    term
+      .trim()
+      .replace(/[^\p{L}\p{N}\-_\s]/gu, '')
+      .replace(/\s+/g, '-')
+      .slice(0, 40) || 'results';
+  const base = mode === 'verse' ? 'verse' : 'full';
+  const ext = format === 'excel' ? 'xls' : 'csv';
+  return `${safe}-${base}-results.${ext}`;
+}
+
 export function exportResults(
   results: GroupedResult[],
   mode: ViewMode,
   format: ExportFormat = 'csv',
+  filename?: string,
 ): { success: boolean; rowCount: number } {
   const headers =
     mode === 'verse' ? [...VERSE_EXPORT_HEADERS] : [...FULL_EXPORT_HEADERS];
@@ -167,13 +184,14 @@ export function exportResults(
   if (rows.length === 0) return { success: false, rowCount: 0 };
 
   const baseName = mode === 'verse' ? 'verse-results' : 'full-results';
-  const filename =
-    format === 'excel' ? `${baseName}.xls` : `${baseName}.csv`;
+  const resolvedFilename =
+    filename ??
+    (format === 'excel' ? `${baseName}.xls` : `${baseName}.csv`);
 
   if (format === 'excel') {
-    downloadExcel(filename, headers, rows);
+    downloadExcel(resolvedFilename, headers, rows);
   } else {
-    downloadCsv(filename, headers, rows);
+    downloadCsv(resolvedFilename, headers, rows);
   }
 
   return { success: true, rowCount: rows.length };

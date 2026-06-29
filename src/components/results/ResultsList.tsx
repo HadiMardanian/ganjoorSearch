@@ -1,5 +1,3 @@
-import { useRef } from 'react';
-import { useVirtualizer } from '@tanstack/react-virtual';
 import { ResultCard } from './ResultCard';
 import { ResultsLoading } from '@/components/ui/Skeleton';
 import { countMatchingBits } from '@/utils/searchMap';
@@ -26,7 +24,7 @@ function SearchGuide() {
         <li>یک کلمه یا عبارت کوتاه وارد کنید (مثلاً «جام»).</li>
         <li>برای عبارت دقیق از گیومه استفاده کنید: «جام می».</li>
         <li>چند کلمه با فاصله = هر کدام جداگانه جستجو می‌شود.</li>
-        <li>پس از تغییر شاعر، دوباره «جستجو» را بزنید.</li>
+        <li>پس از تغییر شاعر یا قالب، دوباره «جستجو» را بزنید.</li>
       </ul>
     </div>
   );
@@ -43,15 +41,6 @@ export function ResultsList({
   totalCount,
   totalPages,
 }: ResultsListProps) {
-  const parentRef = useRef<HTMLDivElement>(null);
-
-  const virtualizer = useVirtualizer({
-    count: results.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => (viewMode === 'verse' ? 280 : 360),
-    overscan: 4,
-  });
-
   if (loading && results.length === 0) {
     return <ResultsLoading />;
   }
@@ -98,45 +87,12 @@ export function ResultsList({
         </p>
       </div>
 
-      <div
-        ref={parentRef}
-        className="max-h-[70vh] overflow-auto rounded-2xl"
-        role="list"
-        aria-label="نتایج جستجو"
-      >
-        <div
-          style={{
-            height: `${virtualizer.getTotalSize()}px`,
-            width: '100%',
-            position: 'relative',
-          }}
-        >
-          {virtualizer.getVirtualItems().map((virtualItem) => {
-            const result = results[virtualItem.index];
-            return (
-              <div
-                key={result.poemId}
-                role="listitem"
-                data-index={virtualItem.index}
-                ref={virtualizer.measureElement}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  transform: `translateY(${virtualItem.start}px)`,
-                }}
-                className="pb-4"
-              >
-                <ResultCard
-                  result={result}
-                  searchTerm={searchTerm}
-                  viewMode={viewMode}
-                />
-              </div>
-            );
-          })}
-        </div>
+      <div className="space-y-4" role="list" aria-label="نتایج جستجو">
+        {results.map((result) => (
+          <div key={result.poemId} role="listitem">
+            <ResultCard result={result} searchTerm={searchTerm} viewMode={viewMode} />
+          </div>
+        ))}
       </div>
     </div>
   );

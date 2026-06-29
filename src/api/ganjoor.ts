@@ -5,11 +5,13 @@ import type {
   Poet,
   SearchResponse,
 } from '@/types/ganjoor';
+import { mapWithConcurrency } from '@/utils/parallel';
 import { mapSearchHitsToGrouped } from '@/utils/searchMap';
 import { parsePagingHeaders } from '@/utils/paging';
 import { apiFetch, buildApiUrl } from './client';
 
 const EXPORT_PAGE_SIZE = 200;
+const PAGE_FETCH_CONCURRENCY = 4;
 
 export async function fetchPoets(signal?: AbortSignal): Promise<Poet[]> {
   const data = await apiFetch<Poet[]>(buildApiUrl('/poets'), signal);
@@ -120,21 +122,31 @@ export async function searchPoems(
   };
 }
 
+export type ExportProgress = {
+  phase: 'fetching' | 'enriching';
+  loadedPages: number;
+  totalPages: number;
+  loadedItems: number;
+  totalItems: number;
+};
+
+export type ExportScope = 'all' | 'page';
+
 export async function fetchAllSearchResults(
   term: string,
   options: {
     poetId?: number | 'all';
     categoryId?: number | 'all';
+    scope?: ExportScope;
+    page?: number;
     signal?: AbortSignal;
-    onProgress?: (loaded: number, total: number) => void;
+    onProgress?: (progress: ExportProgress) => void;
   } = {},
 ): Promise<GroupedResult[]> {
-  const allResults: GroupedResult[] = [];
-  let page = 1;
-  let totalPages = 1;
-  let hasMore = true;
+  const scope = options.scope ?? 'all';
+  const page = Math.max(options.page ?? 1, 1);
 
-  while (hasMore) {
+  if (scope === 'page') {
     const response = await searchPoems(term, {
       poetId: options.poetId,
       categoryId: options.categoryId,
@@ -143,25 +155,76 @@ export async function fetchAllSearchResults(
       signal: options.signal,
     });
 
-    allResults.push(...response.results);
+    options.onProgress?.({
+      phase: 'fetching',
+      loadedPages: 1,
+      totalPages: 1,
+      loadedItems: response.results.length,
+      totalItems: response.totalCount || response.results.length,
+    });
 
-    if (response.totalPages > 0) {
-      totalPages = response.totalPages;
-      hasMore = page < totalPages;
-      options.onProgress?.(page, totalPages);
-      page += 1;
-      continue;
-    }
+    return response.results;
+  }
 
-    hasMore = response.hasMore;
-    options.onProgress?.(page, page + (hasMore ? 1 : 0));
+  const first = await searchPoems(term, {
+    poetId: options.poetId,
+    categoryId: options.categoryId,
+    page: 1,
+    pageSize: EXPORT_PAGE_SIZE,
+    signal: options.signal,
+  });
 
-    if (!hasMore) break;
-    page += 1;
+  const allResults = [...first.results];
+  const totalPages = first.totalPages > 0 ? first.totalPages : first.hasMore ? 2 : 1;
+  const totalItems = first.totalCount || allResults.length;
 
-    if (page > 500) {
-      throw new Error('تعداد صفحات نتایج از حد مجاز بیشتر است.');
-    }
+  options.onProgress?.({
+    phase: 'fetching',
+    loadedPages: 1,
+    totalPages,
+    loadedItems: allResults.length,
+    totalItems,
+  });
+
+  if (totalPages <= 1) {
+    return allResults;
+  }
+
+  const remainingPages = Array.from({ length: totalPages - 1 }, (_, index) => index + 2);
+  let completedPages = 1;
+
+  const pageBatches = await mapWithConcurrency(
+    remainingPages,
+    PAGE_FETCH_CONCURRENCY,
+    async (pageNumber) => {
+      const response = await searchPoems(term, {
+        poetId: options.poetId,
+        categoryId: options.categoryId,
+        page: pageNumber,
+        pageSize: EXPORT_PAGE_SIZE,
+        signal: options.signal,
+      });
+
+      completedPages += 1;
+
+      options.onProgress?.({
+        phase: 'fetching',
+        loadedPages: completedPages,
+        totalPages,
+        loadedItems: allResults.length + response.results.length,
+        totalItems,
+      });
+
+      return { pageNumber, results: response.results };
+    },
+  );
+
+  pageBatches
+    .sort((a, b) => a.pageNumber - b.pageNumber)
+    .forEach((batch) => allResults.push(...batch.results));
+
+  if (totalPages > 500) {
+    throw new Error('تعداد صفحات نتایج از حد مجاز بیشتر است.');
   }
 
   return allResults;

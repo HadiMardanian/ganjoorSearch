@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  buildExportFilename,
   buildFullExportRows,
   buildVerseExportRows,
   escapeCsv,
@@ -86,6 +87,11 @@ describe('export', () => {
     expect(verseRows[0]?.[1]).toBe('جام می‌ده');
     expect(verseRows[0]?.[1]).not.toContain('بیت سوم');
     expect(fullRows[0]?.[1]).toContain('بیت سوم طولانی');
+  });
+
+  it('builds filename from search term', () => {
+    expect(buildExportFilename('جام', 'verse', 'csv')).toBe('جام-verse-results.csv');
+    expect(buildExportFilename('جام می', 'full', 'excel')).toContain('full-results.xls');
   });
 
   it('exports title-only match note', () => {
