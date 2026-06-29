@@ -2,6 +2,13 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.14.5] - 2026-06-29
+
+### Fixed
+- Installed poet PWA opening to a blank page: build now emits real `pwa/{id}/index.html` shells (HTTP 200 on GitHub Pages instead of 404-only SPA fallback)
+- Poet app shows a placeholder while poet metadata loads instead of an empty shell
+- Install gallery navigates to `/?install=1&poet={id}` on the main path (reliable during install)
+
 ## [2.14.4] - 2026-06-29
 
 ### Fixed

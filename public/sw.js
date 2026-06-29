@@ -1,4 +1,4 @@
-const CACHE = 'ganjoorsearch-shell-v4';
+const CACHE = 'ganjoorsearch-shell-v5';
 const SHELL = ['/ganjoorSearch/', '/ganjoorSearch/index.html'];
 const STATIC_ASSETS = [
   '/ganjoorSearch/manifest.webmanifest',

@@ -1,12 +1,12 @@
 {
   "name": "ganjoorsearch",
   "private": true,
-  "version": "2.14.4",
+  "version": "2.14.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build:poet-assets": "node scripts/generate-poet-icons.mjs --all && node scripts/generate-poet-manifests.mjs --all",
-    "build:app": "tsc --noEmit && vite build && cp dist/index.html dist/404.html",
+    "build:app": "tsc --noEmit && vite build && cp dist/index.html dist/404.html && node scripts/generate-pwa-shells.mjs",
     "build": "npm run build:poet-assets && npm run build:app",
     "preview": "vite preview",
     "lint": "eslint .",

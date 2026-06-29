@@ -1,8 +1,9 @@
-import { getPoetPwaScopePath } from '@/utils/poetPwaPath';
+import { defaultAppPathname } from '@/utils/poetPwaPath';
 
-/** Full-page URL so the browser loads the correct manifest and can fire beforeinstallprompt again. */
+/** Full-page URL on the main app path (HTTP 200) so install flow is reliable on GitHub Pages. */
 export function buildPoetInstallUrl(poetId: number): string {
-  return `${getPoetPwaScopePath(poetId)}?install=1`;
+  const base = defaultAppPathname();
+  return `${base}?install=1&poet=${poetId}`;
 }
 
 export function parseInstallPoetIdFromUrl(): number | null {
