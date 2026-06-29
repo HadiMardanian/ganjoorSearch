@@ -1,15 +1,6 @@
 ::highlight(ganjoor-search) {
   background-color: transparent;
   color: #b45309;
-  font-weight: 700;
-  text-decoration: underline;
-  text-decoration-color: rgb(180 83 9 / 45%);
-  text-underline-offset: 3px;
-}
-
-@media (prefers-color-scheme: dark) {
-  ::highlight(ganjoor-search) {
-    color: #fbbf24;
-    text-decoration-color: rgb(251 191 36 / 45%);
-  }
+  font-weight: inherit;
+  text-decoration: none;
 }

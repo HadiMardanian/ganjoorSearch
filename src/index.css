@@ -35,6 +35,10 @@
     color: #fbbf24;
   }
 
+  ::highlight(ganjoor-search) {
+    color: #fbbf24;
+  }
+
   .skeleton {
     background: linear-gradient(90deg, #292524 25%, #44403c 50%, #292524 75%);
     background-size: 200% 100%;
@@ -72,8 +76,9 @@ body {
   padding: 0;
   margin: 0;
   border-radius: 0;
-  font-weight: 700;
+  font-weight: inherit;
   font-style: inherit;
+  text-decoration: none;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
