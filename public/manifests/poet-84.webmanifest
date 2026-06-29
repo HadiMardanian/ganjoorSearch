@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/84",
+  "id": "/ganjoorSearch/pwa/84",
   "name": "نظامی عروضی — گنجورسرچ",
   "short_name": "نظامی عروضی",
   "description": "جستجوی اشعار نظامی عروضی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=84&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/84/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/84/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-84.webmanifest",
+      "id": "/ganjoorSearch/pwa/84"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/84-192.png",

@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/16",
+  "id": "/ganjoorSearch/pwa/16",
   "name": "خاقانی شروانی — گنجورسرچ",
   "short_name": "خاقانی شروانی",
   "description": "جستجوی اشعار خاقانی شروانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=16&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/16/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/16/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-16.webmanifest",
+      "id": "/ganjoorSearch/pwa/16"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/16-192.png",

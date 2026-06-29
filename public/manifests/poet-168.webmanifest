@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/168",
+  "id": "/ganjoorSearch/pwa/168",
   "name": "صفایی جندقی — گنجورسرچ",
   "short_name": "صفایی جندقی",
   "description": "جستجوی اشعار صفایی جندقی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=168&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/168/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/168/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-168.webmanifest",
+      "id": "/ganjoorSearch/pwa/168"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/168-192.png",

@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/91",
+  "id": "/ganjoorSearch/pwa/91",
   "name": "سلطان ولد — گنجورسرچ",
   "short_name": "سلطان ولد",
   "description": "جستجوی اشعار سلطان ولد با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=91&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/91/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/91/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-91.webmanifest",
+      "id": "/ganjoorSearch/pwa/91"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/91-192.png",

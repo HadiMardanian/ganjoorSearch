@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/221",
+  "id": "/ganjoorSearch/pwa/221",
   "name": "رونقی بخارایی — گنجورسرچ",
   "short_name": "رونقی بخارایی",
   "description": "جستجوی اشعار رونقی بخارایی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=221&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/221/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/221/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-221.webmanifest",
+      "id": "/ganjoorSearch/pwa/221"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/221-192.png",

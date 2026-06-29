@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/52",
+  "id": "/ganjoorSearch/pwa/52",
   "name": "اسدی توسی — گنجورسرچ",
   "short_name": "اسدی توسی",
   "description": "جستجوی اشعار اسدی توسی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=52&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/52/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/52/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-52.webmanifest",
+      "id": "/ganjoorSearch/pwa/52"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/52-192.png",

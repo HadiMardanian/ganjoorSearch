@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/90",
+  "id": "/ganjoorSearch/pwa/90",
   "name": "ملا مسیح پانی‌پتی — گنجورسرچ",
   "short_name": "ملا مسیح پانی‌پتی",
   "description": "جستجوی اشعار ملا مسیح پانی‌پتی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=90&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/90/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/90/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-90.webmanifest",
+      "id": "/ganjoorSearch/pwa/90"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/90-192.png",

@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/145",
+  "id": "/ganjoorSearch/pwa/145",
   "name": "فضولی بغدادی — گنجورسرچ",
   "short_name": "فضولی بغدادی",
   "description": "جستجوی اشعار فضولی بغدادی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=145&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/145/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/145/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-145.webmanifest",
+      "id": "/ganjoorSearch/pwa/145"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/145-192.png",

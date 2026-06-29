@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/140",
+  "id": "/ganjoorSearch/pwa/140",
   "name": "مجیرالدین بیلقانی — گنجورسرچ",
   "short_name": "مجیرالدین بیلقانی",
   "description": "جستجوی اشعار مجیرالدین بیلقانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=140&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/140/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/140/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-140.webmanifest",
+      "id": "/ganjoorSearch/pwa/140"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/140-192.png",

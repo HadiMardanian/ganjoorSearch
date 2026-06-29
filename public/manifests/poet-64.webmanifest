@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/64",
+  "id": "/ganjoorSearch/pwa/64",
   "name": "امیر معزی نیشابوری — گنجورسرچ",
   "short_name": "امیر معزی نیشابوری",
   "description": "جستجوی اشعار امیر معزی نیشابوری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=64&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/64/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/64/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-64.webmanifest",
+      "id": "/ganjoorSearch/pwa/64"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/64-192.png",

@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/68",
+  "id": "/ganjoorSearch/pwa/68",
   "name": "عارف قزوینی — گنجورسرچ",
   "short_name": "عارف قزوینی",
   "description": "جستجوی اشعار عارف قزوینی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=68&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/68/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/68/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-68.webmanifest",
+      "id": "/ganjoorSearch/pwa/68"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/68-192.png",

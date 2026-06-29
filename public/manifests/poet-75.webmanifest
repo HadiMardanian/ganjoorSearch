@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/75",
+  "id": "/ganjoorSearch/pwa/75",
   "name": "همام تبریزی — گنجورسرچ",
   "short_name": "همام تبریزی",
   "description": "جستجوی اشعار همام تبریزی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=75&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/75/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/75/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-75.webmanifest",
+      "id": "/ganjoorSearch/pwa/75"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/75-192.png",

@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/181",
+  "id": "/ganjoorSearch/pwa/181",
   "name": "سیدای نسفی — گنجورسرچ",
   "short_name": "سیدای نسفی",
   "description": "جستجوی اشعار سیدای نسفی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=181&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/181/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/181/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-181.webmanifest",
+      "id": "/ganjoorSearch/pwa/181"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/181-192.png",

@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/85",
+  "id": "/ganjoorSearch/pwa/85",
   "name": "جلال عضد — گنجورسرچ",
   "short_name": "جلال عضد",
   "description": "جستجوی اشعار جلال عضد با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=85&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/85/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/85/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-85.webmanifest",
+      "id": "/ganjoorSearch/pwa/85"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/85-192.png",

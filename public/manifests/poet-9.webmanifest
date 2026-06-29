@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/9",
+  "id": "/ganjoorSearch/pwa/9",
   "name": "عطار نیشابوری — گنجورسرچ",
   "short_name": "عطار نیشابوری",
   "description": "جستجوی اشعار عطار نیشابوری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=9&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/9/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/9/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-9.webmanifest",
+      "id": "/ganjoorSearch/pwa/9"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/9-192.png",

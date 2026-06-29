@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/178",
+  "id": "/ganjoorSearch/pwa/178",
   "name": "جیحون یزدی — گنجورسرچ",
   "short_name": "جیحون یزدی",
   "description": "جستجوی اشعار جیحون یزدی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=178&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/178/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/178/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-178.webmanifest",
+      "id": "/ganjoorSearch/pwa/178"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/178-192.png",

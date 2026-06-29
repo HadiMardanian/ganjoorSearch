@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/222",
+  "id": "/ganjoorSearch/pwa/222",
   "name": "سپهری بخارایی — گنجورسرچ",
   "short_name": "سپهری بخارایی",
   "description": "جستجوی اشعار سپهری بخارایی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=222&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/222/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/222/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-222.webmanifest",
+      "id": "/ganjoorSearch/pwa/222"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/222-192.png",

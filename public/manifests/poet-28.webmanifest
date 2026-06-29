@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/28",
+  "id": "/ganjoorSearch/pwa/28",
   "name": "باباطاهر — گنجورسرچ",
   "short_name": "باباطاهر",
   "description": "جستجوی اشعار باباطاهر با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=28&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/28/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/28/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-28.webmanifest",
+      "id": "/ganjoorSearch/pwa/28"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/28-192.png",

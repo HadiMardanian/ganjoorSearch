@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/159",
+  "id": "/ganjoorSearch/pwa/159",
   "name": "محمد کوسج — گنجورسرچ",
   "short_name": "محمد کوسج",
   "description": "جستجوی اشعار محمد کوسج با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=159&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/159/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/159/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-159.webmanifest",
+      "id": "/ganjoorSearch/pwa/159"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/159-192.png",

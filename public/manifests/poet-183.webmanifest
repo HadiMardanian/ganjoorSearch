@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/183",
+  "id": "/ganjoorSearch/pwa/183",
   "name": "میلی — گنجورسرچ",
   "short_name": "میلی",
   "description": "جستجوی اشعار میلی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=183&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/183/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/183/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-183.webmanifest",
+      "id": "/ganjoorSearch/pwa/183"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/183-192.png",

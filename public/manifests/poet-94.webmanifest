@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/94",
+  "id": "/ganjoorSearch/pwa/94",
   "name": "عین‌القضات همدانی — گنجورسرچ",
   "short_name": "عین‌القضات همدانی",
   "description": "جستجوی اشعار عین‌القضات همدانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=94&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/94/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/94/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-94.webmanifest",
+      "id": "/ganjoorSearch/pwa/94"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/94-192.png",

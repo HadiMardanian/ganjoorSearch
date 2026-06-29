@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/216",
+  "id": "/ganjoorSearch/pwa/216",
   "name": "احمد برمکی — گنجورسرچ",
   "short_name": "احمد برمکی",
   "description": "جستجوی اشعار احمد برمکی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=216&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/216/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/216/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-216.webmanifest",
+      "id": "/ganjoorSearch/pwa/216"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/216-192.png",

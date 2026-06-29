@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/41",
+  "id": "/ganjoorSearch/pwa/41",
   "name": "رهی معیری — گنجورسرچ",
   "short_name": "رهی معیری",
   "description": "جستجوی اشعار رهی معیری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=41&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/41/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/41/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-41.webmanifest",
+      "id": "/ganjoorSearch/pwa/41"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/41-192.png",

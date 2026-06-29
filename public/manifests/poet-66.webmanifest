@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/66",
+  "id": "/ganjoorSearch/pwa/66",
   "name": "سعدالدین وراوینی — گنجورسرچ",
   "short_name": "سعدالدین وراوینی",
   "description": "جستجوی اشعار سعدالدین وراوینی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=66&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/66/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/66/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-66.webmanifest",
+      "id": "/ganjoorSearch/pwa/66"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/66-192.png",

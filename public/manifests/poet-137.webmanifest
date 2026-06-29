@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/137",
+  "id": "/ganjoorSearch/pwa/137",
   "name": "جهان ملک خاتون — گنجورسرچ",
   "short_name": "جهان ملک خاتون",
   "description": "جستجوی اشعار جهان ملک خاتون با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=137&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/137/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/137/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-137.webmanifest",
+      "id": "/ganjoorSearch/pwa/137"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/137-192.png",

@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/193",
+  "id": "/ganjoorSearch/pwa/193",
   "name": "بهاء ولد — گنجورسرچ",
   "short_name": "بهاء ولد",
   "description": "جستجوی اشعار بهاء ولد با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=193&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/193/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/193/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-193.webmanifest",
+      "id": "/ganjoorSearch/pwa/193"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/193-192.png",

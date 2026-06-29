@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/74",
+  "id": "/ganjoorSearch/pwa/74",
   "name": "صامت بروجردی — گنجورسرچ",
   "short_name": "صامت بروجردی",
   "description": "جستجوی اشعار صامت بروجردی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=74&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/74/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/74/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-74.webmanifest",
+      "id": "/ganjoorSearch/pwa/74"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/74-192.png",

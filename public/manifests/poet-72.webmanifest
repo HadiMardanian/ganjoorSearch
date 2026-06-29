@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/72",
+  "id": "/ganjoorSearch/pwa/72",
   "name": "خواجه عبدالله انصاری — گنجورسرچ",
   "short_name": "خواجه عبدالله انصاری",
   "description": "جستجوی اشعار خواجه عبدالله انصاری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=72&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/72/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/72/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-72.webmanifest",
+      "id": "/ganjoorSearch/pwa/72"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/72-192.png",

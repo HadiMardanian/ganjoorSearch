@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/116",
+  "id": "/ganjoorSearch/pwa/116",
   "name": "امامی هروی — گنجورسرچ",
   "short_name": "امامی هروی",
   "description": "جستجوی اشعار امامی هروی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=116&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/116/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/116/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-116.webmanifest",
+      "id": "/ganjoorSearch/pwa/116"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/116-192.png",

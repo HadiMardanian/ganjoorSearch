@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/108",
+  "id": "/ganjoorSearch/pwa/108",
   "name": "صفای اصفهانی — گنجورسرچ",
   "short_name": "صفای اصفهانی",
   "description": "جستجوی اشعار صفای اصفهانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=108&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/108/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/108/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-108.webmanifest",
+      "id": "/ganjoorSearch/pwa/108"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/108-192.png",

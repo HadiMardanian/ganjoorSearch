@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/102",
+  "id": "/ganjoorSearch/pwa/102",
   "name": "نجم‌الدین رازی — گنجورسرچ",
   "short_name": "نجم‌الدین رازی",
   "description": "جستجوی اشعار نجم‌الدین رازی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=102&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/102/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/102/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-102.webmanifest",
+      "id": "/ganjoorSearch/pwa/102"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/102-192.png",

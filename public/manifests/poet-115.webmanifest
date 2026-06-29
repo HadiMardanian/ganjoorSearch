@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/115",
+  "id": "/ganjoorSearch/pwa/115",
   "name": "بابافغانی شیرازی — گنجورسرچ",
   "short_name": "بابافغانی شیرازی",
   "description": "جستجوی اشعار بابافغانی شیرازی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=115&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/115/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/115/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-115.webmanifest",
+      "id": "/ganjoorSearch/pwa/115"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/115-192.png",

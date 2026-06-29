@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/3",
+  "id": "/ganjoorSearch/pwa/3",
   "name": "خیام نیشابوری — گنجورسرچ",
   "short_name": "خیام نیشابوری",
   "description": "جستجوی اشعار خیام نیشابوری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=3&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/3/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/3/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-3.webmanifest",
+      "id": "/ganjoorSearch/pwa/3"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/3-192.png",

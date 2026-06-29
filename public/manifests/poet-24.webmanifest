@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/24",
+  "id": "/ganjoorSearch/pwa/24",
   "name": "جامی — گنجورسرچ",
   "short_name": "جامی",
   "description": "جستجوی اشعار جامی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=24&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/24/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/24/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-24.webmanifest",
+      "id": "/ganjoorSearch/pwa/24"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/24-192.png",

@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/223",
+  "id": "/ganjoorSearch/pwa/223",
   "name": "صانع بلخی — گنجورسرچ",
   "short_name": "صانع بلخی",
   "description": "جستجوی اشعار صانع بلخی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=223&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/223/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/223/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-223.webmanifest",
+      "id": "/ganjoorSearch/pwa/223"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/223-192.png",

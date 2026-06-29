@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/121",
+  "id": "/ganjoorSearch/pwa/121",
   "name": "جویای تبریزی — گنجورسرچ",
   "short_name": "جویای تبریزی",
   "description": "جستجوی اشعار جویای تبریزی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=121&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/121/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/121/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-121.webmanifest",
+      "id": "/ganjoorSearch/pwa/121"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/121-192.png",

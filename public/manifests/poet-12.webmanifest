@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/12",
+  "id": "/ganjoorSearch/pwa/12",
   "name": "رودکی سمرقندی — گنجورسرچ",
   "short_name": "رودکی سمرقندی",
   "description": "جستجوی اشعار رودکی سمرقندی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=12&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/12/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/12/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-12.webmanifest",
+      "id": "/ganjoorSearch/pwa/12"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/12-192.png",

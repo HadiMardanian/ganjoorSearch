@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/234",
+  "id": "/ganjoorSearch/pwa/234",
   "name": "نورس دماوندی — گنجورسرچ",
   "short_name": "نورس دماوندی",
   "description": "جستجوی اشعار نورس دماوندی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=234&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/234/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/234/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-234.webmanifest",
+      "id": "/ganjoorSearch/pwa/234"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/234-192.png",

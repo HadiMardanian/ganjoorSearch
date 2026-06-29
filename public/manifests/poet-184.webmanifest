@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/184",
+  "id": "/ganjoorSearch/pwa/184",
   "name": "طغرای مشهدی — گنجورسرچ",
   "short_name": "طغرای مشهدی",
   "description": "جستجوی اشعار طغرای مشهدی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=184&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/184/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/184/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-184.webmanifest",
+      "id": "/ganjoorSearch/pwa/184"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/184-192.png",

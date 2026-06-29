@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/136",
+  "id": "/ganjoorSearch/pwa/136",
   "name": "عمعق بخاری — گنجورسرچ",
   "short_name": "عمعق بخاری",
   "description": "جستجوی اشعار عمعق بخاری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=136&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/136/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/136/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-136.webmanifest",
+      "id": "/ganjoorSearch/pwa/136"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/136-192.png",

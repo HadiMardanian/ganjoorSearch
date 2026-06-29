@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/14",
+  "id": "/ganjoorSearch/pwa/14",
   "name": "منوچهری دامغانی — گنجورسرچ",
   "short_name": "منوچهری دامغانی",
   "description": "جستجوی اشعار منوچهری دامغانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=14&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/14/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/14/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-14.webmanifest",
+      "id": "/ganjoorSearch/pwa/14"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/14-192.png",

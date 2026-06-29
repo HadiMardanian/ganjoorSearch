@@ -42,19 +42,25 @@ function buildManifest(poet) {
   const poetName = poet.name || poet.fullName || 'شاعر';
   const icon192 = `${BASE}icons/poets/${poet.id}-192.png`;
   const icon512 = `${BASE}icons/poets/${poet.id}-512.png`;
+  const scope = `${BASE}pwa/${poet.id}/`;
+  const manifestId = `${BASE}pwa/${poet.id}`.replace(/\/$/, '');
+  const manifestUrl = `${BASE}manifests/poet-${poet.id}.webmanifest`;
 
   return {
-    id: `${BASE}poet-app/${poet.id}`,
+    id: manifestId,
     name: `${poetName} — گنجورسرچ`,
     short_name: poetName,
     description: `جستجوی اشعار ${poetName} با گنجورسرچ`,
     lang: 'fa',
     dir: 'rtl',
-    start_url: `${BASE}?poet=${poet.id}&source=pwa&tab=browse`,
-    scope: BASE,
+    start_url: `${scope}?source=pwa&tab=browse`,
+    scope,
     display: 'standalone',
     background_color: '#f7f4ef',
     theme_color: '#9a3412',
+    related_applications: [
+      { platform: 'webapp', url: manifestUrl, id: manifestId },
+    ],
     icons: [
       { src: icon192, sizes: '192x192', type: 'image/png', purpose: 'any' },
       { src: icon512, sizes: '512x512', type: 'image/png', purpose: 'any' },

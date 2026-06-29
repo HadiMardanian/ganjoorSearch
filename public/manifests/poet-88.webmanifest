@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/88",
+  "id": "/ganjoorSearch/pwa/88",
   "name": "ایرج میرزا — گنجورسرچ",
   "short_name": "ایرج میرزا",
   "description": "جستجوی اشعار ایرج میرزا با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=88&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/88/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/88/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-88.webmanifest",
+      "id": "/ganjoorSearch/pwa/88"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/88-192.png",

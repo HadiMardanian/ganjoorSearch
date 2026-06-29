@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/51",
+  "id": "/ganjoorSearch/pwa/51",
   "name": "شاه نعمت‌الله ولی — گنجورسرچ",
   "short_name": "شاه نعمت‌الله ولی",
   "description": "جستجوی اشعار شاه نعمت‌الله ولی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=51&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/51/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/51/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-51.webmanifest",
+      "id": "/ganjoorSearch/pwa/51"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/51-192.png",

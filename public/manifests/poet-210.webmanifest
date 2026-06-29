@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/210",
+  "id": "/ganjoorSearch/pwa/210",
   "name": "مسعودی مروزی — گنجورسرچ",
   "short_name": "مسعودی مروزی",
   "description": "جستجوی اشعار مسعودی مروزی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=210&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/210/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/210/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-210.webmanifest",
+      "id": "/ganjoorSearch/pwa/210"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/210-192.png",

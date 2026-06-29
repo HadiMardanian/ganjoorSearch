@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/123",
+  "id": "/ganjoorSearch/pwa/123",
   "name": "غالب دهلوی — گنجورسرچ",
   "short_name": "غالب دهلوی",
   "description": "جستجوی اشعار غالب دهلوی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=123&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/123/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/123/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-123.webmanifest",
+      "id": "/ganjoorSearch/pwa/123"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/123-192.png",

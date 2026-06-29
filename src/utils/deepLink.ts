@@ -1,3 +1,5 @@
+import { getPoetPwaScopePath } from '@/utils/poetPwaPath';
+
 const BASE = import.meta.env.BASE_URL;
 
 export interface AppDeepLinkParams {
@@ -17,11 +19,18 @@ export function buildAppDeepLink(params: AppDeepLinkParams, origin?: string): st
       ? `${window.location.origin}${BASE}`
       : `https://example.com${BASE}`);
 
-  const url = new URL(root.endsWith('/') ? root : `${root}/`);
+  const usePoetPath = params.source === 'pwa' && params.poetId != null;
+  const pathname = usePoetPath
+    ? getPoetPwaScopePath(params.poetId!).replace(/\/$/, '')
+    : root.endsWith('/')
+      ? root.slice(0, -1)
+      : root;
+
+  const url = new URL(pathname, 'https://example.com');
   const search = url.searchParams;
 
   if (params.term?.trim()) search.set('q', params.term.trim());
-  if (params.poetId != null) search.set('poet', String(params.poetId));
+  if (params.poetId != null && !usePoetPath) search.set('poet', String(params.poetId));
   if (params.poemUrl) search.set('poem', params.poemUrl);
   if (params.source === 'pwa') search.set('source', 'pwa');
   if (params.tab) search.set('tab', params.tab);
@@ -33,7 +42,8 @@ export function buildAppDeepLink(params: AppDeepLinkParams, origin?: string): st
   }
 
   const query = search.toString();
-  return query ? `${url.pathname}?${query}` : url.pathname;
+  const pathWithBase = usePoetPath ? pathname : root.endsWith('/') ? root.slice(0, -1) : root;
+  return query ? `${pathWithBase}?${query}` : pathWithBase;
 }
 
 export function buildPoemDeepLink(

@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/48",
+  "id": "/ganjoorSearch/pwa/48",
   "name": "خلیل‌الله خلیلی — گنجورسرچ",
   "short_name": "خلیل‌الله خلیلی",
   "description": "جستجوی اشعار خلیل‌الله خلیلی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=48&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/48/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/48/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-48.webmanifest",
+      "id": "/ganjoorSearch/pwa/48"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/48-192.png",

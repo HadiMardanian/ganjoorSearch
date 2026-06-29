@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/67",
+  "id": "/ganjoorSearch/pwa/67",
   "name": "کمال‌الدین اسماعیل — گنجورسرچ",
   "short_name": "کمال‌الدین اسماعیل",
   "description": "جستجوی اشعار کمال‌الدین اسماعیل با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=67&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/67/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/67/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-67.webmanifest",
+      "id": "/ganjoorSearch/pwa/67"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/67-192.png",

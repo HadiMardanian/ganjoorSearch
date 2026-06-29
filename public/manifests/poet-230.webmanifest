@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/230",
+  "id": "/ganjoorSearch/pwa/230",
   "name": "جنید شیرازی — گنجورسرچ",
   "short_name": "جنید شیرازی",
   "description": "جستجوی اشعار جنید شیرازی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=230&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/230/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/230/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-230.webmanifest",
+      "id": "/ganjoorSearch/pwa/230"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/230-192.png",

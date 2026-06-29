@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/186",
+  "id": "/ganjoorSearch/pwa/186",
   "name": "میرداماد — گنجورسرچ",
   "short_name": "میرداماد",
   "description": "جستجوی اشعار میرداماد با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=186&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/186/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/186/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-186.webmanifest",
+      "id": "/ganjoorSearch/pwa/186"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/186-192.png",

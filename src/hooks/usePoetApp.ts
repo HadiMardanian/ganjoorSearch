@@ -9,6 +9,7 @@ import {
   resolveActivePoetId,
   shouldStandaloneRedirectToStoredPoet,
 } from '@/utils/poetAppState';
+import { getPoetPwaScopePath } from '@/utils/poetPwaPath';
 
 const STORAGE_KEY = 'ganjoorsearch-installed-poet';
 
@@ -73,14 +74,9 @@ export function usePoetApp(
       return;
     }
 
-    const base = import.meta.env.BASE_URL;
-    const params = new URLSearchParams({
-      poet: String(storedPoet!.id),
-      source: 'pwa',
-      tab: 'browse',
-    });
+    const params = new URLSearchParams('source=pwa&tab=browse');
     appendBrowseSessionToParams(storedPoet!.id, params);
-    const target = `${base}?${params.toString()}`;
+    const target = `${getPoetPwaScopePath(storedPoet!.id).replace(/\/$/, '')}?${params.toString()}`;
     const current = `${window.location.pathname}${window.location.search}`;
     if (current !== target) {
       window.location.replace(target);

@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/17",
+  "id": "/ganjoorSearch/pwa/17",
   "name": "مسعود سعد سلمان — گنجورسرچ",
   "short_name": "مسعود سعد سلمان",
   "description": "جستجوی اشعار مسعود سعد سلمان با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=17&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/17/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/17/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-17.webmanifest",
+      "id": "/ganjoorSearch/pwa/17"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/17-192.png",

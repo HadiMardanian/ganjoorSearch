@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/227",
+  "id": "/ganjoorSearch/pwa/227",
   "name": "عبدالکریم اشراق بیرجندی — گنجورسرچ",
   "short_name": "عبدالکریم اشراق بیرجندی",
   "description": "جستجوی اشعار عبدالکریم اشراق بیرجندی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=227&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/227/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/227/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-227.webmanifest",
+      "id": "/ganjoorSearch/pwa/227"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/227-192.png",

@@ -25,7 +25,7 @@ export function usePwaInstall() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(
     null,
   );
-  const [isInstalled, setIsInstalled] = useState(isStandaloneDisplay);
+  const [isStandalone, setIsStandalone] = useState(isStandaloneDisplay);
   const [isIos, setIsIos] = useState(false);
 
   useEffect(() => {
@@ -38,12 +38,12 @@ export function usePwaInstall() {
     }
 
     function handleAppInstalled() {
+      // Clear prompt only — do not mark "installed" globally; multiple poet PWAs are allowed.
       setDeferredPrompt(null);
-      setIsInstalled(true);
     }
 
     function handleDisplayMode(event: MediaQueryListEvent) {
-      if (event.matches) setIsInstalled(true);
+      setIsStandalone(event.matches || isStandaloneDisplay());
     }
 
     const mq = window.matchMedia('(display-mode: standalone)');
@@ -58,8 +58,8 @@ export function usePwaInstall() {
     };
   }, []);
 
-  const canInstall = Boolean(deferredPrompt) && !isInstalled;
-  const showInstallCta = !isInstalled;
+  const canInstall = Boolean(deferredPrompt);
+  const showInstallCta = !isStandalone;
 
   const promptInstall = useCallback(async (): Promise<'accepted' | 'dismissed' | 'unavailable'> => {
     if (!deferredPrompt) return 'unavailable';
@@ -72,7 +72,6 @@ export function usePwaInstall() {
         { outcome: 'dismissed' as const },
       );
       setDeferredPrompt(null);
-      if (outcome === 'accepted') setIsInstalled(true);
       return outcome;
     } catch {
       setDeferredPrompt(null);
@@ -82,7 +81,7 @@ export function usePwaInstall() {
 
   return {
     canInstall,
-    isInstalled,
+    isStandalone,
     isIos,
     showInstallCta,
     promptInstall,

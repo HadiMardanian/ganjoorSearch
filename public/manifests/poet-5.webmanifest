@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/5",
+  "id": "/ganjoorSearch/pwa/5",
   "name": "جلال الدین محمد مولوی — گنجورسرچ",
   "short_name": "جلال الدین محمد مولوی",
   "description": "جستجوی اشعار جلال الدین محمد مولوی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=5&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/5/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/5/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-5.webmanifest",
+      "id": "/ganjoorSearch/pwa/5"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/5-192.png",

@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/97",
+  "id": "/ganjoorSearch/pwa/97",
   "name": "اسیری لاهیجی — گنجورسرچ",
   "short_name": "اسیری لاهیجی",
   "description": "جستجوی اشعار اسیری لاهیجی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=97&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/97/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/97/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-97.webmanifest",
+      "id": "/ganjoorSearch/pwa/97"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/97-192.png",

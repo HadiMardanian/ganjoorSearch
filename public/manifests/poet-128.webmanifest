@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/128",
+  "id": "/ganjoorSearch/pwa/128",
   "name": "سعیدا — گنجورسرچ",
   "short_name": "سعیدا",
   "description": "جستجوی اشعار سعیدا با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=128&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/128/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/128/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-128.webmanifest",
+      "id": "/ganjoorSearch/pwa/128"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/128-192.png",

@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/206",
+  "id": "/ganjoorSearch/pwa/206",
   "name": "محمد بن مخلد سگزی — گنجورسرچ",
   "short_name": "محمد بن مخلد سگزی",
   "description": "جستجوی اشعار محمد بن مخلد سگزی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=206&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/206/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/206/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-206.webmanifest",
+      "id": "/ganjoorSearch/pwa/206"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/206-192.png",

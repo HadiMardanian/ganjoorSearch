@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/231",
+  "id": "/ganjoorSearch/pwa/231",
   "name": "عبدالرحیم حائری — گنجورسرچ",
   "short_name": "عبدالرحیم حائری",
   "description": "جستجوی اشعار عبدالرحیم حائری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=231&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/231/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/231/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-231.webmanifest",
+      "id": "/ganjoorSearch/pwa/231"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/231-192.png",

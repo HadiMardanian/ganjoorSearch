@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/69",
+  "id": "/ganjoorSearch/pwa/69",
   "name": "ظهیر فاریابی — گنجورسرچ",
   "short_name": "ظهیر فاریابی",
   "description": "جستجوی اشعار ظهیر فاریابی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=69&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/69/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/69/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-69.webmanifest",
+      "id": "/ganjoorSearch/pwa/69"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/69-192.png",

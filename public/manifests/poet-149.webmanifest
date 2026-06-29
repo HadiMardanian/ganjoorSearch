@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/149",
+  "id": "/ganjoorSearch/pwa/149",
   "name": "نشاط اصفهانی — گنجورسرچ",
   "short_name": "نشاط اصفهانی",
   "description": "جستجوی اشعار نشاط اصفهانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=149&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/149/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/149/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-149.webmanifest",
+      "id": "/ganjoorSearch/pwa/149"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/149-192.png",

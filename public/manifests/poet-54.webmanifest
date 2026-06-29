@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/54",
+  "id": "/ganjoorSearch/pwa/54",
   "name": "مهستی گنجوی — گنجورسرچ",
   "short_name": "مهستی گنجوی",
   "description": "جستجوی اشعار مهستی گنجوی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=54&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/54/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/54/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-54.webmanifest",
+      "id": "/ganjoorSearch/pwa/54"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/54-192.png",

@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/80",
+  "id": "/ganjoorSearch/pwa/80",
   "name": "حکیم سبزواری — گنجورسرچ",
   "short_name": "حکیم سبزواری",
   "description": "جستجوی اشعار حکیم سبزواری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=80&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/80/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/80/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-80.webmanifest",
+      "id": "/ganjoorSearch/pwa/80"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/80-192.png",

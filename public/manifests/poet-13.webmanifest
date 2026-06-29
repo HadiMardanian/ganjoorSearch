@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/13",
+  "id": "/ganjoorSearch/pwa/13",
   "name": "ناصرخسرو قبادیانی — گنجورسرچ",
   "short_name": "ناصرخسرو قبادیانی",
   "description": "جستجوی اشعار ناصرخسرو قبادیانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=13&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/13/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/13/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-13.webmanifest",
+      "id": "/ganjoorSearch/pwa/13"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/13-192.png",

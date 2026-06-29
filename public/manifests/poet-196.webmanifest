@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/196",
+  "id": "/ganjoorSearch/pwa/196",
   "name": "محمد بن عمادالدین خراسانی — گنجورسرچ",
   "short_name": "محمد بن عمادالدین خراسانی",
   "description": "جستجوی اشعار محمد بن عمادالدین خراسانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=196&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/196/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/196/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-196.webmanifest",
+      "id": "/ganjoorSearch/pwa/196"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/196-192.png",

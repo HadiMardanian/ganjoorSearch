@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/219",
+  "id": "/ganjoorSearch/pwa/219",
   "name": "جلاب بخارایی — گنجورسرچ",
   "short_name": "جلاب بخارایی",
   "description": "جستجوی اشعار جلاب بخارایی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=219&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/219/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/219/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-219.webmanifest",
+      "id": "/ganjoorSearch/pwa/219"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/219-192.png",

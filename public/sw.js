@@ -1,4 +1,4 @@
-const CACHE = 'ganjoorsearch-shell-v3';
+const CACHE = 'ganjoorsearch-shell-v4';
 const SHELL = ['/ganjoorSearch/', '/ganjoorSearch/index.html'];
 const STATIC_ASSETS = [
   '/ganjoorSearch/manifest.webmanifest',
@@ -27,6 +27,10 @@ function isPoetManifestPath(pathname) {
   return /\/ganjoorSearch\/manifests\/poet-\d+\.webmanifest$/.test(pathname);
 }
 
+function isPoetPwaPath(pathname) {
+  return /\/ganjoorSearch\/pwa\/\d+\/?$/.test(pathname);
+}
+
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
@@ -34,6 +38,7 @@ self.addEventListener('fetch', (event) => {
 
   const isShell =
     SHELL.includes(url.pathname) ||
+    isPoetPwaPath(url.pathname) ||
     url.pathname.endsWith('.html') ||
     url.pathname.endsWith('manifest.webmanifest') ||
     isPoetIconPath(url.pathname) ||
@@ -42,6 +47,12 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
+
+      if (isPoetPwaPath(url.pathname)) {
+        return caches.match('/ganjoorSearch/index.html').then(
+          (shell) => shell || fetch(event.request),
+        );
+      }
 
       return fetch(event.request).then((response) => {
         if (response.ok && isShell) {

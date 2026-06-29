@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/198",
+  "id": "/ganjoorSearch/pwa/198",
   "name": "ناصر بخارایی — گنجورسرچ",
   "short_name": "ناصر بخارایی",
   "description": "جستجوی اشعار ناصر بخارایی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=198&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/198/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/198/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-198.webmanifest",
+      "id": "/ganjoorSearch/pwa/198"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/198-192.png",

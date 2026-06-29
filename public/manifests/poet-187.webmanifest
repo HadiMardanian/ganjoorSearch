@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/187",
+  "id": "/ganjoorSearch/pwa/187",
   "name": "صفی علیشاه — گنجورسرچ",
   "short_name": "صفی علیشاه",
   "description": "جستجوی اشعار صفی علیشاه با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=187&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/187/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/187/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-187.webmanifest",
+      "id": "/ganjoorSearch/pwa/187"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/187-192.png",

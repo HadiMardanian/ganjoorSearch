@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/29",
+  "id": "/ganjoorSearch/pwa/29",
   "name": "محتشم کاشانی — گنجورسرچ",
   "short_name": "محتشم کاشانی",
   "description": "جستجوی اشعار محتشم کاشانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=29&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/29/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/29/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-29.webmanifest",
+      "id": "/ganjoorSearch/pwa/29"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/29-192.png",

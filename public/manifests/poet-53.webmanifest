@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/53",
+  "id": "/ganjoorSearch/pwa/53",
   "name": "علی بن عثمان هجویری — گنجورسرچ",
   "short_name": "علی بن عثمان هجویری",
   "description": "جستجوی اشعار علی بن عثمان هجویری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=53&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/53/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/53/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-53.webmanifest",
+      "id": "/ganjoorSearch/pwa/53"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/53-192.png",

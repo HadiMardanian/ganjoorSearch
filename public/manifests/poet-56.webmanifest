@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/56",
+  "id": "/ganjoorSearch/pwa/56",
   "name": "باباافضل کاشانی — گنجورسرچ",
   "short_name": "باباافضل کاشانی",
   "description": "جستجوی اشعار باباافضل کاشانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=56&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/56/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/56/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-56.webmanifest",
+      "id": "/ganjoorSearch/pwa/56"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/56-192.png",

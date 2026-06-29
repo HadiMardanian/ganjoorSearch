@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/35",
+  "id": "/ganjoorSearch/pwa/35",
   "name": "شهریار — گنجورسرچ",
   "short_name": "شهریار",
   "description": "جستجوی اشعار شهریار با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=35&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/35/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/35/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-35.webmanifest",
+      "id": "/ganjoorSearch/pwa/35"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/35-192.png",

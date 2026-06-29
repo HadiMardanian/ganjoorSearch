@@ -1,5 +1,10 @@
 import type { Poet } from '@/types/ganjoor';
 import { resolveManifestIconUrls } from '@/utils/poetIcon';
+import {
+  buildPoetPwaStartUrl,
+  getPoetPwaManifestId,
+  getPoetPwaScopePath,
+} from '@/utils/poetPwaPath';
 
 const BASE = import.meta.env.BASE_URL;
 const MANIFEST_LINK_ID = 'app-manifest';
@@ -19,6 +24,7 @@ export interface PoetManifest {
   background_color: string;
   theme_color: string;
   icons: Array<{ src: string; sizes: string; type: string; purpose?: string }>;
+  related_applications?: Array<{ platform: string; url: string; id: string }>;
 }
 
 let manifestObjectUrl: string | null = null;
@@ -53,17 +59,24 @@ export function buildPoetManifest(
 ): PoetManifest {
   const poetName = poet.name || poet.fullName || 'شاعر';
   return {
-    id: `${BASE}poet-app/${poet.id}`,
+    id: getPoetPwaManifestId(poet.id),
     name: `${poetName} — گنجورسرچ`,
     short_name: poetName,
     description: `جستجوی اشعار ${poetName} با گنجورسرچ`,
     lang: 'fa',
     dir: 'rtl',
-    start_url: `${BASE}?poet=${poet.id}&source=pwa&tab=browse`,
-    scope: BASE,
+    start_url: buildPoetPwaStartUrl(poet.id),
+    scope: getPoetPwaScopePath(poet.id),
     display: 'standalone',
     background_color: '#f7f4ef',
     theme_color: '#9a3412',
+    related_applications: [
+      {
+        platform: 'webapp',
+        url: getPoetManifestUrl(poet.id),
+        id: getPoetPwaManifestId(poet.id),
+      },
+    ],
     icons: [
       { src: icon192, sizes: '192x192', type: 'image/png', purpose: 'any' },
       { src: icon512, sizes: '512x512', type: 'image/png', purpose: 'any' },

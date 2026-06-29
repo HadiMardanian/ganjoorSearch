@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/47",
+  "id": "/ganjoorSearch/pwa/47",
   "name": "رضی‌الدین آرتیمانی — گنجورسرچ",
   "short_name": "رضی‌الدین آرتیمانی",
   "description": "جستجوی اشعار رضی‌الدین آرتیمانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=47&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/47/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/47/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-47.webmanifest",
+      "id": "/ganjoorSearch/pwa/47"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/47-192.png",

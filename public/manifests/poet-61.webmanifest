@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/61",
+  "id": "/ganjoorSearch/pwa/61",
   "name": "فایز — گنجورسرچ",
   "short_name": "فایز",
   "description": "جستجوی اشعار فایز با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=61&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/61/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/61/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-61.webmanifest",
+      "id": "/ganjoorSearch/pwa/61"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/61-192.png",

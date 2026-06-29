@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/225",
+  "id": "/ganjoorSearch/pwa/225",
   "name": "مرادی — گنجورسرچ",
   "short_name": "مرادی",
   "description": "جستجوی اشعار مرادی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=225&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/225/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/225/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-225.webmanifest",
+      "id": "/ganjoorSearch/pwa/225"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/225-192.png",

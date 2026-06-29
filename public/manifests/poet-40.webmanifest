@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/40",
+  "id": "/ganjoorSearch/pwa/40",
   "name": "سلمان ساوجی — گنجورسرچ",
   "short_name": "سلمان ساوجی",
   "description": "جستجوی اشعار سلمان ساوجی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=40&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/40/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/40/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-40.webmanifest",
+      "id": "/ganjoorSearch/pwa/40"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/40-192.png",

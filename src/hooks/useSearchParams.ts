@@ -1,8 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { CategoryFilter, PoetFilter, ViewMode } from '@/types/ganjoor';
 import { formatBrowsePath, parseBrowsePath } from '@/utils/browsePath';
-import { formatIdListParam, parseIdListParam } from '@/utils/filterState';
+import { formatIdListParam, parseIdListParam, singleFilterId } from '@/utils/filterState';
 import { mergeBrowseSessionIntoState } from '@/utils/browseSession';
+import {
+  defaultAppPathname,
+  getPoetPwaScopePath,
+  parsePoetIdFromPwaPath,
+} from '@/utils/poetPwaPath';
 
 export type PoetAppTab = 'browse' | 'search';
 
@@ -38,6 +43,9 @@ function readFromUrl(): SearchState {
   const params = new URLSearchParams(window.location.search);
 
   const poet = params.get('poet');
+  const pathPoetId = parsePoetIdFromPwaPath(window.location.pathname);
+  const poetIdFromUrl =
+    pathPoetId != null ? [pathPoetId] : parseIdListParam(poet);
   const cat = params.get('cat');
   const page = Number(params.get('page') ?? '1');
   const mode = params.get('mode');
@@ -67,7 +75,7 @@ function readFromUrl(): SearchState {
 
   return mergeBrowseSessionIntoState({
     term,
-    poetId: parseIdListParam(poet),
+    poetId: poetIdFromUrl,
     categoryId: parseIdListParam(cat),
     page: Number.isFinite(page) && page > 0 ? page : 1,
     viewMode: mode === 'full' ? 'full' : 'verse',
@@ -80,12 +88,21 @@ function readFromUrl(): SearchState {
   });
 }
 
+function resolvePathname(state: SearchState): string {
+  const poetId = singleFilterId(state.poetId);
+  if (state.source === 'pwa' && poetId != null) {
+    return getPoetPwaScopePath(poetId).replace(/\/$/, '');
+  }
+  return defaultAppPathname();
+}
+
 function buildUrl(state: SearchState): string {
   const params = new URLSearchParams();
 
   if (state.term) params.set('q', state.term);
   const poetParam = formatIdListParam(state.poetId);
-  if (poetParam) params.set('poet', poetParam);
+  // Poet id is in the path for PWA mode; keep query for legacy deep links only when not on /pwa/{id}/
+  if (poetParam && state.source !== 'pwa') params.set('poet', poetParam);
   const catParam = formatIdListParam(state.categoryId);
   if (catParam) params.set('cat', catParam);
   if (state.page > 1) params.set('page', String(state.page));
@@ -101,7 +118,8 @@ function buildUrl(state: SearchState): string {
   if (state.poemListPage > 1) params.set('plist', String(state.poemListPage));
 
   const query = params.toString();
-  return query ? `${window.location.pathname}?${query}` : window.location.pathname;
+  const pathname = resolvePathname(state);
+  return query ? `${pathname}?${query}` : pathname;
 }
 
 function writeToUrl(state: SearchState, push = false) {

@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/190",
+  "id": "/ganjoorSearch/pwa/190",
   "name": "حاجب شیرازی — گنجورسرچ",
   "short_name": "حاجب شیرازی",
   "description": "جستجوی اشعار حاجب شیرازی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=190&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/190/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/190/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-190.webmanifest",
+      "id": "/ganjoorSearch/pwa/190"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/190-192.png",

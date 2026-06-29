@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/109",
+  "id": "/ganjoorSearch/pwa/109",
   "name": "عثمان مختاری — گنجورسرچ",
   "short_name": "عثمان مختاری",
   "description": "جستجوی اشعار عثمان مختاری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=109&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/109/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/109/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-109.webmanifest",
+      "id": "/ganjoorSearch/pwa/109"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/109-192.png",

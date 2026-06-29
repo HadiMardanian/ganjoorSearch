@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/167",
+  "id": "/ganjoorSearch/pwa/167",
   "name": "رفیق اصفهانی — گنجورسرچ",
   "short_name": "رفیق اصفهانی",
   "description": "جستجوی اشعار رفیق اصفهانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=167&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/167/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/167/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-167.webmanifest",
+      "id": "/ganjoorSearch/pwa/167"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/167-192.png",

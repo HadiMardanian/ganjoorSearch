@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/83",
+  "id": "/ganjoorSearch/pwa/83",
   "name": "ابراهیم شاهدی دده — گنجورسرچ",
   "short_name": "ابراهیم شاهدی دده",
   "description": "جستجوی اشعار ابراهیم شاهدی دده با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=83&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/83/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/83/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-83.webmanifest",
+      "id": "/ganjoorSearch/pwa/83"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/83-192.png",

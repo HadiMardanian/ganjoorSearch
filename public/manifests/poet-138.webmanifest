@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/138",
+  "id": "/ganjoorSearch/pwa/138",
   "name": "طبیب اصفهانی — گنجورسرچ",
   "short_name": "طبیب اصفهانی",
   "description": "جستجوی اشعار طبیب اصفهانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=138&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/138/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/138/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-138.webmanifest",
+      "id": "/ganjoorSearch/pwa/138"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/138-192.png",

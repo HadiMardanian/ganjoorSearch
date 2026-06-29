@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/205",
+  "id": "/ganjoorSearch/pwa/205",
   "name": "محمود وراق هروی — گنجورسرچ",
   "short_name": "محمود وراق هروی",
   "description": "جستجوی اشعار محمود وراق هروی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=205&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/205/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/205/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-205.webmanifest",
+      "id": "/ganjoorSearch/pwa/205"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/205-192.png",

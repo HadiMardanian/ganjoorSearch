@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/188",
+  "id": "/ganjoorSearch/pwa/188",
   "name": "صوفی محمد هروی — گنجورسرچ",
   "short_name": "صوفی محمد هروی",
   "description": "جستجوی اشعار صوفی محمد هروی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=188&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/188/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/188/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-188.webmanifest",
+      "id": "/ganjoorSearch/pwa/188"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/188-192.png",

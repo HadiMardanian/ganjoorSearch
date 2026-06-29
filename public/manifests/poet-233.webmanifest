@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/233",
+  "id": "/ganjoorSearch/pwa/233",
   "name": "ساغر کنگاوری — گنجورسرچ",
   "short_name": "ساغر کنگاوری",
   "description": "جستجوی اشعار ساغر کنگاوری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=233&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/233/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/233/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-233.webmanifest",
+      "id": "/ganjoorSearch/pwa/233"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/233-192.png",

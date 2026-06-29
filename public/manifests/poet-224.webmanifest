@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/224",
+  "id": "/ganjoorSearch/pwa/224",
   "name": "طخاری — گنجورسرچ",
   "short_name": "طخاری",
   "description": "جستجوی اشعار طخاری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=224&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/224/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/224/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-224.webmanifest",
+      "id": "/ganjoorSearch/pwa/224"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/224-192.png",

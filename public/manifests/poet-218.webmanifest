@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/218",
+  "id": "/ganjoorSearch/pwa/218",
   "name": "ترکی کشی — گنجورسرچ",
   "short_name": "ترکی کشی",
   "description": "جستجوی اشعار ترکی کشی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=218&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/218/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/218/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-218.webmanifest",
+      "id": "/ganjoorSearch/pwa/218"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/218-192.png",

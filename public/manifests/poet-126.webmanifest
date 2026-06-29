@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/126",
+  "id": "/ganjoorSearch/pwa/126",
   "name": "سرایندهٔ فرامرزنامه — گنجورسرچ",
   "short_name": "سرایندهٔ فرامرزنامه",
   "description": "جستجوی اشعار سرایندهٔ فرامرزنامه با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=126&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/126/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/126/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-126.webmanifest",
+      "id": "/ganjoorSearch/pwa/126"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/126-192.png",

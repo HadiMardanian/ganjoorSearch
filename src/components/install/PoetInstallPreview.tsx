@@ -7,6 +7,7 @@ interface PoetInstallPreviewProps {
   poet: Poet;
   canInstall: boolean;
   isIos: boolean;
+  alreadyInstalled?: boolean;
   installing?: boolean;
   onInstall: () => void;
   onUseWithoutInstall: () => void;
@@ -24,6 +25,7 @@ export function PoetInstallPreview({
   poet,
   canInstall,
   isIos,
+  alreadyInstalled,
   installing,
   onInstall,
   onUseWithoutInstall,
@@ -63,6 +65,15 @@ export function PoetInstallPreview({
         </ul>
 
         <div className="mt-8 space-y-3">
+          {alreadyInstalled ? (
+            <div className="surface-muted rounded-xl border p-4 text-sm">
+              <p className="font-medium">اپ {name} قبلاً نصب شده</p>
+              <p className="text-muted mt-2">
+                از آیکون صفحهٔ اصلی همان شاعر را باز کنید، یا شاعر دیگری را نصب کنید.
+              </p>
+            </div>
+          ) : null}
+
           <Button
             type="button"
             variant="secondary"
@@ -73,7 +84,7 @@ export function PoetInstallPreview({
             شروع مرور آثار {name}
           </Button>
 
-          {canInstall ? (
+          {canInstall && !alreadyInstalled ? (
             <Button
               type="button"
               className="w-full py-3 text-base"
@@ -83,12 +94,12 @@ export function PoetInstallPreview({
               <Download size={18} />
               {installing ? 'در حال نصب…' : `نصب اپ ${name}`}
             </Button>
-          ) : isIos ? (
+          ) : isIos && !alreadyInstalled ? (
             <Button type="button" className="w-full py-3 text-base" onClick={onIosGuide}>
               <Smartphone size={18} />
               راهنمای افزودن به صفحهٔ اصلی
             </Button>
-          ) : (
+          ) : !alreadyInstalled ? (
             <div className="surface-muted rounded-xl border p-4 text-sm">
               <p className="font-medium">نصب از مرورگر</p>
               <p className="text-muted mt-2">
@@ -104,7 +115,7 @@ export function PoetInstallPreview({
                 راهنمای iOS / Safari
               </Button>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

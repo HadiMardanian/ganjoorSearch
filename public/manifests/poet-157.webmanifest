@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/157",
+  "id": "/ganjoorSearch/pwa/157",
   "name": "نظیری نیشابوری — گنجورسرچ",
   "short_name": "نظیری نیشابوری",
   "description": "جستجوی اشعار نظیری نیشابوری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=157&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/157/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/157/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-157.webmanifest",
+      "id": "/ganjoorSearch/pwa/157"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/157-192.png",

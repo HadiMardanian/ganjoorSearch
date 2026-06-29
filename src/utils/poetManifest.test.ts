@@ -16,8 +16,9 @@ describe('poetManifest', () => {
     );
 
     expect(manifest.short_name).toBe('حافظ');
-    expect(manifest.start_url).toContain('poet=1');
+    expect(manifest.start_url).toContain('/pwa/1/');
     expect(manifest.start_url).toContain('source=pwa');
+    expect(manifest.scope).toContain('/pwa/1/');
     expect(manifest.icons).toHaveLength(3);
   });
 

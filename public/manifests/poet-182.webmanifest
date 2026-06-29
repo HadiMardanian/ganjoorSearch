@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/182",
+  "id": "/ganjoorSearch/pwa/182",
   "name": "صغیر اصفهانی — گنجورسرچ",
   "short_name": "صغیر اصفهانی",
   "description": "جستجوی اشعار صغیر اصفهانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=182&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/182/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/182/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-182.webmanifest",
+      "id": "/ganjoorSearch/pwa/182"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/182-192.png",

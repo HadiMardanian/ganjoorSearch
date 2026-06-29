@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/122",
+  "id": "/ganjoorSearch/pwa/122",
   "name": "اهلی شیرازی — گنجورسرچ",
   "short_name": "اهلی شیرازی",
   "description": "جستجوی اشعار اهلی شیرازی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=122&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/122/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/122/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-122.webmanifest",
+      "id": "/ganjoorSearch/pwa/122"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/122-192.png",

@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/155",
+  "id": "/ganjoorSearch/pwa/155",
   "name": "الهامی کرمانشاهی — گنجورسرچ",
   "short_name": "الهامی کرمانشاهی",
   "description": "جستجوی اشعار الهامی کرمانشاهی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=155&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/155/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/155/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-155.webmanifest",
+      "id": "/ganjoorSearch/pwa/155"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/155-192.png",

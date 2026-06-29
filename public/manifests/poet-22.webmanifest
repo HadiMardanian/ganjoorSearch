@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/22",
+  "id": "/ganjoorSearch/pwa/22",
   "name": "صائب — گنجورسرچ",
   "short_name": "صائب",
   "description": "جستجوی اشعار صائب با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=22&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/22/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/22/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-22.webmanifest",
+      "id": "/ganjoorSearch/pwa/22"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/22-192.png",

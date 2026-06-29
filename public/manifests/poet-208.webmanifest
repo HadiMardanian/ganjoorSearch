@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/208",
+  "id": "/ganjoorSearch/pwa/208",
   "name": "ابواسحاق جویباری — گنجورسرچ",
   "short_name": "ابواسحاق جویباری",
   "description": "جستجوی اشعار ابواسحاق جویباری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=208&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/208/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/208/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-208.webmanifest",
+      "id": "/ganjoorSearch/pwa/208"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/208-192.png",

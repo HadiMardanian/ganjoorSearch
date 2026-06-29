@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/103",
+  "id": "/ganjoorSearch/pwa/103",
   "name": "امیر شاهی سبزواری — گنجورسرچ",
   "short_name": "امیر شاهی سبزواری",
   "description": "جستجوی اشعار امیر شاهی سبزواری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=103&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/103/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/103/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-103.webmanifest",
+      "id": "/ganjoorSearch/pwa/103"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/103-192.png",

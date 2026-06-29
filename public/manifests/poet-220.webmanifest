@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/220",
+  "id": "/ganjoorSearch/pwa/220",
   "name": "شاکر بخارایی — گنجورسرچ",
   "short_name": "شاکر بخارایی",
   "description": "جستجوی اشعار شاکر بخارایی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=220&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/220/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/220/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-220.webmanifest",
+      "id": "/ganjoorSearch/pwa/220"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/220-192.png",

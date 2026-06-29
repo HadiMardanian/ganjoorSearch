@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/148",
+  "id": "/ganjoorSearch/pwa/148",
   "name": "آذر بیگدلی — گنجورسرچ",
   "short_name": "آذر بیگدلی",
   "description": "جستجوی اشعار آذر بیگدلی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=148&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/148/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/148/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-148.webmanifest",
+      "id": "/ganjoorSearch/pwa/148"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/148-192.png",

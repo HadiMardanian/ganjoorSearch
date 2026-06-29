@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/7",
+  "id": "/ganjoorSearch/pwa/7",
   "name": "سعدی شیرازی — گنجورسرچ",
   "short_name": "سعدی شیرازی",
   "description": "جستجوی اشعار سعدی شیرازی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=7&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/7/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/7/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-7.webmanifest",
+      "id": "/ganjoorSearch/pwa/7"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/7-192.png",

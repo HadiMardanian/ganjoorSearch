@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/57",
+  "id": "/ganjoorSearch/pwa/57",
   "name": "ابن حسام خوسفی — گنجورسرچ",
   "short_name": "ابن حسام خوسفی",
   "description": "جستجوی اشعار ابن حسام خوسفی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=57&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/57/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/57/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-57.webmanifest",
+      "id": "/ganjoorSearch/pwa/57"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/57-192.png",

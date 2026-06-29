@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/46",
+  "id": "/ganjoorSearch/pwa/46",
   "name": "عرفی شیرازی — گنجورسرچ",
   "short_name": "عرفی شیرازی",
   "description": "جستجوی اشعار عرفی شیرازی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=46&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/46/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/46/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-46.webmanifest",
+      "id": "/ganjoorSearch/pwa/46"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/46-192.png",

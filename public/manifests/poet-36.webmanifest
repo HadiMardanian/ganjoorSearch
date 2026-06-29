@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/36",
+  "id": "/ganjoorSearch/pwa/36",
   "name": "رشحه — گنجورسرچ",
   "short_name": "رشحه",
   "description": "جستجوی اشعار رشحه با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=36&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/36/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/36/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-36.webmanifest",
+      "id": "/ganjoorSearch/pwa/36"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/36-192.png",

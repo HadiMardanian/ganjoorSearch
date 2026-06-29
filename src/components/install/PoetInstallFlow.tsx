@@ -4,6 +4,7 @@ import { PoetInstallGallery } from '@/components/install/PoetInstallGallery';
 import { PoetInstallPreview } from '@/components/install/PoetInstallPreview';
 import { IosInstallGuide } from '@/components/install/IosInstallGuide';
 import { usePwaInstall } from '@/hooks/usePwaInstall';
+import { isPoetPwaInstalled } from '@/utils/poetPwaInstall';
 import {
   injectPoetManifest,
   lockPoetManifestForInstall,
@@ -37,6 +38,7 @@ export function PoetInstallFlow({
   const [step, setStep] = useState<Step>('gallery');
   const [selectedPoet, setSelectedPoet] = useState<Poet | null>(null);
   const [installing, setInstalling] = useState(false);
+  const [poetAlreadyInstalled, setPoetAlreadyInstalled] = useState(false);
   const userPickedPoetRef = useRef(false);
   const activatedPoetRef = useRef(false);
 
@@ -63,6 +65,22 @@ export function PoetInstallFlow({
       }
     }
   }, [open, initialPoetId, poets]);
+
+  useEffect(() => {
+    if (!open || !selectedPoet || step === 'gallery') {
+      setPoetAlreadyInstalled(false);
+      return;
+    }
+
+    let cancelled = false;
+    void isPoetPwaInstalled(selectedPoet.id).then((installed) => {
+      if (!cancelled) setPoetAlreadyInstalled(installed);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open, selectedPoet, step]);
 
   useEffect(() => {
     if (!open) return;
@@ -183,6 +201,7 @@ export function PoetInstallFlow({
             poet={selectedPoet}
             canInstall={canInstall}
             isIos={isIos}
+            alreadyInstalled={poetAlreadyInstalled}
             installing={installing}
             onInstall={handleInstall}
             onUseWithoutInstall={handleUseWithoutInstall}

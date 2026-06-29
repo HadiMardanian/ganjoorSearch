@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/142",
+  "id": "/ganjoorSearch/pwa/142",
   "name": "قطران تبریزی — گنجورسرچ",
   "short_name": "قطران تبریزی",
   "description": "جستجوی اشعار قطران تبریزی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=142&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/142/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/142/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-142.webmanifest",
+      "id": "/ganjoorSearch/pwa/142"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/142-192.png",

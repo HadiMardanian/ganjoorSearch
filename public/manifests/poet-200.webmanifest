@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/200",
+  "id": "/ganjoorSearch/pwa/200",
   "name": "حنظلهٔ بادغیسی — گنجورسرچ",
   "short_name": "حنظلهٔ بادغیسی",
   "description": "جستجوی اشعار حنظلهٔ بادغیسی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=200&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/200/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/200/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-200.webmanifest",
+      "id": "/ganjoorSearch/pwa/200"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/200-192.png",

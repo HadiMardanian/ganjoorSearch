@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/143",
+  "id": "/ganjoorSearch/pwa/143",
   "name": "اثیر اخسیکتی — گنجورسرچ",
   "short_name": "اثیر اخسیکتی",
   "description": "جستجوی اشعار اثیر اخسیکتی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=143&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/143/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/143/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-143.webmanifest",
+      "id": "/ganjoorSearch/pwa/143"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/143-192.png",

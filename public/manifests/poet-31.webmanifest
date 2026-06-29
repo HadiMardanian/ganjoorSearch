@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/31",
+  "id": "/ganjoorSearch/pwa/31",
   "name": "سیف فرغانی — گنجورسرچ",
   "short_name": "سیف فرغانی",
   "description": "جستجوی اشعار سیف فرغانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=31&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/31/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/31/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-31.webmanifest",
+      "id": "/ganjoorSearch/pwa/31"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/31-192.png",

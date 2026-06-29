@@ -2,6 +2,16 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.14.2] - 2026-06-29
+
+### Fixed
+- Multiple poet PWAs: each poet now has a unique install scope (`/pwa/{id}/`) so Chrome allows installing حافظ after بیدل (no false «already installed»)
+- `usePwaInstall` no longer blocks install UI after the first poet PWA on the same device
+- Install preview shows «قبلاً نصب شده» only for the same poet (`getInstalledRelatedApps`)
+
+### Changed
+- Poet PWA `start_url`, `scope`, and `id` use per-poet paths; legacy `?poet=` URLs still work
+
 ## [2.14.1] - 2026-06-29
 
 ### Fixed

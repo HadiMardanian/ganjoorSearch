@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/6",
+  "id": "/ganjoorSearch/pwa/6",
   "name": "نظامی گنجوی — گنجورسرچ",
   "short_name": "نظامی گنجوی",
   "description": "جستجوی اشعار نظامی گنجوی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=6&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/6/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/6/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-6.webmanifest",
+      "id": "/ganjoorSearch/pwa/6"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/6-192.png",

@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/201",
+  "id": "/ganjoorSearch/pwa/201",
   "name": "محمد وصیف سگزی — گنجورسرچ",
   "short_name": "محمد وصیف سگزی",
   "description": "جستجوی اشعار محمد وصیف سگزی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=201&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/201/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/201/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-201.webmanifest",
+      "id": "/ganjoorSearch/pwa/201"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/201-192.png",

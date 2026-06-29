@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/45",
+  "id": "/ganjoorSearch/pwa/45",
   "name": "کسایی مروزی — گنجورسرچ",
   "short_name": "کسایی مروزی",
   "description": "جستجوی اشعار کسایی مروزی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=45&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/45/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/45/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-45.webmanifest",
+      "id": "/ganjoorSearch/pwa/45"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/45-192.png",

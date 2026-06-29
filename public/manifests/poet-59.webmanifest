@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/59",
+  "id": "/ganjoorSearch/pwa/59",
   "name": "عمان سامانی — گنجورسرچ",
   "short_name": "عمان سامانی",
   "description": "جستجوی اشعار عمان سامانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=59&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/59/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/59/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-59.webmanifest",
+      "id": "/ganjoorSearch/pwa/59"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/59-192.png",

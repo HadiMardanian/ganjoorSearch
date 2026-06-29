@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/20",
+  "id": "/ganjoorSearch/pwa/20",
   "name": "خواجوی کرمانی — گنجورسرچ",
   "short_name": "خواجوی کرمانی",
   "description": "جستجوی اشعار خواجوی کرمانی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=20&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/20/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/20/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-20.webmanifest",
+      "id": "/ganjoorSearch/pwa/20"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/20-192.png",

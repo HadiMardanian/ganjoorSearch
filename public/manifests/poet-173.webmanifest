@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/173",
+  "id": "/ganjoorSearch/pwa/173",
   "name": "بلند اقبال — گنجورسرچ",
   "short_name": "بلند اقبال",
   "description": "جستجوی اشعار بلند اقبال با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=173&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/173/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/173/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-173.webmanifest",
+      "id": "/ganjoorSearch/pwa/173"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/173-192.png",

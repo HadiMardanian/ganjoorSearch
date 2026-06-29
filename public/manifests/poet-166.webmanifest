@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/166",
+  "id": "/ganjoorSearch/pwa/166",
   "name": "سراج قمری — گنجورسرچ",
   "short_name": "سراج قمری",
   "description": "جستجوی اشعار سراج قمری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=166&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/166/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/166/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-166.webmanifest",
+      "id": "/ganjoorSearch/pwa/166"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/166-192.png",

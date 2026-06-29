@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/232",
+  "id": "/ganjoorSearch/pwa/232",
   "name": "مجذوب تبریزی — گنجورسرچ",
   "short_name": "مجذوب تبریزی",
   "description": "جستجوی اشعار مجذوب تبریزی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=232&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/232/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/232/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-232.webmanifest",
+      "id": "/ganjoorSearch/pwa/232"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/232-192.png",

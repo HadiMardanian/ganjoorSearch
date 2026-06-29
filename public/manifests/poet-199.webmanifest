@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/199",
+  "id": "/ganjoorSearch/pwa/199",
   "name": "غنی کشمیری — گنجورسرچ",
   "short_name": "غنی کشمیری",
   "description": "جستجوی اشعار غنی کشمیری با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=199&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/199/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/199/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-199.webmanifest",
+      "id": "/ganjoorSearch/pwa/199"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/199-192.png",

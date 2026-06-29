@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/197",
+  "id": "/ganjoorSearch/pwa/197",
   "name": "سام میرزا صفوی — گنجورسرچ",
   "short_name": "سام میرزا صفوی",
   "description": "جستجوی اشعار سام میرزا صفوی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=197&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/197/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/197/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-197.webmanifest",
+      "id": "/ganjoorSearch/pwa/197"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/197-192.png",

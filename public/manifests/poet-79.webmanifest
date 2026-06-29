@@ -1,15 +1,22 @@
 {
-  "id": "/ganjoorSearch/poet-app/79",
+  "id": "/ganjoorSearch/pwa/79",
   "name": "نیر تبریزی — گنجورسرچ",
   "short_name": "نیر تبریزی",
   "description": "جستجوی اشعار نیر تبریزی با گنجورسرچ",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/ganjoorSearch/?poet=79&source=pwa&tab=browse",
-  "scope": "/ganjoorSearch/",
+  "start_url": "/ganjoorSearch/pwa/79/?source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/pwa/79/",
   "display": "standalone",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/ganjoorSearch/manifests/poet-79.webmanifest",
+      "id": "/ganjoorSearch/pwa/79"
+    }
+  ],
   "icons": [
     {
       "src": "/ganjoorSearch/icons/poets/79-192.png",
