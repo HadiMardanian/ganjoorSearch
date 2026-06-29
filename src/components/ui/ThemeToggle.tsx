@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 interface ThemeToggleProps {
   theme: Theme;
   onChange: (theme: Theme) => void;
+  className?: string;
 }
 
 const LABELS: Record<Theme, string> = {
@@ -13,7 +14,7 @@ const LABELS: Record<Theme, string> = {
   system: 'سیستم',
 };
 
-export function ThemeToggle({ theme, onChange }: ThemeToggleProps) {
+export function ThemeToggle({ theme, onChange, className = '' }: ThemeToggleProps) {
   function cycleTheme() {
     const order: Theme[] = ['light', 'dark', 'system'];
     const index = order.indexOf(theme);
@@ -23,12 +24,12 @@ export function ThemeToggle({ theme, onChange }: ThemeToggleProps) {
   return (
     <Button
       variant="ghost"
-      className="fixed left-4 top-4 z-40"
+      className={`shrink-0 px-2.5 py-2 text-sm sm:px-4 ${className}`}
       onClick={cycleTheme}
       aria-label={`حالت نمایش: ${LABELS[theme]}`}
     >
       {theme === 'dark' ? <Moon size={18} /> : <Sun size={18} />}
-      {LABELS[theme]}
+      <span className="hidden min-[400px]:inline">{LABELS[theme]}</span>
     </Button>
   );
 }

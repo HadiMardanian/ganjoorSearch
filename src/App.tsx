@@ -14,7 +14,6 @@ import {
 } from '@/components/search/SearchForm';
 import { Pagination } from '@/components/ui/Pagination';
 import { showToast, ToastContainer } from '@/components/ui/Toast';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { ViewModeToggle } from '@/components/ui/ViewModeToggle';
 import { useSearchHistory } from '@/hooks/useSearchHistory';
 import { useSearchState } from '@/hooks/useSearchParams';
@@ -180,14 +179,13 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <ThemeToggle theme={theme} onChange={setTheme} />
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-16 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:shadow-lg"
+        className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:shadow-lg"
       >
         پرش به محتوا
       </a>
-      <Header />
+      <Header theme={theme} onThemeChange={setTheme} />
 
       <main id="main-content" className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6">
         <SearchBar
