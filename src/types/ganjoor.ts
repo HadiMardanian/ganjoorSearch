@@ -54,6 +54,24 @@ export interface Verse {
   sectionIndex1?: number;
 }
 
+export interface PoemSection {
+  id: number;
+  index: number;
+  number?: number;
+  plainText?: string;
+  htmlText?: string;
+  coupletsCount?: number;
+}
+
+export interface PoemRecitation {
+  id: number;
+  poemId: number;
+  audioTitle?: string;
+  audioArtist?: string;
+  mp3Url?: string;
+  inSyncWithText?: boolean;
+}
+
 export interface Poem {
   id: number;
   title: string;
@@ -61,6 +79,7 @@ export interface Poem {
   fullUrl?: string;
   urlSlug?: string;
   verses?: Verse[];
+  sections?: PoemSection[];
   plainText?: string;
   htmlText?: string;
   category?: {
@@ -104,5 +123,5 @@ export interface SearchResponse {
 }
 
 export type ViewMode = 'verse' | 'full';
-export type PoetFilter = number | 'all';
-export type CategoryFilter = number | 'all';
+export type PoetFilter = 'all' | number[];
+export type CategoryFilter = 'all' | number[];

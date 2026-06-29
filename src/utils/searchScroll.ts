@@ -1,4 +1,5 @@
 import type { CategoryFilter, PoetFilter } from '@/types/ganjoor';
+import { filterKey } from '@/utils/filterState';
 
 const STORAGE_KEY = 'ganjoorsearch-search-scroll';
 
@@ -19,8 +20,8 @@ function matchesContext(
 ): boolean {
   return (
     saved.term === term &&
-    saved.poetId === poetId &&
-    saved.categoryId === categoryId &&
+    filterKey(saved.poetId) === filterKey(poetId) &&
+    filterKey(saved.categoryId) === filterKey(categoryId) &&
     saved.page === page
   );
 }

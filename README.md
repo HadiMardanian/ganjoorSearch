@@ -26,7 +26,11 @@ A fast, Persian-first web app for searching classical Persian poetry via the pub
 - Install a dedicated home-screen app per poet (custom icon and name)
 - **Browse** category tree → poem lists → immersive reader
 - **Search** within the same poet; results open in-app reader
-- Continue reading, **favorites**, **random poem**, in-poem find, font size / line spacing in reader
+- جستجوی عمومی: کلیک روی نتیجه → reader داخلی (نه فقط لینک گنجور)
+- فیلتر چند شاعر / چند قالب (`poet=1,2` و `cat=24,25`)
+- خوانش صوتی (نوا) در reader، بخش «درباره شاعر»، لیست مجازی اشعار طولانی
+- cache آفلاین دسته‌های مرورشده
+- Analytics سبک با `VITE_ANALYTICS_ENDPOINT`
 - Share/copy deep links (`?poet=&poem=`) to open a poem directly
 - Browse session restored after closing the app (`bpath`, `plist`, open poem)
 - Search scroll position restored when returning from reader
@@ -55,7 +59,8 @@ Open `http://localhost:5173/ganjoorSearch/`
 | `npm run build:poet-assets` | Generate all poet icons and manifests (API) |
 | `npm run preview` | Preview `dist/` |
 | `npm run test:unit` | Vitest (no network) |
-| `npm run test:e2e` | Playwright poet-app flows (dev server + live API) |
+| `npm run build:app` | Typecheck + Vite build (بدون regen assets) |
+| `npm run test:e2e` | Playwright (جستجو، اپ شاعر، deep link) |
 | `npm run verify` | Live API checks + unit tests |
 | `npm run lint` | ESLint |
 | `npm run generate:poet-icons` | Top poets PNG icons |
@@ -104,7 +109,10 @@ Poetry data belongs to [Ganjoor](https://ganjoor.net). This project’s source c
 - نصب اپ اختصاصی برای هر شاعر روی صفحهٔ اصلی (آیکون و نام شاعر)
 - **مرور آثار:** دسته‌بندی → فهرست اشعار → reader تمام‌صفحه
 - **جستجو** در همان شاعر؛ نتایج در reader داخلی باز می‌شوند
-- ادامه مطالعه، **علاقه‌مندی‌ها**، تنظیم اندازه قلم و فاصله خطوط
+- ادامه مطالعه، علاقه‌مندی‌ها، شعر تصادفی، جستجو در شعر، خوانش صوتی (نوا)
+- کلیک نتیجه در جستجوی عمومی → reader داخلی
+- فیلتر چند شاعر / چند قالب
+- بخش «درباره شاعر»، لیست مجازی اشعار طولانی
 - بازگردانی موقعیت مرور بعد از بستن اپ (`bpath`، `plist`، شعر باز)
 - مطالعهٔ آفلاین اشعار اخیراً خوانده‌شده (ذخیره محلی)
 - دکمه Back اندروید: اول داخل اپ برمی‌گردد، بعد خارج می‌شود

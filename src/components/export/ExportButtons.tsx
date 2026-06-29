@@ -4,6 +4,7 @@ import { fetchAllSearchResults, type ExportProgress, type ExportScope } from '@/
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { exportResults, buildExportFilename, type ExportFormat } from '@/utils/export';
 import { enrichResultsWithFullText } from '@/utils/enrichResults';
+import { trackEvent } from '@/utils/analytics';
 import { formatPersianNumber } from '@/utils/paging';
 import { showToast } from '@/components/ui/Toast';
 import type { CategoryFilter, GroupedResult, PoetFilter, ViewMode } from '@/types/ganjoor';
@@ -82,8 +83,8 @@ export function ExportButtons({
         });
       } else {
         results = await fetchAllSearchResults(term, {
-          poetId,
-          categoryId,
+          poetIds: poetId,
+          categoryIds: categoryId,
           scope: 'all',
           signal: controller.signal,
           onProgress: setProgress,
@@ -130,6 +131,7 @@ export function ExportButtons({
           ? `${formatPersianNumber(rowCount)} ردیف بیت`
           : `${formatPersianNumber(results.length)} قطعه`;
       showToast(`فایل ${label} با ${countLabel} دانلود شد.`, 'success');
+      trackEvent('export', { format, mode, scope });
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') {
         showToast('دریافت خروجی لغو شد.', 'info');

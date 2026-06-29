@@ -29,9 +29,9 @@ describe('searchScroll', () => {
   });
 
   it('saves and restores scroll for matching search context', () => {
-    saveSearchScroll('جام', 1, 'all', 2, 480);
-    expect(readSearchScroll('جام', 1, 'all', 2)).toBe(480);
-    expect(readSearchScroll('جام', 1, 'all', 1)).toBeNull();
+    saveSearchScroll('جام', [1], 'all', 2, 480);
+    expect(readSearchScroll('جام', [1], 'all', 2)).toBe(480);
+    expect(readSearchScroll('جام', [1], 'all', 1)).toBeNull();
   });
 
   it('clears saved scroll', () => {

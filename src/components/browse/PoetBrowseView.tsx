@@ -4,6 +4,7 @@ import { useCategoryDetailQuery, usePoetDetailQuery } from '@/api/queries';
 import { BrowseBreadcrumb } from '@/components/poet-app/BrowseBreadcrumb';
 import type { Category, PoemSummary } from '@/types/ganjoor';
 import { CategoryGrid } from '@/components/browse/CategoryGrid';
+import { PoetAbout } from '@/components/browse/PoetAbout';
 import { PoemList } from '@/components/browse/PoemList';
 import { PoemReader } from '@/components/browse/PoemReader';
 import { QueryErrorPanel } from '@/components/ui/QueryErrorPanel';
@@ -237,6 +238,12 @@ export function PoetBrowseView({
             ))}
           </div>
         </section>
+      ) : null}
+      {!activeCatId && poetQuery.data?.poet.description ? (
+        <PoetAbout
+          name={poetName}
+          description={poetQuery.data.poet.description}
+        />
       ) : null}
       <CategoryGrid
         title={`آثار ${poetName}`}

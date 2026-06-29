@@ -32,7 +32,13 @@ import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/components/ui/Button';
 import type { CategoryFilter, Poet, PoetFilter, ViewMode } from '@/types/ganjoor';
 import { injectPoetManifest } from '@/utils/poetManifest';
+import { trackEvent } from '@/utils/analytics';
 import { clearBrowseSession, saveBrowseSession } from '@/utils/browseSession';
+import {
+  filtersEqual,
+  isAllFilter,
+  singleFilterId,
+} from '@/utils/filterState';
 import { clearSearchScroll, readSearchScroll, saveSearchScroll } from '@/utils/searchScroll';
 import { PoemReader } from '@/components/browse/PoemReader';
 
@@ -70,6 +76,9 @@ export default function App() {
   const [installOpen, setInstallOpen] = useState(false);
   const [readerTitle, setReaderTitle] = useState<string | undefined>();
   const pendingScrollRestore = useRef<number | null>(null);
+  const [readerPoetId, setReaderPoetId] = useState<number | null>(() =>
+    initial.poemUrl ? singleFilterId(initial.poetId) ?? null : null,
+  );
 
   const poetsQuery = usePoetsQuery();
   const poets = poetsQuery.data ?? [];
@@ -83,7 +92,9 @@ export default function App() {
 
   const filtersDirty =
     searched &&
-    (poetId !== appliedPoetId || categoryId !== appliedCategoryId || input.trim() !== searchTerm);
+    (!filtersEqual(poetId, appliedPoetId) ||
+      !filtersEqual(categoryId, appliedCategoryId) ||
+      input.trim() !== searchTerm);
 
   useEffect(() => {
     setInput(urlState.term);
@@ -100,13 +111,18 @@ export default function App() {
     setPoemUrl(urlState.poemUrl);
     setPoemListPage(urlState.poemListPage);
     setSearched(Boolean(urlState.term));
+    if (urlState.poemUrl) {
+      setReaderPoetId(singleFilterId(urlState.poetId) ?? null);
+    } else {
+      setReaderPoetId(null);
+    }
   }, [urlState]);
 
   useEffect(() => {
     if (!isPoetApp || !poetAppPoet) return;
-    if (poetId === poetAppPoet.id) return;
-    setPoetId(poetAppPoet.id);
-    setAppliedPoetId(poetAppPoet.id);
+    if (!isAllFilter(poetId) && poetId.length === 1 && poetId[0] === poetAppPoet.id) return;
+    setPoetId([poetAppPoet.id]);
+    setAppliedPoetId([poetAppPoet.id]);
     setCategoryId('all');
     setAppliedCategoryId('all');
   }, [isPoetApp, poetAppPoet, poetId]);
@@ -172,25 +188,28 @@ export default function App() {
       if (push) pushUrl(next);
       else replaceUrl(next);
 
-      if (lockPoet && typeof next.poetId === 'number') {
-        saveBrowseSession(next.poetId, {
-          tab: next.tab,
-          browsePath: next.browsePath,
-          poemListPage: next.poemListPage,
-          poemUrl: next.poemUrl,
-          searchTerm: next.term,
-        });
+      if (lockPoet) {
+        const lockedPoet = singleFilterId(next.poetId);
+        if (lockedPoet != null) {
+          saveBrowseSession(lockedPoet, {
+            tab: next.tab,
+            browsePath: next.browsePath,
+            poemListPage: next.poemListPage,
+            poemUrl: next.poemUrl,
+            searchTerm: next.term,
+          });
+        }
       }
     },
     [buildState, pushUrl, replaceUrl, lockPoet],
   );
 
   useEffect(() => {
-    if (!lockPoet || typeof appliedPoetId !== 'number') return;
+    const lockedPoet = singleFilterId(appliedPoetId);
+    if (!lockPoet || lockedPoet == null) return;
 
     function persistBrowseSession() {
-      if (typeof appliedPoetId !== 'number') return;
-      saveBrowseSession(appliedPoetId, {
+      saveBrowseSession(lockedPoet!, {
         tab: appTab,
         browsePath,
         poemListPage,
@@ -228,7 +247,7 @@ export default function App() {
   }, [poetsQuery.error]);
 
   useEffect(() => {
-    if (categoriesQuery.error && poetId !== 'all') {
+    if (categoriesQuery.error && !isAllFilter(poetId)) {
       showToast('خطا در بارگذاری قالب‌های شعر.', 'error');
     }
   }, [categoriesQuery.error, poetId]);
@@ -277,6 +296,7 @@ export default function App() {
     setSearched(true);
     setAppTab('search');
     addEntry({ term: trimmed, poetId, categoryId });
+    trackEvent('search', { term: trimmed });
     syncUrl({
       term: trimmed,
       poetId,
@@ -290,7 +310,9 @@ export default function App() {
   function handlePoetChange(value: PoetFilter) {
     if (lockPoet) return;
     setPoetId(value);
-    setCategoryId('all');
+    if (isAllFilter(value) || value.length !== 1) {
+      setCategoryId('all');
+    }
   }
 
   function applyHistoryEntry(entry: {
@@ -298,9 +320,12 @@ export default function App() {
     poetId: PoetFilter;
     categoryId: CategoryFilter;
   }) {
-    if (lockPoet && poetAppPoet && entry.poetId !== poetAppPoet.id) {
-      showToast(`در اپ ${poetAppPoet.name} فقط همان شاعر قابل جستجو است.`, 'info');
-      return;
+    if (lockPoet && poetAppPoet) {
+      const entryPoet = singleFilterId(entry.poetId);
+      if (entryPoet !== poetAppPoet.id) {
+        showToast(`در اپ ${poetAppPoet.name} فقط همان شاعر قابل جستجو است.`, 'info');
+        return;
+      }
     }
 
     setInput(entry.term);
@@ -341,8 +366,8 @@ export default function App() {
     setInput('');
     setSearchTerm('');
     setSearched(false);
-    setPoetId(poet.id);
-    setAppliedPoetId(poet.id);
+    setPoetId([poet.id]);
+    setAppliedPoetId([poet.id]);
     setCategoryId('all');
     setAppliedCategoryId('all');
     setUrlSource('pwa');
@@ -350,8 +375,9 @@ export default function App() {
     setBrowsePath([]);
     setPoemUrl(null);
     setPoemListPage(1);
+    trackEvent('poet_install', { poetId: poet.id });
     syncUrl({
-      poetId: poet.id,
+      poetId: [poet.id],
       categoryId: 'all',
       source: 'pwa',
       tab: 'browse',
@@ -400,19 +426,29 @@ export default function App() {
     syncUrl({ browsePath: nextPath, poemUrl: null, poemListPage: 1 }, true);
   }
 
-  function handleOpenPoem(url: string, title?: string) {
+  function handleOpenPoem(url: string, title?: string, poetIdForReader?: number) {
     if (searched && (!isPoetApp || appTab === 'search')) {
       saveSearchScroll(searchTerm, appliedPoetId, appliedCategoryId, page, window.scrollY);
     }
+    const resolvedPoet =
+      poetIdForReader ?? singleFilterId(appliedPoetId) ?? undefined;
+    if (resolvedPoet) setReaderPoetId(resolvedPoet);
     setPoemUrl(url);
     setReaderTitle(title);
     setAppTab(appTab);
-    syncUrl({ poemUrl: url }, true);
+    syncUrl(
+      {
+        poemUrl: url,
+        poetId: resolvedPoet ? [resolvedPoet] : appliedPoetId,
+      },
+      true,
+    );
+    trackEvent('poem_open', { poemUrl: url, poetId: resolvedPoet });
   }
 
   function handleBrowseBack() {
     if (poemUrl) {
-      if (searched && appTab === 'search') {
+      if (searched) {
         const restored = readSearchScroll(
           searchTerm,
           appliedPoetId,
@@ -422,6 +458,7 @@ export default function App() {
         if (restored != null) pendingScrollRestore.current = restored;
       }
       setPoemUrl(null);
+      setReaderPoetId(null);
       setReaderTitle(undefined);
       syncUrl({ poemUrl: null }, true);
       return;
@@ -480,8 +517,8 @@ export default function App() {
             categories={categories}
             value={categoryId}
             onChange={setCategoryId}
-            poetSelected={poetId !== 'all'}
-            loading={categoriesQuery.isFetching && poetId !== 'all'}
+            poetSelected={singleFilterId(poetId) != null}
+            loading={categoriesQuery.isFetching && singleFilterId(poetId) != null}
           />
         }
       />
@@ -546,15 +583,15 @@ export default function App() {
           pageSize={searchQuery.data?.pageSize ?? 20}
           totalCount={searchQuery.data?.totalCount ?? 0}
           totalPages={searchQuery.data?.totalPages ?? 0}
-          onOpenPoem={
-            isPoetApp
-              ? (result) => {
-                  if (result.fullUrl) {
-                    handleOpenPoem(result.fullUrl, result.poemTitle);
-                  }
-                }
-              : undefined
-          }
+          onOpenPoem={(result) => {
+            if (result.fullUrl) {
+              handleOpenPoem(
+                result.fullUrl,
+                result.poemTitle,
+                result.poetId ?? singleFilterId(appliedPoetId),
+              );
+            }
+          }}
         />
       </div>
 
@@ -636,8 +673,7 @@ export default function App() {
     );
   }
 
-  const showGeneralPoemReader =
-    !isPoetApp && Boolean(poemUrl) && typeof appliedPoetId === 'number';
+  const showGeneralPoemReader = !isPoetApp && Boolean(poemUrl) && readerPoetId != null;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -655,9 +691,9 @@ export default function App() {
       />
 
       <main id="main-content" className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6">
-        {showGeneralPoemReader && poemUrl ? (
+        {showGeneralPoemReader && poemUrl && readerPoetId ? (
           <PoemReader
-            poetId={appliedPoetId}
+            poetId={readerPoetId}
             poemUrl={poemUrl}
             onBack={handleBrowseBack}
           />

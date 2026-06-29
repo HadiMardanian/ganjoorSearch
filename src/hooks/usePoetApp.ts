@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Poet } from '@/types/ganjoor';
 import type { PoetFilter } from '@/types/ganjoor';
 import { appendBrowseSessionToParams } from '@/utils/browseSession';
+import { parseIdListParam, singleFilterId } from '@/utils/filterState';
 
 const STORAGE_KEY = 'ganjoorsearch-installed-poet';
 
@@ -32,8 +33,7 @@ function isStandaloneDisplay(): boolean {
 
 function readPoetIdParam(): number | null {
   if (typeof window === 'undefined') return null;
-  const poet = Number(new URLSearchParams(window.location.search).get('poet'));
-  return Number.isFinite(poet) && poet > 0 ? poet : null;
+  return singleFilterId(parseIdListParam(new URLSearchParams(window.location.search).get('poet'))) ?? null;
 }
 
 export function usePoetApp(
@@ -44,8 +44,7 @@ export function usePoetApp(
   const [storedPoet, setStoredPoet] = useState<StoredPoet | null>(() => readStoredPoet());
   const [standalone, setStandalone] = useState(isStandaloneDisplay);
 
-  const resolvedUrlPoetId =
-    urlPoetId !== 'all' && typeof urlPoetId === 'number' ? urlPoetId : null;
+  const resolvedUrlPoetId = singleFilterId(urlPoetId);
 
   useEffect(() => {
     function handleDisplayMode(event: MediaQueryListEvent) {

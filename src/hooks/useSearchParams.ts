@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { CategoryFilter, PoetFilter, ViewMode } from '@/types/ganjoor';
 import { formatBrowsePath, parseBrowsePath } from '@/utils/browsePath';
+import { formatIdListParam, parseIdListParam } from '@/utils/filterState';
 import { mergeBrowseSessionIntoState } from '@/utils/browseSession';
 
 export type PoetAppTab = 'browse' | 'search';
@@ -42,9 +43,6 @@ function readFromUrl(): SearchState {
   const mode = params.get('mode');
   const poemListPage = Number(params.get('plist') ?? '1');
 
-  const poetNum = poet ? Number(poet) : NaN;
-  const catNum = cat ? Number(cat) : NaN;
-
   const sourceParam = params.get('source');
   const tabParam = params.get('tab');
   const term = params.get('q') ?? '';
@@ -69,9 +67,8 @@ function readFromUrl(): SearchState {
 
   return mergeBrowseSessionIntoState({
     term,
-    poetId: poet && poet !== 'all' && Number.isFinite(poetNum) ? poetNum : 'all',
-    categoryId:
-      cat && cat !== 'all' && Number.isFinite(catNum) ? catNum : 'all',
+    poetId: parseIdListParam(poet),
+    categoryId: parseIdListParam(cat),
     page: Number.isFinite(page) && page > 0 ? page : 1,
     viewMode: mode === 'full' ? 'full' : 'verse',
     source: sourceParam === 'pwa' ? 'pwa' : null,
@@ -87,8 +84,10 @@ function buildUrl(state: SearchState): string {
   const params = new URLSearchParams();
 
   if (state.term) params.set('q', state.term);
-  if (state.poetId !== 'all') params.set('poet', String(state.poetId));
-  if (state.categoryId !== 'all') params.set('cat', String(state.categoryId));
+  const poetParam = formatIdListParam(state.poetId);
+  if (poetParam) params.set('poet', poetParam);
+  const catParam = formatIdListParam(state.categoryId);
+  if (catParam) params.set('cat', catParam);
   if (state.page > 1) params.set('page', String(state.page));
   if (state.viewMode !== 'verse') params.set('mode', state.viewMode);
   if (state.source === 'pwa') params.set('source', 'pwa');

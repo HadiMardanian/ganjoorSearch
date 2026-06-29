@@ -9,7 +9,7 @@ describe('poetAppState', () => {
   it('prefers URL poet id over stored poet', () => {
     expect(
       resolveActivePoetId({
-        urlPoetId: 3,
+        urlPoetId: [3],
         urlSource: 'pwa',
         urlPoetParam: null,
         standalone: true,

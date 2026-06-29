@@ -1,5 +1,6 @@
 import type { PoetFilter } from '@/types/ganjoor';
 import type { StoredPoet } from '@/hooks/usePoetApp';
+import { singleFilterId } from '@/utils/filterState';
 
 export function resolveActivePoetId(options: {
   urlPoetId: PoetFilter;
@@ -8,10 +9,7 @@ export function resolveActivePoetId(options: {
   standalone: boolean;
   storedPoet: StoredPoet | null;
 }): number | null {
-  const resolvedUrlPoetId =
-    options.urlPoetId !== 'all' && typeof options.urlPoetId === 'number'
-      ? options.urlPoetId
-      : null;
+  const resolvedUrlPoetId = singleFilterId(options.urlPoetId) ?? null;
 
   return (
     resolvedUrlPoetId ??
