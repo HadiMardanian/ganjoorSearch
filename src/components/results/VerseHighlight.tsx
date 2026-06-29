@@ -14,7 +14,7 @@ export function VerseHighlight({ verses, searchTerm }: VerseHighlightProps) {
           key={verse.id}
           text={verse.text || ''}
           term={searchTerm}
-          className="verse-text block text-base text-stone-800 dark:text-stone-100"
+          className="verse-text text-base text-stone-800 dark:text-stone-100"
         />
       ))}
     </div>
