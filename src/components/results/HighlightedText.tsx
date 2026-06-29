@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useId } from 'react';
+import { useLayoutEffect, useMemo, useRef, useId } from 'react';
 import {
   clearHighlightRanges,
   createTextRanges,
@@ -19,7 +19,7 @@ export function HighlightedText({ text, term, className = '' }: HighlightedTextP
   const owner = useMemo(() => Symbol(ownerId), [ownerId]);
   const useHighlightApi = supportsCssHighlightApi();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!useHighlightApi || !ref.current || !term.trim()) return;
 
     const textNode = ref.current.firstChild;

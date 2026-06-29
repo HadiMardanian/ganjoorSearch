@@ -32,8 +32,7 @@
   }
 
   .highlight {
-    background: #fbbf24;
-    color: #1c1917;
+    color: #fbbf24;
   }
 
   .skeleton {
@@ -68,12 +67,12 @@ body {
 }
 
 .highlight {
-  background: var(--color-highlight);
-  color: #92400e;
+  background: transparent;
+  color: #b45309;
   padding: 0;
   margin: 0;
   border-radius: 0;
-  font-weight: inherit;
+  font-weight: 700;
   font-style: inherit;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
@@ -112,20 +111,9 @@ body {
 .verse-text {
   line-height: 2.2;
   font-variant-ligatures: contextual;
+  font-feature-settings: "calt" 1, "liga" 1;
 }
 
 .poetry-highlight-host {
   unicode-bidi: plaintext;
-}
-
-::highlight(ganjoor-search) {
-  background-color: var(--color-highlight);
-  color: #92400e;
-}
-
-@media (prefers-color-scheme: dark) {
-  ::highlight(ganjoor-search) {
-    background-color: #fbbf24;
-    color: #1c1917;
-  }
 }

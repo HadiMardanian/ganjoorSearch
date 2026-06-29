@@ -5,6 +5,7 @@ import { fetchPoets } from '@/api/ganjoor';
 import App from './App';
 import { STALE_TIMES, queryClient } from './lib/queryClient';
 import './index.css';
+import './highlight.css';
 
 queryClient.prefetchQuery({
   queryKey: ['poets'],
