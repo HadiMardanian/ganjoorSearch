@@ -1,5 +1,6 @@
 import { GANJOOR_SITE } from '@/api/client';
 import { formatDisplayTitle } from '@/utils/displayTitle';
+import { excerptLinesForExport } from '@/utils/searchExcerpt';
 import type { GroupedResult, ViewMode } from '@/types/ganjoor';
 
 export type ExportFormat = 'csv' | 'excel';
@@ -80,7 +81,9 @@ export function buildVerseExportRows(results: GroupedResult[]): string[][] {
   const rows: string[][] = [];
 
   for (const result of results) {
-    if (result.matchingCouplets.length === 0) {
+    const lines = excerptLinesForExport(result.excerpt);
+
+    if (lines.length === 0) {
       if (result.titleOnlyMatch) {
         rows.push([
           displayTitle(result),
@@ -92,12 +95,13 @@ export function buildVerseExportRows(results: GroupedResult[]): string[][] {
       continue;
     }
 
-    for (const couplet of result.matchingCouplets) {
-      const lines = couplet.verses.map((verse) => verse.text || '');
+    for (let i = 0; i < lines.length; i += 2) {
+      const line1 = lines[i] ?? '';
+      const line2 = lines[i + 1] ?? line1;
       rows.push([
         displayTitle(result),
-        lines[0] ?? '',
-        lines[1] ?? lines[0] ?? '',
+        line1,
+        line2,
         result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : '',
       ]);
     }
