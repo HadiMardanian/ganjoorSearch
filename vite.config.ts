@@ -12,6 +12,7 @@ export default defineConfig({
     },
   },
   server: {
+    watch: { usePolling: true },
     proxy: {
       '/api/ganjoor': {
         target: 'https://api.ganjoor.net',
