@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchCategories, fetchPoem, fetchPoets, searchPoems } from '@/api/ganjoor';
+import { fetchCategories, fetchPoemVerses, fetchPoets, searchPoems } from '@/api/ganjoor';
 import { STALE_TIMES } from '@/lib/queryClient';
 import type { CategoryFilter, PoetFilter } from '@/types/ganjoor';
 
@@ -44,11 +44,11 @@ export function useSearchQuery(
   });
 }
 
-export function usePoemQuery(url: string | null) {
+export function usePoemVersesQuery(poemId: number, enabled: boolean) {
   return useQuery({
-    queryKey: ['poem', url],
-    queryFn: ({ signal }) => fetchPoem(url!, signal),
-    enabled: Boolean(url),
+    queryKey: ['poem-verses', poemId],
+    queryFn: ({ signal }) => fetchPoemVerses(poemId, signal),
+    enabled,
     staleTime: STALE_TIMES.poem,
   });
 }

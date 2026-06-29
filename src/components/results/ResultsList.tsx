@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { ResultCard } from './ResultCard';
 import { ResultsLoading } from '@/components/ui/Skeleton';
+import { countMatchingBits } from '@/utils/searchMap';
 import type { GroupedResult, ViewMode } from '@/types/ganjoor';
 
 interface ResultsListProps {
@@ -9,6 +10,7 @@ interface ResultsListProps {
   searchTerm: string;
   viewMode: ViewMode;
   loading: boolean;
+  isFetching: boolean;
   searched: boolean;
 }
 
@@ -17,6 +19,7 @@ export function ResultsList({
   searchTerm,
   viewMode,
   loading,
+  isFetching,
   searched,
 }: ResultsListProps) {
   const parentRef = useRef<HTMLDivElement>(null);
@@ -28,14 +31,16 @@ export function ResultsList({
     overscan: 4,
   });
 
+  const matchingBits = countMatchingBits(results);
+
   if (loading && results.length === 0) {
     return <ResultsLoading />;
   }
 
   if (searched && !loading && results.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-stone-300 bg-white/70 px-6 py-16 text-center">
-        <p className="text-lg text-stone-700">نتیجه‌ای یافت نشد.</p>
+      <div className="rounded-2xl border border-dashed border-stone-300 bg-white/70 px-6 py-16 text-center dark:border-stone-600 dark:bg-stone-900/40">
+        <p className="text-lg text-stone-700 dark:text-stone-200">نتیجه‌ای یافت نشد.</p>
         <p className="mt-2 text-sm text-stone-500">لطفاً کلمهٔ دیگری را امتحان کنید.</p>
       </div>
     );
@@ -43,7 +48,7 @@ export function ResultsList({
 
   if (results.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-stone-300 bg-white/70 px-6 py-16 text-center text-stone-500">
+      <div className="rounded-2xl border border-dashed border-stone-300 bg-white/70 px-6 py-16 text-center text-stone-500 dark:border-stone-600 dark:bg-stone-900/40">
         برای شروع، یک کلمه جستجو کنید.
       </div>
     );
@@ -51,9 +56,9 @@ export function ResultsList({
 
   return (
     <div>
-      <p className="mb-4 text-center text-sm text-stone-600">
-        {results.length} غزل یافت شد
-        {loading ? ' — در حال به‌روزرسانی...' : ''}
+      <p className="mb-4 text-center text-sm text-stone-600 dark:text-stone-400">
+        {results.length} شعر، {matchingBits} بیت matching
+        {isFetching ? ' — در حال به‌روزرسانی...' : ''}
       </p>
 
       <div ref={parentRef} className="max-h-[70vh] overflow-auto rounded-2xl">
@@ -84,6 +89,7 @@ export function ResultsList({
                   result={result}
                   searchTerm={searchTerm}
                   viewMode={viewMode}
+                  eagerLoad={virtualItem.index < 3}
                 />
               </div>
             );

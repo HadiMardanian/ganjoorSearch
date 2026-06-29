@@ -165,7 +165,8 @@ export default function App() {
             results={groupedResults}
             searchTerm={searchTerm}
             viewMode={viewMode}
-            loading={searchQuery.isFetching}
+            loading={searchQuery.isLoading}
+            isFetching={searchQuery.isFetching}
             searched={searched}
           />
         </div>
