@@ -133,8 +133,6 @@ export default function App() {
                 setCategoryId(value);
               }}
               poetSelected={poetId !== 'all'}
-              loading={categoriesQuery.isFetching && poetId !== 'all'}
-              error={categoriesQuery.isError}
             />
           }
         />

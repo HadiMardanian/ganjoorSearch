@@ -117,8 +117,6 @@ interface CategorySelectProps {
   value: number | 'all';
   onChange: (value: number | 'all') => void;
   poetSelected: boolean;
-  loading?: boolean;
-  error?: boolean;
 }
 
 export function CategorySelect({
@@ -126,11 +124,7 @@ export function CategorySelect({
   value,
   onChange,
   poetSelected,
-  loading = false,
-  error = false,
 }: CategorySelectProps) {
-  const disabled = !poetSelected;
-
   return (
     <div className="w-full sm:w-44">
       <label htmlFor="category-select" className="field-label">
@@ -144,29 +138,16 @@ export function CategorySelect({
           const next = event.target.value;
           onChange(next === 'all' ? 'all' : Number(next));
         }}
-        disabled={disabled}
+        disabled={!poetSelected}
         aria-label="انتخاب قالب شعر"
-        aria-describedby="category-select-hint"
       >
-        <option value="all">
-          {loading ? 'در حال بارگذاری قالب‌ها…' : 'همه قالب‌ها'}
-        </option>
-        {!loading &&
-          categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.title}
-            </option>
-          ))}
+        <option value="all">همه قالب‌ها</option>
+        {categories.map((category) => (
+          <option key={category.id} value={category.id}>
+            {category.title}
+          </option>
+        ))}
       </select>
-      <p id="category-select-hint" className="mt-1.5 text-xs text-stone-600">
-        {disabled
-          ? 'برای فیلتر قالب، ابتدا شاعر را انتخاب کنید.'
-          : error
-            ? 'خطا در بارگذاری قالب‌ها. دوباره شاعر را انتخاب کنید.'
-            : loading
-              ? 'در حال دریافت قالب‌های شاعر…'
-              : `${categories.length} قالب در دسترس`}
-      </p>
     </div>
   );
 }
