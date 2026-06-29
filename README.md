@@ -16,11 +16,13 @@
 ## نصب و اجرا
 
 ```bash
+git checkout main
+git pull
 npm install
 npm run dev
 ```
 
-اپ در `http://localhost:5173` اجرا می‌شود. در محیط توسعه، درخواست‌های API از طریق Vite proxy به `api.ganjoor.net` هدایت می‌شوند.
+اپ در `http://localhost:5173/ganjoorSearch/` اجرا می‌شود.
 
 ## Build
 
