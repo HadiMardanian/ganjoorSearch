@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Poet } from '@/types/ganjoor';
 import type { PoetFilter } from '@/types/ganjoor';
+import { appendBrowseSessionToParams } from '@/utils/browseSession';
 
 const STORAGE_KEY = 'ganjoorsearch-installed-poet';
 
@@ -61,7 +62,13 @@ export function usePoetApp(
     if (resolvedUrlPoetId === storedPoet.id && urlSource === 'pwa') return;
 
     const base = import.meta.env.BASE_URL;
-    const target = `${base}?poet=${storedPoet.id}&source=pwa&tab=browse`;
+    const params = new URLSearchParams({
+      poet: String(storedPoet.id),
+      source: 'pwa',
+      tab: 'browse',
+    });
+    appendBrowseSessionToParams(storedPoet.id, params);
+    const target = `${base}?${params.toString()}`;
     const current = `${window.location.pathname}${window.location.search}`;
     if (current !== target) {
       window.location.replace(target);

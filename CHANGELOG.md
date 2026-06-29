@@ -2,6 +2,11 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.7.3] - 2026-06-29
+
+### Added
+- Browse session persistence in poet PWA: category path, poem list page, open poem, and tab are restored after closing and reopening the app
+
 ## [2.7.2] - 2026-06-29
 
 ### Fixed

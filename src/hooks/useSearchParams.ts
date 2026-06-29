@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { CategoryFilter, PoetFilter, ViewMode } from '@/types/ganjoor';
+import { formatBrowsePath, parseBrowsePath } from '@/utils/browsePath';
+import { mergeBrowseSessionIntoState } from '@/utils/browseSession';
 
 export type PoetAppTab = 'browse' | 'search';
 
@@ -28,19 +30,6 @@ const DEFAULT_STATE: SearchState = {
   poemUrl: null,
   poemListPage: 1,
 };
-
-export function parseBrowsePath(raw: string | null): number[] {
-  if (!raw) return [];
-  return raw
-    .split('/')
-    .map((part) => Number(part.trim()))
-    .filter((id) => Number.isFinite(id) && id > 0);
-}
-
-export function formatBrowsePath(path: number[]): string | null {
-  if (path.length === 0) return null;
-  return path.join('/');
-}
 
 function readFromUrl(): SearchState {
   if (typeof window === 'undefined') return DEFAULT_STATE;
@@ -78,7 +67,7 @@ function readFromUrl(): SearchState {
     }
   }
 
-  return {
+  return mergeBrowseSessionIntoState({
     term,
     poetId: poet && poet !== 'all' && Number.isFinite(poetNum) ? poetNum : 'all',
     categoryId:
@@ -91,7 +80,7 @@ function readFromUrl(): SearchState {
     poemUrl: params.get('poem'),
     poemListPage:
       Number.isFinite(poemListPage) && poemListPage > 0 ? poemListPage : 1,
-  };
+  });
 }
 
 function buildUrl(state: SearchState): string {
@@ -167,3 +156,5 @@ export function activeBrowseCategoryId(path: number[]): number | null {
   if (path.length === 0) return null;
   return path[path.length - 1] ?? null;
 }
+
+export { formatBrowsePath, parseBrowsePath } from '@/utils/browsePath';

@@ -31,6 +31,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/components/ui/Button';
 import type { CategoryFilter, Poet, PoetFilter, ViewMode } from '@/types/ganjoor';
 import { injectPoetManifest } from '@/utils/poetManifest';
+import { clearBrowseSession, saveBrowseSession } from '@/utils/browseSession';
 import { PoemReader } from '@/components/browse/PoemReader';
 
 function syncThemeColor() {
@@ -167,9 +168,45 @@ export default function App() {
       const next = buildState(overrides);
       if (push) pushUrl(next);
       else replaceUrl(next);
+
+      if (lockPoet && typeof next.poetId === 'number') {
+        saveBrowseSession(next.poetId, {
+          tab: next.tab,
+          browsePath: next.browsePath,
+          poemListPage: next.poemListPage,
+          poemUrl: next.poemUrl,
+          searchTerm: next.term,
+        });
+      }
     },
-    [buildState, pushUrl, replaceUrl],
+    [buildState, pushUrl, replaceUrl, lockPoet],
   );
+
+  useEffect(() => {
+    if (!lockPoet || typeof appliedPoetId !== 'number') return;
+
+    function persistBrowseSession() {
+      if (typeof appliedPoetId !== 'number') return;
+      saveBrowseSession(appliedPoetId, {
+        tab: appTab,
+        browsePath,
+        poemListPage,
+        poemUrl,
+        searchTerm,
+      });
+    }
+
+    function handleVisibilityChange() {
+      if (document.visibilityState === 'hidden') persistBrowseSession();
+    }
+
+    window.addEventListener('pagehide', persistBrowseSession);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      window.removeEventListener('pagehide', persistBrowseSession);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [lockPoet, appliedPoetId, appTab, browsePath, poemListPage, poemUrl, searchTerm]);
 
   useEffect(() => {
     if (searchQuery.error) {
@@ -291,6 +328,7 @@ export default function App() {
   }
 
   function handlePoetInstalled(poet: Poet) {
+    clearBrowseSession(poet.id);
     saveInstalledPoet({
       id: poet.id,
       name: poet.name || poet.fullName || 'شاعر',
@@ -321,6 +359,7 @@ export default function App() {
   }
 
   function handleChangePoet() {
+    if (poetAppPoet) clearBrowseSession(poetAppPoet.id);
     clearInstalledPoet();
     setUrlSource(null);
     syncUrl({ source: null, poetId: 'all', categoryId: 'all', browsePath: [], poemUrl: null });
