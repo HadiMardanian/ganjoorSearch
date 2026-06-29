@@ -1,8 +1,11 @@
 import type {
   Category,
+  CategoryDetail,
   GroupedResult,
   Poem,
   Poet,
+  PoetDetail,
+  PoetWithCatalog,
   SearchResponse,
 } from '@/types/ganjoor';
 import { mapWithConcurrency } from '@/utils/parallel';
@@ -232,4 +235,77 @@ export async function fetchAllSearchResults(
 
 export async function fetchPoem(url: string, signal?: AbortSignal): Promise<Poem> {
   return apiFetch<Poem>(buildApiUrl('/poem', { url }), signal);
+}
+
+export async function fetchPoetDetail(
+  poetId: number,
+  signal?: AbortSignal,
+): Promise<PoetWithCatalog> {
+  const data = await apiFetch<{
+    poet?: PoetDetail;
+    cat?: CategoryDetail;
+  }>(buildApiUrl(`/poet/${poetId}`), signal);
+
+  const poet = data.poet ?? ({} as PoetDetail);
+  const rootCategory = normalizeCategoryDetail(data.cat);
+
+  return {
+    poet: {
+      id: poet.id ?? poetId,
+      name: poet.name ?? poet.nickname ?? '',
+      fullName: poet.name,
+      description: poet.description,
+      imageUrl: poet.imageUrl,
+      fullUrl: poet.fullUrl,
+      rootCatId: poet.rootCatId,
+      nickname: poet.nickname,
+    },
+    rootCategory,
+  };
+}
+
+export async function fetchCategoryDetail(
+  categoryId: number,
+  options: { withPoems?: boolean; signal?: AbortSignal } = {},
+): Promise<CategoryDetail> {
+  const params: Record<string, string> = {};
+  if (options.withPoems) {
+    params.poems = 'true';
+    params.mainSections = 'false';
+  } else {
+    params.poems = 'false';
+  }
+
+  const data = await apiFetch<{ cat?: CategoryDetail }>(
+    buildApiUrl(`/cat/${categoryId}`, params),
+    options.signal,
+  );
+
+  return normalizeCategoryDetail(data.cat);
+}
+
+function normalizeCategoryDetail(cat?: CategoryDetail | null): CategoryDetail {
+  const children = (cat?.children ?? []).filter(
+    (item): item is Category => Boolean(item?.id && item?.title),
+  );
+  const poems = (cat?.poems ?? []).map((poem) => ({
+    ...poem,
+    fullUrl: poem.fullUrl ?? buildPoemUrl(cat?.fullUrl, poem.urlSlug),
+  }));
+
+  return {
+    id: cat?.id ?? 0,
+    title: cat?.title ?? '',
+    fullUrl: cat?.fullUrl,
+    urlSlug: cat?.urlSlug,
+    description: cat?.description,
+    children,
+    poems,
+    poemCount: poems.length || cat?.poemCount,
+  };
+}
+
+export function buildPoemUrl(categoryFullUrl?: string, poemSlug?: string): string | undefined {
+  if (!categoryFullUrl || !poemSlug) return undefined;
+  return `${categoryFullUrl}/${poemSlug}`;
 }

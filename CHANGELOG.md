@@ -2,6 +2,19 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.6.0] - 2026-06-29
+
+### Added
+- Poet app browse mode: category tree, poem lists, and in-app poem reader
+- Tabs «مرور آثار» and «جستجو» in installed poet PWA
+- API: `fetchPoetDetail`, `fetchCategoryDetail` for Ganjoor catalog navigation
+- Prev/next poem navigation within a category list
+- URL params: `tab`, `bcat`, `poem`, `plist` for browse state
+
+### Changed
+- Installed poet app opens on browse home (not empty search) after install
+- Poet app header subtitle reflects browse/read experience
+
 ## [2.5.0] - 2026-06-29
 
 ### Added

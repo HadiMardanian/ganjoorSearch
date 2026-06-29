@@ -254,6 +254,25 @@ function testExcelExport() {
   assert('does not use HTML table export', !xml.includes('<table>'));
 }
 
+async function testBrowseCatalog() {
+  console.log('\nBrowse catalog');
+
+  const poet = await (await api(`/poet/${HAFEZ_POET_ID}`)).json();
+  const ghazal = (poet.cat?.children ?? []).find((c) => c.title === 'غزلیات');
+  assert('poet has غزلیات category', Boolean(ghazal?.id));
+
+  const cat = await (
+    await api(`/cat/${ghazal.id}?poems=true&mainSections=false`)
+  ).json();
+  const poems = cat.cat?.poems ?? [];
+  assert('غزلیات has poem list', poems.length >= 100, `got ${poems.length}`);
+  assert('first poem has urlSlug', Boolean(poems[0]?.urlSlug));
+
+  const poemUrl = `${cat.cat.fullUrl}/${poems[0].urlSlug}`;
+  const poem = await (await api(`/poem?url=${encodeURIComponent(poemUrl)}`)).json();
+  assert('poem detail has verses', (poem.verses?.length ?? 0) > 0);
+}
+
 async function main() {
   console.log('GanjoorSearch verify\n');
 
@@ -262,6 +281,7 @@ async function main() {
   testMatchNormalization();
   testSearchExcerpt();
   await testCategories();
+  await testBrowseCatalog();
   await testSearchFilters();
   await testFirstResultMeta();
   await testExportPagination();

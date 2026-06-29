@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { ArrowUp, Link2, RefreshCw } from 'lucide-react';
 import { useCategoriesQuery, usePoetsQuery, useSearchQuery } from '@/api/queries';
 import { ExportButtons } from '@/components/export/ExportButtons';
+import { PoetBrowseView } from '@/components/browse/PoetBrowseView';
+import { PoetAppTabs } from '@/components/browse/PoetAppTabs';
 import { PoetInstallFlow } from '@/components/install/PoetInstallFlow';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
@@ -19,7 +21,7 @@ import { ViewModeToggle } from '@/components/ui/ViewModeToggle';
 import { usePoetApp } from '@/hooks/usePoetApp';
 import { usePwaInstall } from '@/hooks/usePwaInstall';
 import { useSearchHistory } from '@/hooks/useSearchHistory';
-import { useSearchState } from '@/hooks/useSearchParams';
+import { useSearchState, type PoetAppTab } from '@/hooks/useSearchParams';
 import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/components/ui/Button';
 import type { CategoryFilter, Poet, PoetFilter, ViewMode } from '@/types/ganjoor';
@@ -42,6 +44,10 @@ export default function App() {
   const [page, setPage] = useState(initial.page);
   const [viewMode, setViewMode] = useState<ViewMode>(initial.viewMode);
   const [urlSource, setUrlSource] = useState<'pwa' | null>(initial.source);
+  const [appTab, setAppTab] = useState<PoetAppTab>(initial.tab);
+  const [browseCatId, setBrowseCatId] = useState<number | null>(initial.browseCatId);
+  const [poemUrl, setPoemUrl] = useState<string | null>(initial.poemUrl);
+  const [poemListPage, setPoemListPage] = useState(initial.poemListPage);
   const [searched, setSearched] = useState(Boolean(initial.term));
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [installOpen, setInstallOpen] = useState(false);
@@ -70,6 +76,10 @@ export default function App() {
     setPage(urlState.page);
     setViewMode(urlState.viewMode);
     setUrlSource(urlState.source);
+    setAppTab(urlState.tab);
+    setBrowseCatId(urlState.browseCatId);
+    setPoemUrl(urlState.poemUrl);
+    setPoemListPage(urlState.poemListPage);
     setSearched(Boolean(urlState.term));
   }, [urlState]);
 
@@ -107,6 +117,10 @@ export default function App() {
       page: number;
       viewMode: ViewMode;
       source: 'pwa' | null;
+      tab: PoetAppTab;
+      browseCatId: number | null;
+      poemUrl: string | null;
+      poemListPage: number;
     }> = {}) => {
       updateUrl({
         term: overrides.term ?? searchTerm,
@@ -115,13 +129,22 @@ export default function App() {
         page: overrides.page ?? page,
         viewMode: overrides.viewMode ?? viewMode,
         source: overrides.source ?? (lockPoet ? 'pwa' : urlSource),
+        tab: overrides.tab ?? appTab,
+        browseCatId:
+          overrides.browseCatId !== undefined ? overrides.browseCatId : browseCatId,
+        poemUrl: overrides.poemUrl !== undefined ? overrides.poemUrl : poemUrl,
+        poemListPage: overrides.poemListPage ?? poemListPage,
       });
     },
     [
+      appTab,
       appliedCategoryId,
       appliedPoetId,
+      browseCatId,
       lockPoet,
       page,
+      poemListPage,
+      poemUrl,
       searchTerm,
       updateUrl,
       urlSource,
@@ -186,8 +209,16 @@ export default function App() {
     setAppliedCategoryId(categoryId);
     setPage(1);
     setSearched(true);
+    setAppTab('search');
     addEntry({ term: trimmed, poetId, categoryId });
-    syncUrl({ term: trimmed, poetId, categoryId, page: 1 });
+    syncUrl({
+      term: trimmed,
+      poetId,
+      categoryId,
+      page: 1,
+      tab: 'search',
+      poemUrl: null,
+    });
   }
 
   function handlePoetChange(value: PoetFilter) {
@@ -214,11 +245,14 @@ export default function App() {
     setAppliedCategoryId(entry.categoryId);
     setPage(1);
     setSearched(true);
+    setAppTab('search');
     syncUrl({
       term: entry.term,
       poetId: entry.poetId,
       categoryId: entry.categoryId,
       page: 1,
+      tab: 'search',
+      poemUrl: null,
     });
   }
 
@@ -242,7 +276,20 @@ export default function App() {
     setCategoryId('all');
     setAppliedCategoryId('all');
     setUrlSource('pwa');
-    syncUrl({ poetId: poet.id, categoryId: 'all', source: 'pwa' });
+    setAppTab('browse');
+    setBrowseCatId(null);
+    setPoemUrl(null);
+    setPoemListPage(1);
+    syncUrl({
+      poetId: poet.id,
+      categoryId: 'all',
+      source: 'pwa',
+      tab: 'browse',
+      browseCatId: null,
+      poemUrl: null,
+      poemListPage: 1,
+      term: '',
+    });
   }
 
   function handleChangePoet() {
@@ -251,6 +298,66 @@ export default function App() {
     syncUrl({ source: null, poetId: 'all', categoryId: 'all' });
     setInstallOpen(true);
   }
+
+  function handleAppTabChange(tab: PoetAppTab) {
+    setAppTab(tab);
+    if (tab === 'browse') {
+      setSearched(false);
+      setSearchTerm('');
+      setInput('');
+      syncUrl({
+        tab: 'browse',
+        term: '',
+        poemUrl: null,
+        browseCatId,
+        page: 1,
+      });
+      return;
+    }
+    syncUrl({ tab: 'search' });
+  }
+
+  function handleOpenBrowseCategory(categoryId: number) {
+    setBrowseCatId(categoryId);
+    setPoemUrl(null);
+    setPoemListPage(1);
+    setAppTab('browse');
+    syncUrl({
+      tab: 'browse',
+      browseCatId: categoryId,
+      poemUrl: null,
+      poemListPage: 1,
+    });
+  }
+
+  function handleOpenPoem(url: string) {
+    setPoemUrl(url);
+    setAppTab('browse');
+    syncUrl({ tab: 'browse', poemUrl: url });
+  }
+
+  function handleBrowseHome() {
+    setBrowseCatId(null);
+    setPoemUrl(null);
+    setPoemListPage(1);
+    syncUrl({ browseCatId: null, poemUrl: null, poemListPage: 1 });
+  }
+
+  function handleBrowseBack() {
+    if (poemUrl) {
+      setPoemUrl(null);
+      syncUrl({ poemUrl: null });
+      return;
+    }
+    if (browseCatId) {
+      setBrowseCatId(null);
+      setPoemListPage(1);
+      syncUrl({ browseCatId: null, poemListPage: 1 });
+    }
+  }
+
+  const showBrowse = isPoetApp && appTab === 'browse';
+  const showSearch = !isPoetApp || appTab === 'search';
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -278,6 +385,29 @@ export default function App() {
           </div>
         ) : null}
 
+        {isPoetApp ? (
+          <PoetAppTabs activeTab={appTab} onChange={handleAppTabChange} />
+        ) : null}
+
+        {showBrowse && poetAppPoet ? (
+          <PoetBrowseView
+            poetId={poetAppPoet.id}
+            browseCatId={browseCatId}
+            poemUrl={poemUrl}
+            poemListPage={poemListPage}
+            onOpenCategory={handleOpenBrowseCategory}
+            onOpenPoem={handleOpenPoem}
+            onPoemListPageChange={(nextPage) => {
+              setPoemListPage(nextPage);
+              syncUrl({ poemListPage: nextPage });
+            }}
+            onBrowseHome={handleBrowseHome}
+            onBrowseBack={handleBrowseBack}
+          />
+        ) : null}
+
+        {showSearch ? (
+          <>
         <SearchBar
           value={input}
           onChange={setInput}
@@ -383,6 +513,8 @@ export default function App() {
             disabled={searchQuery.isFetching}
           />
         )}
+          </>
+        ) : null}
       </main>
 
       <Footer />

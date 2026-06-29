@@ -59,7 +59,7 @@ export function Header({
             <p className="mb-2 text-sm font-semibold tracking-wide text-accent">✦ {poetName}</p>
             <h1 className="text-3xl font-bold sm:text-4xl">جستجوی اشعار {poetName}</h1>
             <p className="text-muted mt-3 text-base sm:text-lg">
-              اپ اختصاصی {poetName} — سریع، دقیق و زیبا
+              مرور و مطالعهٔ آثار {poetName} — مثل اپ گنجور
             </p>
           </>
         ) : (

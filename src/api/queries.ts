@@ -1,5 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchCategories, fetchPoets, searchPoems } from '@/api/ganjoor';
+import {
+  fetchCategories,
+  fetchCategoryDetail,
+  fetchPoem,
+  fetchPoetDetail,
+  fetchPoets,
+  searchPoems,
+} from '@/api/ganjoor';
 import { STALE_TIMES } from '@/lib/queryClient';
 import type { CategoryFilter, PoetFilter } from '@/types/ganjoor';
 
@@ -8,6 +15,38 @@ export function usePoetsQuery() {
     queryKey: ['poets'],
     queryFn: ({ signal }) => fetchPoets(signal),
     staleTime: STALE_TIMES.poets,
+  });
+}
+
+export function usePoetDetailQuery(poetId: number | null, enabled = true) {
+  return useQuery({
+    queryKey: ['poet-detail', poetId],
+    queryFn: ({ signal }) => fetchPoetDetail(poetId!, signal),
+    enabled: enabled && poetId != null && Number.isFinite(poetId),
+    staleTime: STALE_TIMES.categories,
+  });
+}
+
+export function useCategoryDetailQuery(
+  categoryId: number | null,
+  withPoems: boolean,
+  enabled = true,
+) {
+  return useQuery({
+    queryKey: ['category-detail', categoryId, withPoems],
+    queryFn: ({ signal }) =>
+      fetchCategoryDetail(categoryId!, { withPoems, signal }),
+    enabled: enabled && categoryId != null && Number.isFinite(categoryId),
+    staleTime: STALE_TIMES.categories,
+  });
+}
+
+export function usePoemDetailQuery(poemUrl: string | null, enabled = true) {
+  return useQuery({
+    queryKey: ['poem-detail', poemUrl],
+    queryFn: ({ signal }) => fetchPoem(poemUrl!, signal),
+    enabled: enabled && Boolean(poemUrl),
+    staleTime: STALE_TIMES.poem,
   });
 }
 
