@@ -16,8 +16,9 @@ export function useCategoriesQuery(poetId: PoetFilter) {
     queryKey: ['categories', poetId],
     queryFn: ({ signal }) =>
       poetId === 'all' ? Promise.resolve([]) : fetchCategories(poetId, signal),
-    enabled: poetId !== 'all',
+    enabled: poetId !== 'all' && Number.isFinite(poetId),
     staleTime: STALE_TIMES.categories,
+    placeholderData: (previous) => previous,
   });
 }
 

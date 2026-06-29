@@ -22,15 +22,14 @@ export async function fetchCategories(
   poetId: number,
   signal?: AbortSignal,
 ): Promise<Category[]> {
-  try {
-    const data = await apiFetch<{ cat?: { children?: Category[] } }>(
-      buildApiUrl(`/poet/${poetId}`),
-      signal,
-    );
-    return (data.cat?.children ?? []).filter((item) => item?.id);
-  } catch {
-    return [];
-  }
+  const data = await apiFetch<{ cat?: { children?: Category[] } }>(
+    buildApiUrl(`/poet/${poetId}`),
+    signal,
+  );
+
+  return (data.cat?.children ?? []).filter(
+    (item): item is Category => Boolean(item?.id && item?.title),
+  );
 }
 
 export async function searchPoems(

@@ -27,10 +27,14 @@ function readFromUrl(): SearchState {
   const page = Number(params.get('page') ?? '1');
   const mode = params.get('mode');
 
+  const poetNum = poet ? Number(poet) : NaN;
+  const catNum = cat ? Number(cat) : NaN;
+
   return {
     term: params.get('q') ?? '',
-    poetId: poet && poet !== 'all' ? Number(poet) : 'all',
-    categoryId: cat && cat !== 'all' ? Number(cat) : 'all',
+    poetId: poet && poet !== 'all' && Number.isFinite(poetNum) ? poetNum : 'all',
+    categoryId:
+      cat && cat !== 'all' && Number.isFinite(catNum) ? catNum : 'all',
     page: Number.isFinite(page) && page > 0 ? page : 1,
     viewMode: mode === 'full' ? 'full' : 'verse',
   };

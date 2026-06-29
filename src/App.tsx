@@ -132,7 +132,9 @@ export default function App() {
               onChange={(value) => {
                 setCategoryId(value);
               }}
-              disabled={poetId === 'all' || categoriesQuery.isLoading}
+              poetSelected={poetId !== 'all'}
+              loading={categoriesQuery.isFetching && poetId !== 'all'}
+              error={categoriesQuery.isError}
             />
           }
         />
