@@ -44,7 +44,14 @@ npm run preview
 
 ## CORS
 
-در production، درخواست‌ها مستقیماً به API گنجور ارسال می‌شوند. در صورت مشکل CORS، از proxy در `vite.config.ts` (dev) یا یک Cloudflare Worker (production) استفاده کنید.
+در development از proxy داخلی Vite استفاده می‌شود. در production می‌توانید:
+
+- مستقیم به `https://api.ganjoor.net` (پیش‌فرض)
+- یا Worker پروکسی در [`workers/api-proxy.js`](workers/api-proxy.js) با متغیر build:
+
+```bash
+VITE_API_BASE=https://your-worker.example.com npm run build
+```
 
 ## لایسنس
 

@@ -14,7 +14,9 @@ interface PoetPickerProps {
 export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps) {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
+  const listboxId = 'poet-picker-listbox';
 
   const selectedPoet = poets.find((poet) => poet.id === value);
 
@@ -25,6 +27,11 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
       (poet.name || poet.fullName || '').toLowerCase().includes(normalized),
     );
   }, [poets, query]);
+
+  const options = useMemo(
+    () => [{ id: 'all' as const, name: 'همه شاعران' }, ...filtered.map((p) => ({ id: p.id, name: p.name || p.fullName || '' }))],
+    [filtered],
+  );
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -37,11 +44,50 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  function selectOption(optionId: number | 'all') {
+    onChange(optionId);
+    setQuery('');
+    setOpen(false);
+    setActiveIndex(-1);
+  }
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (!open && (event.key === 'ArrowDown' || event.key === 'Enter')) {
+      setOpen(true);
+      return;
+    }
+
+    if (!open) return;
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      setActiveIndex((index) => Math.min(index + 1, options.length - 1));
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      setActiveIndex((index) => Math.max(index - 1, 0));
+    } else if (event.key === 'Enter' && activeIndex >= 0) {
+      event.preventDefault();
+      const option = options[activeIndex];
+      if (option) selectOption(option.id);
+    } else if (event.key === 'Escape') {
+      setOpen(false);
+    }
+  }
+
   return (
     <div ref={containerRef} className="relative w-full sm:w-56">
-      <label className="field-label">شاعر</label>
-      <div className="field-control flex items-center px-1 focus-within:border-[#9a3412] focus-within:shadow-[0_0_0_3px_rgb(154_52_18_/_15%)]">
+      <label htmlFor="poet-picker-input" className="field-label">
+        شاعر
+      </label>
+      <div
+        className="field-control flex items-center px-1 focus-within:border-[#9a3412] focus-within:shadow-[0_0_0_3px_rgb(154_52_18_/_15%)]"
+        role="combobox"
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        aria-controls={listboxId}
+      >
         <input
+          id="poet-picker-input"
           type="text"
           className="w-full rounded-xl bg-transparent px-3 py-3 text-sm text-stone-900 outline-none placeholder:text-stone-500"
           placeholder="همه شاعران"
@@ -49,9 +95,12 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
           onChange={(event) => {
             setQuery(event.target.value);
             setOpen(true);
+            setActiveIndex(-1);
           }}
           onFocus={() => setOpen(true)}
+          onKeyDown={handleKeyDown}
           disabled={disabled}
+          aria-autocomplete="list"
           aria-label="جستجوی نام شاعر"
           dir="rtl"
         />
@@ -72,37 +121,26 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
       </div>
 
       {open && !disabled && (
-        <div className="absolute z-20 mt-2 max-h-60 w-full overflow-y-auto rounded-xl border border-stone-300 bg-white p-2 shadow-lg">
-          <button
-            type="button"
-            className={`w-full rounded-lg px-3 py-2 text-right text-sm text-stone-900 hover:bg-stone-100 ${
-              value === 'all' ? 'bg-orange-50 font-semibold text-[#9a3412]' : ''
-            }`}
-            onClick={() => {
-              onChange('all');
-              setQuery('');
-              setOpen(false);
-            }}
-          >
-            همه شاعران
-          </button>
-          {filtered.length === 0 ? (
+        <div
+          id={listboxId}
+          role="listbox"
+          className="absolute z-20 mt-2 max-h-60 w-full overflow-y-auto rounded-xl border border-stone-300 bg-white p-2 shadow-lg"
+        >
+          {options.length === 0 ? (
             <p className="px-3 py-4 text-center text-sm text-stone-600">شاعری یافت نشد</p>
           ) : (
-            filtered.map((poet) => (
+            options.map((option, index) => (
               <button
-                key={poet.id}
+                key={String(option.id)}
                 type="button"
+                role="option"
+                aria-selected={value === option.id}
                 className={`w-full rounded-lg px-3 py-2 text-right text-sm text-stone-900 hover:bg-stone-100 ${
-                  value === poet.id ? 'bg-orange-50 font-semibold text-[#9a3412]' : ''
-                }`}
-                onClick={() => {
-                  onChange(poet.id);
-                  setQuery('');
-                  setOpen(false);
-                }}
+                  value === option.id ? 'bg-orange-50 font-semibold text-[#9a3412]' : ''
+                } ${activeIndex === index ? 'ring-1 ring-[#9a3412]' : ''}`}
+                onClick={() => selectOption(option.id)}
               >
-                {poet.name || poet.fullName}
+                {option.name}
               </button>
             ))
           )}
@@ -157,6 +195,7 @@ interface SearchBarProps {
   onChange: (value: string) => void;
   onSearch: () => void;
   loading?: boolean;
+  filtersDirty?: boolean;
   poetPicker: ReactNode;
   categorySelect: ReactNode;
 }
@@ -166,6 +205,7 @@ export function SearchBar({
   onChange,
   onSearch,
   loading,
+  filtersDirty,
   poetPicker,
   categorySelect,
 }: SearchBarProps) {
@@ -201,6 +241,11 @@ export function SearchBar({
               {loading ? 'در حال جستجو...' : 'جستجو'}
             </Button>
           </div>
+          {filtersDirty ? (
+            <p className="mt-2 text-xs text-amber-800">
+              فیلترها تغییر کرده‌اند — برای اعمال، «جستجو» را بزنید.
+            </p>
+          ) : null}
         </div>
       </div>
     </form>

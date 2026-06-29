@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { CategoryFilter, PoetFilter, ViewMode } from '@/types/ganjoor';
 
 export interface SearchState {
@@ -55,13 +55,23 @@ function writeToUrl(state: SearchState) {
 }
 
 export function useSearchState() {
-  const initial = useMemo(() => readFromUrl(), []);
+  const [urlState, setUrlState] = useState(() => readFromUrl());
+
+  useEffect(() => {
+    function handlePopState() {
+      setUrlState(readFromUrl());
+    }
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const updateUrl = useCallback((state: SearchState) => {
     writeToUrl(state);
+    setUrlState(state);
   }, []);
 
-  return { initial, updateUrl };
+  return { initial: urlState, urlState, updateUrl };
 }
 
 export function buildSearchState(

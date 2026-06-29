@@ -17,7 +17,7 @@ import { useSearchState } from '@/hooks/useSearchParams';
 import type { CategoryFilter, PoetFilter, ViewMode } from '@/types/ganjoor';
 
 export default function App() {
-  const { initial, updateUrl } = useSearchState();
+  const { initial, urlState, updateUrl } = useSearchState();
 
   const [input, setInput] = useState(initial.term);
   const [poetId, setPoetId] = useState<PoetFilter>(initial.poetId);
@@ -31,6 +31,22 @@ export default function App() {
   const [viewMode, setViewMode] = useState<ViewMode>(initial.viewMode);
   const [searched, setSearched] = useState(Boolean(initial.term));
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  const filtersDirty =
+    searched &&
+    (poetId !== appliedPoetId || categoryId !== appliedCategoryId || input.trim() !== searchTerm);
+
+  useEffect(() => {
+    setInput(urlState.term);
+    setPoetId(urlState.poetId);
+    setCategoryId(urlState.categoryId);
+    setSearchTerm(urlState.term);
+    setAppliedPoetId(urlState.poetId);
+    setAppliedCategoryId(urlState.categoryId);
+    setPage(urlState.page);
+    setViewMode(urlState.viewMode);
+    setSearched(Boolean(urlState.term));
+  }, [urlState]);
 
   const poetsQuery = usePoetsQuery();
   const categoriesQuery = useCategoriesQuery(poetId);
@@ -109,14 +125,21 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:shadow-lg"
+      >
+        پرش به محتوا
+      </a>
       <Header />
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6">
+      <main id="main-content" className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6">
         <SearchBar
           value={input}
           onChange={setInput}
           onSearch={handleSearch}
           loading={searchQuery.isFetching}
+          filtersDirty={filtersDirty}
           poetPicker={
             <PoetPicker
               poets={poetsQuery.data ?? []}

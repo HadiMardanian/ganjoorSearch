@@ -3,6 +3,9 @@ import type { GroupedResult, ViewMode } from '@/types/ganjoor';
 
 export type ExportFormat = 'csv' | 'excel';
 
+export const VERSE_EXPORT_HEADERS = ['عنوان', 'بیت۱', 'بیت۲', 'لینک'] as const;
+export const FULL_EXPORT_HEADERS = ['عنوان', 'متن', 'لینک'] as const;
+
 export function escapeCsv(value: string): string {
   if (value.includes('"') || value.includes(',') || value.includes('\n')) {
     return `"${value.replace(/"/g, '""')}"`;
@@ -72,12 +75,24 @@ export function buildVerseExportRows(results: GroupedResult[]): string[][] {
   const rows: string[][] = [];
 
   for (const result of results) {
+    if (result.matchingCouplets.length === 0) {
+      if (result.titleOnlyMatch) {
+        rows.push([
+          result.fullTitle || result.poemTitle,
+          result.excerpt.find((part) => part.type === 'note')?.text ?? result.fullTitle,
+          '',
+          result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : '',
+        ]);
+      }
+      continue;
+    }
+
     for (const couplet of result.matchingCouplets) {
       const lines = couplet.verses.map((verse) => verse.text || '');
       rows.push([
         result.fullTitle || result.poemTitle,
         lines[0] ?? '',
-        lines[1] ?? '',
+        lines[1] ?? lines[0] ?? '',
         result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : '',
       ]);
     }
@@ -134,15 +149,13 @@ export function exportResults(
   results: GroupedResult[],
   mode: ViewMode,
   format: ExportFormat = 'csv',
-) {
+): { success: boolean; rowCount: number } {
   const headers =
-    mode === 'verse'
-      ? ['title', 'line1', 'line2', 'url']
-      : ['title', 'poem', 'url'];
+    mode === 'verse' ? [...VERSE_EXPORT_HEADERS] : [...FULL_EXPORT_HEADERS];
 
   const rows = mode === 'verse' ? buildVerseExportRows(results) : buildFullExportRows(results);
 
-  if (rows.length === 0) return false;
+  if (rows.length === 0) return { success: false, rowCount: 0 };
 
   const baseName = mode === 'verse' ? 'verse-results' : 'ghazal-results';
   const filename =
@@ -154,5 +167,5 @@ export function exportResults(
     downloadCsv(filename, headers, rows);
   }
 
-  return true;
+  return { success: true, rowCount: rows.length };
 }

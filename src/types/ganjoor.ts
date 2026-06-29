@@ -3,6 +3,7 @@ export interface Poet {
   name: string;
   fullName?: string;
   description?: string;
+  imageUrl?: string;
 }
 
 export interface Category {
@@ -28,18 +29,13 @@ export interface Poem {
   verses?: Verse[];
   plainText?: string;
   htmlText?: string;
-}
-
-export interface SearchResult {
-  poemId: number;
-  poemTitle: string;
-  fullUrl: string;
-  urlSlug?: string;
-  matchingVerses: Verse[];
-  allVerses: Verse[];
-  plainText?: string;
-  htmlText?: string;
-  coupletIndex: number;
+  category?: {
+    poet?: {
+      id?: number;
+      name?: string;
+      imageUrl?: string;
+    };
+  };
 }
 
 import type { ExcerptPart } from '@/utils/searchExcerpt';
@@ -50,6 +46,9 @@ export interface GroupedResult {
   fullTitle: string;
   fullUrl: string;
   urlSlug?: string;
+  poetId?: number;
+  poetName?: string;
+  poetImageUrl?: string;
   allVerses: Verse[];
   plainText?: string;
   htmlText?: string;
@@ -58,6 +57,7 @@ export interface GroupedResult {
     coupletIndex: number;
     verses: Verse[];
   }>;
+  titleOnlyMatch?: boolean;
 }
 
 export interface SearchResponse {
