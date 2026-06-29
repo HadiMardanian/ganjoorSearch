@@ -167,8 +167,7 @@ export default function App() {
             results={groupedResults}
             searchTerm={searchTerm}
             viewMode={viewMode}
-            loading={searchQuery.isLoading}
-            isFetching={searchQuery.isFetching}
+            loading={searchQuery.isFetching}
             searched={searched}
             page={page}
             pageSize={searchQuery.data?.pageSize ?? 20}

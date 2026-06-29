@@ -11,7 +11,6 @@ interface ResultsListProps {
   searchTerm: string;
   viewMode: ViewMode;
   loading: boolean;
-  isFetching: boolean;
   searched: boolean;
   page: number;
   pageSize: number;
@@ -24,7 +23,6 @@ export function ResultsList({
   searchTerm,
   viewMode,
   loading,
-  isFetching,
   searched,
   page,
   pageSize,
@@ -69,8 +67,10 @@ export function ResultsList({
         ) : null}
         <p>
           {formatResultRange(page, pageSize, results.length, totalCount)}
-          {totalPages > 1 ? ` (صفحه ${formatPersianNumber(page)} از ${formatPersianNumber(totalPages)})` : ''}
-          {isFetching ? ' — در حال به‌روزرسانی...' : ''}
+          {totalPages > 1
+            ? ` (صفحه ${formatPersianNumber(page)} از ${formatPersianNumber(totalPages)})`
+            : ''}
+          {loading ? ' — در حال به‌روزرسانی...' : ''}
         </p>
         <p className="text-xs text-stone-600">
           {countMatchingBits(results)} بیت مطابق در همین صفحه
