@@ -158,7 +158,7 @@ export default function App() {
 
         <div className="mt-8">
           {searchQuery.isFetching && groupedResults.length === 0 && searched && (
-            <p className="mb-4 text-center text-sm text-stone-500">
+            <p className="mb-4 text-center text-sm text-stone-600">
               در حال جستجو در گنجور…
             </p>
           )}
@@ -196,7 +196,7 @@ export default function App() {
 
       <button
         type="button"
-        className={`fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-accent text-white shadow-lg transition-all hover:bg-amber-700 ${
+        className={`fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-[#9a3412] text-white shadow-lg transition-all hover:bg-[#7c2d12] ${
           showScrollTop ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

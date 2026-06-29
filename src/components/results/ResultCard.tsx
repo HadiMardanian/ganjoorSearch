@@ -63,16 +63,16 @@ export const ResultCard = memo(function ResultCard({
   const plainLines = getPoemText(result).split(/\r?\n/).filter(Boolean);
 
   return (
-    <article className="fade-in rounded-2xl border border-stone-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-stone-700 dark:bg-stone-800 sm:p-6">
+    <article className="fade-in rounded-2xl border border-stone-300 bg-white p-5 shadow-sm transition-shadow hover:shadow-md sm:p-6">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-        <h3 className="text-lg font-semibold text-stone-900 dark:text-stone-100">
+        <h3 className="text-lg font-semibold text-stone-900">
           {result.poemTitle}
         </h3>
         <a
           href={poemUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
+          className="inline-flex items-center gap-1 text-sm font-medium text-[#9a3412] hover:underline"
         >
           مشاهده در گنجور
           <ExternalLink size={14} />
@@ -84,7 +84,7 @@ export const ResultCard = memo(function ResultCard({
           {result.matchingCouplets.map((couplet) => (
             <div
               key={`${result.poemId}-${couplet.coupletIndex}`}
-              className="rounded-xl border-r-4 border-accent bg-stone-50 p-4 dark:bg-stone-900/50"
+              className="rounded-xl border-r-4 border-[#9a3412] bg-stone-50 p-4"
             >
               <VerseHighlight verses={couplet.verses} searchTerm={searchTerm} />
             </div>
@@ -110,17 +110,17 @@ export const ResultCard = memo(function ResultCard({
                 key={verse.id}
                 text={verse.text || ''}
                 term={searchTerm}
-                className="verse-text text-base text-stone-800 dark:text-stone-100"
+                className="verse-text text-base text-stone-900"
               />
             ))}
             {!expanded && plainLines.length > 6 && (
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent dark:from-stone-800" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
             )}
           </div>
           {plainLines.length > 6 && (
             <button
               type="button"
-              className="mt-3 rounded-full border border-accent px-4 py-1.5 text-sm text-accent hover:bg-amber-50"
+              className="mt-3 rounded-full border border-[#9a3412] px-4 py-1.5 text-sm text-[#9a3412] hover:bg-orange-50"
               onClick={() => setExpanded((value) => !value)}
             >
               {expanded ? 'مشاهده کمتر' : 'مشاهده بیشتر'}

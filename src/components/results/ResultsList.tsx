@@ -46,16 +46,16 @@ export function ResultsList({
 
   if (searched && !loading && results.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-stone-300 bg-white/70 px-6 py-16 text-center dark:border-stone-600 dark:bg-stone-900/40">
-        <p className="text-lg text-stone-700 dark:text-stone-200">نتیجه‌ای یافت نشد.</p>
-        <p className="mt-2 text-sm text-stone-500">لطفاً کلمهٔ دیگری را امتحان کنید.</p>
+      <div className="rounded-2xl border border-dashed border-stone-300 bg-white px-6 py-16 text-center">
+        <p className="text-lg text-stone-800">نتیجه‌ای یافت نشد.</p>
+        <p className="mt-2 text-sm text-stone-600">لطفاً کلمهٔ دیگری را امتحان کنید.</p>
       </div>
     );
   }
 
   if (results.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-stone-300 bg-white/70 px-6 py-16 text-center text-stone-500 dark:border-stone-600 dark:bg-stone-900/40">
+      <div className="rounded-2xl border border-dashed border-stone-300 bg-white px-6 py-16 text-center text-stone-600">
         برای شروع، یک کلمه جستجو کنید.
       </div>
     );
@@ -63,7 +63,7 @@ export function ResultsList({
 
   return (
     <div>
-      <div className="mb-4 space-y-1 text-center text-sm text-stone-600 dark:text-stone-400">
+      <div className="mb-4 space-y-1 text-center text-sm text-stone-700">
         {totalCount > 0 ? (
           <p>تعداد کل نتایج: {formatPersianNumber(totalCount)} قطعه</p>
         ) : null}
@@ -72,7 +72,7 @@ export function ResultsList({
           {totalPages > 1 ? ` (صفحه ${formatPersianNumber(page)} از ${formatPersianNumber(totalPages)})` : ''}
           {isFetching ? ' — در حال به‌روزرسانی...' : ''}
         </p>
-        <p className="text-xs text-stone-500">
+        <p className="text-xs text-stone-600">
           {countMatchingBits(results)} بیت مطابق در همین صفحه
         </p>
       </div>

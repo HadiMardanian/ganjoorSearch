@@ -34,7 +34,7 @@ export function Pagination({
         صفحه قبل
       </Button>
 
-      <span className="min-w-32 text-center text-sm text-stone-600">
+      <span className="min-w-32 text-center text-sm text-stone-700">
         صفحه {formatPersianNumber(page)}
         {totalPages > 0 ? ` از ${formatPersianNumber(totalPages)}` : ''}
       </span>
