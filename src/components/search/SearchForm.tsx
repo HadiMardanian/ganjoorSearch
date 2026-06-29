@@ -206,7 +206,7 @@ interface SearchBarProps {
   onSearch: () => void;
   loading?: boolean;
   filtersDirty?: boolean;
-  poetPicker: ReactNode;
+  poetPicker?: ReactNode;
   categorySelect: ReactNode;
 }
 
