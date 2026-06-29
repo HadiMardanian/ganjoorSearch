@@ -4,7 +4,7 @@ import { fetchAllSearchResults } from '@/api/ganjoor';
 import { exportResults, type ExportFormat } from '@/utils/export';
 import { formatPersianNumber } from '@/utils/paging';
 import { showToast } from '@/components/ui/Toast';
-import type { PoetFilter, ViewMode } from '@/types/ganjoor';
+import type { CategoryFilter, PoetFilter, ViewMode } from '@/types/ganjoor';
 import { Button } from '@/components/ui/Button';
 
 const EXPORT_WARN_THRESHOLD = 5000;
@@ -34,6 +34,7 @@ const EXPORT_LABELS: Record<ExportAction, string> = {
 interface ExportButtonsProps {
   term: string;
   poetId: PoetFilter;
+  categoryId: CategoryFilter;
   totalCount?: number;
   disabled?: boolean;
 }
@@ -41,6 +42,7 @@ interface ExportButtonsProps {
 export function ExportButtons({
   term,
   poetId,
+  categoryId,
   totalCount = 0,
   disabled,
 }: ExportButtonsProps) {
@@ -74,6 +76,7 @@ export function ExportButtons({
     try {
       const results = await fetchAllSearchResults(term, {
         poetId,
+        categoryId,
         signal: controller.signal,
         onProgress: (loaded, total) => {
           setProgress({ loaded, total });
