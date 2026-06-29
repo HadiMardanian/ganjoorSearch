@@ -39,4 +39,17 @@ describe('matchCore', () => {
     expect(indices.has(1)).toBe(true);
     expect(indices.has(2)).toBe(true);
   });
+
+  it('matches quoted phrase as contiguous text on one line', () => {
+    const query = parseQuery('"جام می"');
+    expect(lineMatches('بیا جام می نوش', query)).toBe(true);
+    expect(lineMatches('جام باده می خور', query)).toBe(false);
+  });
+
+  it('matches quoted phrase across adjacent lines', () => {
+    const lines = ['بیا جام', 'می نوش'];
+    const indices = findMatchingLineIndices(lines, parseQuery('"جام می"'));
+    expect(indices.has(0)).toBe(true);
+    expect(indices.has(1)).toBe(true);
+  });
 });

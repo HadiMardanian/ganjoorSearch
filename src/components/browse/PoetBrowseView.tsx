@@ -1,14 +1,17 @@
 import { useMemo, useState } from 'react';
-import { BookOpen, Bookmark } from 'lucide-react';
+import { BookOpen, Bookmark, Shuffle } from 'lucide-react';
 import { useCategoryDetailQuery, usePoetDetailQuery } from '@/api/queries';
 import { BrowseBreadcrumb } from '@/components/poet-app/BrowseBreadcrumb';
 import type { Category, PoemSummary } from '@/types/ganjoor';
 import { CategoryGrid } from '@/components/browse/CategoryGrid';
 import { PoemList } from '@/components/browse/PoemList';
 import { PoemReader } from '@/components/browse/PoemReader';
+import { QueryErrorPanel } from '@/components/ui/QueryErrorPanel';
+import { showToast } from '@/components/ui/Toast';
 import { activeBrowseCategoryId } from '@/hooks/useSearchParams';
 import { listFavorites } from '@/utils/favorites';
 import { readLastRead } from '@/utils/lastRead';
+import { pickRandomPoem } from '@/utils/randomPoem';
 
 interface PoetBrowseViewProps {
   poetId: number;
@@ -36,6 +39,7 @@ export function PoetBrowseView({
   const poetQuery = usePoetDetailQuery(poetId);
   const activeCatId = activeBrowseCategoryId(browsePath);
   const categoryQuery = useCategoryDetailQuery(activeCatId, true, activeCatId != null);
+  const [randomLoading, setRandomLoading] = useState(false);
 
   const poetName = poetQuery.data?.poet.name ?? 'شاعر';
   const rootChildren = poetQuery.data?.rootCategory.children ?? [];
@@ -61,6 +65,22 @@ export function PoetBrowseView({
     return segments;
   }, [activeCatId, category, poetName]);
 
+  async function handleRandomPoem() {
+    setRandomLoading(true);
+    try {
+      const result = await pickRandomPoem(poetId);
+      if (!result) {
+        showToast('شعر تصادفی یافت نشد.', 'info');
+        return;
+      }
+      onOpenPoem(result.poemUrl);
+    } catch {
+      showToast('خطا در بارگذاری شعر تصادفی.', 'error');
+    } finally {
+      setRandomLoading(false);
+    }
+  }
+
   if (poemUrl) {
     return (
       <PoemReader
@@ -68,11 +88,22 @@ export function PoetBrowseView({
         poemUrl={poemUrl}
         poems={poems}
         categoryTitle={category?.title}
+        shareSource="pwa"
         onBack={() => {
           setFavoritesVersion((v) => v + 1);
           onBrowseBack();
         }}
         onNavigate={onOpenPoem}
+      />
+    );
+  }
+
+  if (poetQuery.error && !poetQuery.data) {
+    return (
+      <QueryErrorPanel
+        message="خطا در بارگذاری آثار شاعر."
+        onRetry={() => poetQuery.refetch()}
+        retrying={poetQuery.isFetching}
       />
     );
   }
@@ -85,6 +116,16 @@ export function PoetBrowseView({
         loading
         onSelect={() => {}}
         onBack={onBrowseBack}
+      />
+    );
+  }
+
+  if (activeCatId && categoryQuery.error && !category) {
+    return (
+      <QueryErrorPanel
+        message="خطا در بارگذاری این بخش."
+        onRetry={() => categoryQuery.refetch()}
+        retrying={categoryQuery.isFetching}
       />
     );
   }
@@ -151,6 +192,24 @@ export function PoetBrowseView({
             {lastRead.categoryTitle ? (
               <span className="text-muted mt-1 block text-xs">{lastRead.categoryTitle}</span>
             ) : null}
+          </span>
+        </button>
+      ) : null}
+      {!activeCatId ? (
+        <button
+          type="button"
+          className="surface-card hover:border-[var(--color-accent)] fade-in mb-5 flex w-full items-center gap-3 rounded-2xl border p-4 text-start transition-colors disabled:opacity-60"
+          onClick={handleRandomPoem}
+          disabled={randomLoading || poetQuery.isLoading}
+        >
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--color-accent-soft)] text-accent">
+            <Shuffle size={20} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="text-subtle block text-xs">کشف تصادفی</span>
+            <span className="block font-semibold">
+              {randomLoading ? 'در حال انتخاب شعر…' : 'شعر تصادفی'}
+            </span>
           </span>
         </button>
       ) : null}

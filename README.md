@@ -26,8 +26,10 @@ A fast, Persian-first web app for searching classical Persian poetry via the pub
 - Install a dedicated home-screen app per poet (custom icon and name)
 - **Browse** category tree → poem lists → immersive reader
 - **Search** within the same poet; results open in-app reader
-- Continue reading, **favorites**, font size / line spacing in reader
+- Continue reading, **favorites**, **random poem**, in-poem find, font size / line spacing in reader
+- Share/copy deep links (`?poet=&poem=`) to open a poem directly
 - Browse session restored after closing the app (`bpath`, `plist`, open poem)
+- Search scroll position restored when returning from reader
 - Offline reading for recently opened poems (cached locally)
 - Android hardware Back: in-app navigation stack before exit
 
@@ -53,6 +55,7 @@ Open `http://localhost:5173/ganjoorSearch/`
 | `npm run build:poet-assets` | Generate all poet icons and manifests (API) |
 | `npm run preview` | Preview `dist/` |
 | `npm run test:unit` | Vitest (no network) |
+| `npm run test:e2e` | Playwright poet-app flows (dev server + live API) |
 | `npm run verify` | Live API checks + unit tests |
 | `npm run lint` | ESLint |
 | `npm run generate:poet-icons` | Top poets PNG icons |

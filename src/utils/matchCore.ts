@@ -27,19 +27,38 @@ export function parseQuery(term: string): ParsedQuery {
   return { parts: trimmed.split(/\s+/).filter(Boolean), isQuotedPhrase: false };
 }
 
+function normalizedIncludes(haystack: string, needle: string): boolean {
+  return haystack.includes(normalizePersian(needle));
+}
+
 export function lineMatches(line: string, query: ParsedQuery): boolean {
   if (!line || query.parts.length === 0) return false;
   const normalizedLine = normalizePersian(line);
-  return query.parts.some((part) => normalizedLine.includes(normalizePersian(part)));
+
+  if (query.isQuotedPhrase) {
+    return normalizedIncludes(normalizedLine, query.parts[0]!);
+  }
+
+  return query.parts.some((part) => normalizedIncludes(normalizedLine, part));
 }
 
 export function textMatches(text: string, query: ParsedQuery): boolean {
   if (!text || query.parts.length === 0) return false;
-  return text
+
+  const lines = text
     .split(/\r?\n/)
     .map((line) => line.trim())
-    .filter(Boolean)
-    .some((line) => lineMatches(line, query));
+    .filter(Boolean);
+
+  if (query.isQuotedPhrase) {
+    const phrase = query.parts[0]!;
+    if (lines.some((line) => lineMatches(line, query))) return true;
+
+    const joined = normalizePersian(lines.join(' '));
+    return normalizedIncludes(joined, phrase);
+  }
+
+  return lines.some((line) => lineMatches(line, query));
 }
 
 export function titleMatches(title: string, query: ParsedQuery): boolean {
@@ -114,6 +133,32 @@ export function findMatchRanges(text: string, term: string): Array<[number, numb
 
 export function findMatchingLineIndices(lines: string[], query: ParsedQuery): Set<number> {
   const indices = new Set<number>();
+
+  if (query.isQuotedPhrase && query.parts.length > 0) {
+    const phrase = normalizePersian(query.parts[0]!);
+
+    for (let index = 0; index < lines.length; index++) {
+      if (normalizedIncludes(normalizePersian(lines[index]!), query.parts[0]!)) {
+        indices.add(index);
+      }
+    }
+
+    if (indices.size > 0) return indices;
+
+    const normalizedLines = lines.map((line) => normalizePersian(line));
+    for (let start = 0; start < lines.length; start++) {
+      let combined = '';
+      for (let end = start; end < lines.length && end < start + 3; end++) {
+        combined = combined ? `${combined} ${normalizedLines[end]}` : normalizedLines[end]!;
+        if (combined.includes(phrase)) {
+          for (let i = start; i <= end; i++) indices.add(i);
+          break;
+        }
+      }
+    }
+
+    return indices;
+  }
 
   for (let index = 0; index < lines.length; index++) {
     if (lineMatches(lines[index]!, query)) {

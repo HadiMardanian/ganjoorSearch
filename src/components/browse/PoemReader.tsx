@@ -7,16 +7,21 @@ import {
   ChevronRight,
   Copy,
   ExternalLink,
+  Link2,
   Minus,
   Plus,
+  Search,
   Share2,
   Type,
+  X,
 } from 'lucide-react';
 import { GANJOOR_SITE } from '@/api/client';
 import { fetchPoemWithOfflineFallback, usePoemDetailQuery } from '@/api/queries';
 import { Button } from '@/components/ui/Button';
+import { QueryErrorPanel } from '@/components/ui/QueryErrorPanel';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { showToast } from '@/components/ui/Toast';
+import { HighlightedText } from '@/components/results/HighlightedText';
 import {
   readerFontSizeClass,
   readerLineHeightClass,
@@ -24,7 +29,9 @@ import {
   type ReaderFontSize,
 } from '@/hooks/useReaderPrefs';
 import type { PoemSummary } from '@/types/ganjoor';
+import { buildPoemDeepLink } from '@/utils/deepLink';
 import { isFavorite, toggleFavorite } from '@/utils/favorites';
+import { findMatchingLineIndices, parseQuery } from '@/utils/matchCore';
 import { linesToCouplets, poemToCouplets, poemToLines } from '@/utils/poemText';
 import { saveLastRead } from '@/utils/lastRead';
 import { STALE_TIMES } from '@/lib/queryClient';
@@ -36,6 +43,7 @@ interface PoemReaderProps {
   categoryTitle?: string;
   onBack: () => void;
   onNavigate?: (poemUrl: string) => void;
+  shareSource?: 'pwa' | null;
 }
 
 const SWIPE_THRESHOLD = 60;
@@ -47,12 +55,15 @@ export function PoemReader({
   categoryTitle,
   onBack,
   onNavigate,
+  shareSource = null,
 }: PoemReaderProps) {
   const poemQuery = usePoemDetailQuery(poemUrl);
   const queryClient = useQueryClient();
   const { prefs, setFontSize, setLineHeight } = useReaderPrefs();
   const [copied, setCopied] = useState(false);
   const [showPrefs, setShowPrefs] = useState(false);
+  const [showFind, setShowFind] = useState(false);
+  const [findTerm, setFindTerm] = useState('');
   const [favorited, setFavorited] = useState(() => isFavorite(poemUrl));
   const touchStartX = useRef<number | null>(null);
 
@@ -66,6 +77,17 @@ export function PoemReader({
     return linesToCouplets(poemToLines(poem));
   }, [poem]);
 
+  const flatLines = useMemo(
+    () => couplets.flatMap((group) => group.lines),
+    [couplets],
+  );
+
+  const findQuery = useMemo(() => parseQuery(findTerm), [findTerm]);
+  const matchingLineIndices = useMemo(() => {
+    if (!findTerm.trim()) return new Set<number>();
+    return findMatchingLineIndices(flatLines, findQuery);
+  }, [findQuery, findTerm, flatLines]);
+
   const currentIndex = poems.findIndex((item) => item.fullUrl === poemUrl);
   const prevPoem = currentIndex > 0 ? poems[currentIndex - 1] : null;
   const nextPoem =
@@ -76,10 +98,16 @@ export function PoemReader({
   const title = poem?.title || poem?.fullTitle || 'در حال بارگذاری…';
   const displayTitle = poem?.fullTitle || title;
   const externalUrl = `${GANJOOR_SITE}${poemUrl}`;
-  const plainText = couplets.flatMap((group) => group.lines).join('\n');
+  const appDeepLink = buildPoemDeepLink(poetId, poemUrl, {
+    source: shareSource,
+    tab: 'browse',
+  });
+  const plainText = flatLines.join('\n');
 
   useEffect(() => {
     setFavorited(isFavorite(poemUrl));
+    setFindTerm('');
+    setShowFind(false);
   }, [poemUrl]);
 
   useEffect(() => {
@@ -125,14 +153,23 @@ export function PoemReader({
     }
   }
 
+  async function handleCopyDeepLink() {
+    try {
+      await navigator.clipboard.writeText(appDeepLink);
+      showToast('لینک شعر کپی شد.', 'success');
+    } catch {
+      showToast('کپی لینک ممکن نشد.', 'error');
+    }
+  }
+
   async function handleShare() {
     const text = `${displayTitle}\n\n${plainText}`;
     try {
       if (navigator.share) {
-        await navigator.share({ title: displayTitle, text, url: externalUrl });
+        await navigator.share({ title: displayTitle, text, url: appDeepLink });
         return;
       }
-      await handleCopy();
+      await handleCopyDeepLink();
     } catch {
       /* user cancelled share */
     }
@@ -187,6 +224,16 @@ export function PoemReader({
             type="button"
             variant="ghost"
             className="h-10 w-10 px-0"
+            onClick={() => setShowFind((open) => !open)}
+            aria-label="یافتن در این شعر"
+            aria-pressed={showFind}
+          >
+            <Search size={18} />
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            className="h-10 w-10 px-0"
             onClick={handleToggleFavorite}
             aria-label={favorited ? 'حذف از علاقه‌مندی‌ها' : 'افزودن به علاقه‌مندی‌ها'}
             aria-pressed={favorited}
@@ -207,6 +254,30 @@ export function PoemReader({
           </Button>
         </div>
       </div>
+
+      {showFind ? (
+        <div className="surface-card mb-4 flex items-center gap-2 rounded-2xl border p-3">
+          <Search size={16} className="text-muted shrink-0" />
+          <input
+            type="search"
+            value={findTerm}
+            onChange={(event) => setFindTerm(event.target.value)}
+            placeholder="یافتن در این شعر…"
+            className="min-w-0 flex-1 bg-transparent text-sm outline-none"
+            autoFocus
+          />
+          {findTerm ? (
+            <button
+              type="button"
+              className="text-muted hover:text-[var(--color-ink)]"
+              onClick={() => setFindTerm('')}
+              aria-label="پاک کردن جستجو"
+            >
+              <X size={16} />
+            </button>
+          ) : null}
+        </div>
+      ) : null}
 
       {showPrefs ? (
         <div className="surface-card mb-4 flex flex-wrap items-center gap-3 rounded-2xl border p-3 text-sm">
@@ -244,7 +315,11 @@ export function PoemReader({
           ))}
         </div>
       ) : poemQuery.error ? (
-        <p className="text-muted py-12 text-center text-sm">خطا در بارگذاری شعر.</p>
+        <QueryErrorPanel
+          message="خطا در بارگذاری شعر."
+          onRetry={() => poemQuery.refetch()}
+          retrying={poemQuery.isFetching}
+        />
       ) : (
         <>
           <header className="mb-8 text-center">
@@ -256,6 +331,10 @@ export function PoemReader({
               <Button variant="secondary" onClick={handleCopy}>
                 {copied ? <Check size={16} /> : <Copy size={16} />}
                 {copied ? 'کپی شد' : 'کپی'}
+              </Button>
+              <Button variant="secondary" onClick={handleCopyDeepLink}>
+                <Link2 size={16} />
+                لینک شعر
               </Button>
               <a
                 href={externalUrl}
@@ -269,24 +348,50 @@ export function PoemReader({
             </div>
           </header>
 
+          {showFind && findTerm.trim() && matchingLineIndices.size === 0 ? (
+            <p className="text-muted mb-4 text-center text-sm">موردی در این شعر یافت نشد.</p>
+          ) : null}
+
           <div
             className={`poem-reader mx-auto max-w-prose space-y-6 ${readerFontSizeClass[prefs.fontSize]}`}
           >
-            {couplets.map((group) => (
-              <div
-                key={`couplet-${group.coupletIndex}`}
-                className={`verse-couplet space-y-1 ${readerLineHeightClass[prefs.lineHeight]}`}
-              >
-                {group.lines.map((line, index) => (
-                  <p
-                    key={`${poemUrl}-${group.coupletIndex}-${index}`}
-                    className="verse-text text-center"
+            {(() => {
+              let lineOffset = 0;
+              return couplets.map((group) => {
+                const startOffset = lineOffset;
+                lineOffset += group.lines.length;
+
+                return (
+                  <div
+                    key={`couplet-${group.coupletIndex}`}
+                    className={`verse-couplet space-y-1 ${readerLineHeightClass[prefs.lineHeight]}`}
                   >
-                    {line}
-                  </p>
-                ))}
-              </div>
-            ))}
+                    {group.lines.map((line, index) => {
+                      const globalIndex = startOffset + index;
+                      const highlighted =
+                        showFind &&
+                        findTerm.trim() &&
+                        matchingLineIndices.has(globalIndex);
+
+                      return (
+                        <p
+                          key={`${poemUrl}-${group.coupletIndex}-${index}`}
+                          className={`verse-text text-center ${
+                            highlighted ? 'rounded-lg bg-[var(--color-accent-soft)]/60' : ''
+                          }`}
+                        >
+                          {showFind && findTerm.trim() ? (
+                            <HighlightedText text={line} term={findTerm} />
+                          ) : (
+                            line
+                          )}
+                        </p>
+                      );
+                    })}
+                  </div>
+                );
+              });
+            })()}
           </div>
 
           {(prevPoem || nextPoem) && onNavigate ? (
