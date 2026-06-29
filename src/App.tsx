@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ArrowUp } from 'lucide-react';
 import { groupSearchResults } from '@/api/ganjoor';
 import { useCategoriesQuery, usePoetsQuery, useSearchQuery } from '@/api/queries';
@@ -13,16 +13,20 @@ import {
 } from '@/components/search/SearchForm';
 import { Pagination } from '@/components/ui/Pagination';
 import { showToast, ToastContainer } from '@/components/ui/Toast';
+import { ViewModeToggle } from '@/components/ui/ViewModeToggle';
+import { useSearchState } from '@/hooks/useSearchParams';
 import type { CategoryFilter, PoetFilter, ViewMode } from '@/types/ganjoor';
 
 export default function App() {
-  const [input, setInput] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [poetId, setPoetId] = useState<PoetFilter>('all');
-  const [categoryId, setCategoryId] = useState<CategoryFilter>('all');
-  const [page, setPage] = useState(1);
-  const [viewMode, setViewMode] = useState<ViewMode>('verse');
-  const [searched, setSearched] = useState(false);
+  const { initial, updateUrl } = useSearchState();
+
+  const [input, setInput] = useState(initial.term);
+  const [searchTerm, setSearchTerm] = useState(initial.term);
+  const [poetId, setPoetId] = useState<PoetFilter>(initial.poetId);
+  const [categoryId, setCategoryId] = useState<CategoryFilter>(initial.categoryId);
+  const [page, setPage] = useState(initial.page);
+  const [viewMode, setViewMode] = useState<ViewMode>(initial.viewMode);
+  const [searched, setSearched] = useState(Boolean(initial.term));
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   const poetsQuery = usePoetsQuery();
@@ -38,6 +42,25 @@ export default function App() {
   const groupedResults = useMemo(
     () => groupSearchResults(searchQuery.data?.results ?? []),
     [searchQuery.data?.results],
+  );
+
+  const syncUrl = useCallback(
+    (overrides: Partial<{
+      term: string;
+      poetId: PoetFilter;
+      categoryId: CategoryFilter;
+      page: number;
+      viewMode: ViewMode;
+    }> = {}) => {
+      updateUrl({
+        term: overrides.term ?? searchTerm,
+        poetId: overrides.poetId ?? poetId,
+        categoryId: overrides.categoryId ?? categoryId,
+        page: overrides.page ?? page,
+        viewMode: overrides.viewMode ?? viewMode,
+      });
+    },
+    [categoryId, page, poetId, searchTerm, updateUrl, viewMode],
   );
 
   useEffect(() => {
@@ -74,14 +97,15 @@ export default function App() {
     setSearchTerm(trimmed);
     setPage(1);
     setSearched(true);
+    syncUrl({ term: trimmed, page: 1 });
   }
 
   function handlePoetChange(value: PoetFilter) {
     setPoetId(value);
     setCategoryId('all');
-    if (searched && searchTerm) {
-      setPage(1);
-    }
+    const nextPage = searched && searchTerm ? 1 : page;
+    if (searched && searchTerm) setPage(1);
+    syncUrl({ poetId: value, categoryId: 'all', page: nextPage });
   }
 
   return (
@@ -108,36 +132,23 @@ export default function App() {
               value={categoryId}
               onChange={(value) => {
                 setCategoryId(value);
+                const nextPage = searched ? 1 : page;
                 if (searched) setPage(1);
+                syncUrl({ categoryId: value, page: nextPage });
               }}
               disabled={poetId === 'all' || categoriesQuery.isLoading}
             />
           }
         />
 
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <button
-            type="button"
-            className={`rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
-              viewMode === 'verse'
-                ? 'bg-accent text-white'
-                : 'border border-stone-200 bg-white text-stone-700 hover:bg-stone-50'
-            }`}
-            onClick={() => setViewMode('verse')}
-          >
-            نمایش بیت
-          </button>
-          <button
-            type="button"
-            className={`rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
-              viewMode === 'full'
-                ? 'bg-accent text-white'
-                : 'border border-stone-200 bg-white text-stone-700 hover:bg-stone-50'
-            }`}
-            onClick={() => setViewMode('full')}
-          >
-            نمایش غزل کامل
-          </button>
+        <div className="mt-6 flex justify-center">
+          <ViewModeToggle
+            value={viewMode}
+            onChange={(mode) => {
+              setViewMode(mode);
+              syncUrl({ viewMode: mode });
+            }}
+          />
         </div>
 
         <div className="mt-5">
@@ -163,7 +174,11 @@ export default function App() {
           <Pagination
             page={page}
             hasMore={searchQuery.data?.hasMore ?? false}
-            onPageChange={setPage}
+            onPageChange={(nextPage) => {
+              setPage(nextPage);
+              syncUrl({ page: nextPage });
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
             disabled={searchQuery.isFetching}
           />
         )}

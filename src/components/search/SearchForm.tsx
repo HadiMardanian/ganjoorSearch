@@ -171,7 +171,7 @@ export function SearchBar({
 }: SearchBarProps) {
   return (
     <form
-      className="rounded-2xl border border-stone-200 bg-white/90 p-4 shadow-sm backdrop-blur sm:p-5"
+      className="rounded-2xl border border-stone-200 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-stone-700 dark:bg-stone-900/90 sm:p-5"
       onSubmit={(event) => {
         event.preventDefault();
         onSearch();
