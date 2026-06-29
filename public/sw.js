@@ -1,4 +1,4 @@
-const CACHE = 'ganjoorsearch-shell-v2';
+const CACHE = 'ganjoorsearch-shell-v3';
 const SHELL = ['/ganjoorSearch/', '/ganjoorSearch/index.html'];
 const STATIC_ASSETS = [
   '/ganjoorSearch/manifest.webmanifest',
@@ -23,6 +23,10 @@ function isPoetIconPath(pathname) {
   return /\/ganjoorSearch\/icons\/poets\/\d+-(192|512)\.png$/.test(pathname);
 }
 
+function isPoetManifestPath(pathname) {
+  return /\/ganjoorSearch\/manifests\/poet-\d+\.webmanifest$/.test(pathname);
+}
+
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
@@ -32,7 +36,8 @@ self.addEventListener('fetch', (event) => {
     SHELL.includes(url.pathname) ||
     url.pathname.endsWith('.html') ||
     url.pathname.endsWith('manifest.webmanifest') ||
-    isPoetIconPath(url.pathname);
+    isPoetIconPath(url.pathname) ||
+    isPoetManifestPath(url.pathname);
 
   event.respondWith(
     caches.match(event.request).then((cached) => {
