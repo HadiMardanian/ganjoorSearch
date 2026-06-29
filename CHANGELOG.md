@@ -2,6 +2,16 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.14.4] - 2026-06-29
+
+### Fixed
+- Installing a second (or third) poet PWA after خیام: each poet opens on a fresh install URL so Chrome fires `beforeinstallprompt` again; «قبلاً نصب شده» only for that exact poet
+- Install flow no longer marks a poet as installed when the user dismisses the browser prompt
+- «مرور در مرورگر (بدون نصب)» is clearly separate from install; install button is primary when available
+
+### Changed
+- Selecting a poet in the install gallery navigates to `/pwa/{id}/?install=1` with early manifest swap for reliable multi-install
+
 ## [2.14.3] - 2026-06-29
 
 ### Fixed

@@ -4,7 +4,9 @@ import { PoetInstallGallery } from '@/components/install/PoetInstallGallery';
 import { PoetInstallPreview } from '@/components/install/PoetInstallPreview';
 import { IosInstallGuide } from '@/components/install/IosInstallGuide';
 import { usePwaInstall } from '@/hooks/usePwaInstall';
+import { recordInstalledPoetId } from '@/utils/installedPoets';
 import { isPoetPwaInstalled } from '@/utils/poetPwaInstall';
+import { buildPoetInstallUrl, clearInstallParamFromUrl } from '@/utils/poetInstallUrl';
 import {
   injectPoetManifest,
   lockPoetManifestForInstall,
@@ -108,14 +110,14 @@ export function PoetInstallFlow({
   if (!open) return null;
 
   function handleDismiss() {
+    clearInstallParamFromUrl();
     restoreDefaultManifest();
     onClose();
   }
 
   function handleSelectPoet(poet: Poet) {
     userPickedPoetRef.current = true;
-    setSelectedPoet(poet);
-    setStep('preview');
+    window.location.assign(buildPoetInstallUrl(poet.id));
   }
 
   async function handleInstall() {
@@ -127,38 +129,44 @@ export function PoetInstallFlow({
       await injectPoetManifest(selectedPoet);
       const outcome = await promptInstall();
 
-      onPoetInstalled(selectedPoet);
-      restoreDefaultManifest();
-      onClose();
-
       if (outcome === 'accepted') {
+        recordInstalledPoetId(selectedPoet.id);
+        clearInstallParamFromUrl();
+        restoreDefaultManifest();
+        onPoetInstalled(selectedPoet);
+        onClose();
         showToast(`اپ ${selectedPoet.name} نصب شد. از آیکون صفحهٔ اصلی باز کنید.`, 'success');
       } else if (outcome === 'dismissed') {
-        showToast('نصب لغو شد — می‌توانید «شروع مرور آثار» را بدون نصب امتحان کنید.', 'info');
+        showToast('نصب لغو شد.', 'info');
       } else {
-        showToast('از منوی مرورگر «نصب اپ» را انتخاب کنید.', 'info');
+        showToast('برای نصب این شاعر صفحه را تازه کنید یا از منوی مرورگر «نصب اپ» را بزنید.', 'info');
       }
     } catch {
-      onPoetInstalled(selectedPoet);
-      restoreDefaultManifest();
-      onClose();
-      showToast('خطا در نصب — دوباره تلاش کنید یا از مرور آثار استفاده کنید.', 'error');
+      showToast('خطا در نصب — دوباره تلاش کنید.', 'error');
     } finally {
       setInstalling(false);
       unlockPoetManifestForInstall();
     }
   }
 
+  function handleReloadForInstall() {
+    if (!selectedPoet) return;
+    window.location.assign(buildPoetInstallUrl(selectedPoet.id));
+  }
+
   function handleUseWithoutInstall() {
     if (!selectedPoet) return;
     activatedPoetRef.current = true;
+    clearInstallParamFromUrl();
     onBrowseWithoutInstall(selectedPoet);
     onClose();
-    showToast(`مرور آثار ${selectedPoet.name} آماده است.`, 'success');
+    showToast(`مرور آثار ${selectedPoet.name} در مرورگر آماده است.`, 'success');
   }
 
   function handleIosInstalled() {
     if (selectedPoet) {
+      recordInstalledPoetId(selectedPoet.id);
+      clearInstallParamFromUrl();
       onPoetInstalled(selectedPoet);
       restoreDefaultManifest();
       showToast(`اپ ${selectedPoet.name} آماده است — از صفحهٔ اصلی باز کنید.`, 'success');
@@ -204,9 +212,13 @@ export function PoetInstallFlow({
             alreadyInstalled={poetAlreadyInstalled}
             installing={installing}
             onInstall={handleInstall}
+            onReloadForInstall={handleReloadForInstall}
             onUseWithoutInstall={handleUseWithoutInstall}
             onIosGuide={() => setStep('ios')}
-            onBack={() => setStep('gallery')}
+            onBack={() => {
+              clearInstallParamFromUrl();
+              setStep('gallery');
+            }}
           />
         )}
         {step === 'ios' && selectedPoet && (

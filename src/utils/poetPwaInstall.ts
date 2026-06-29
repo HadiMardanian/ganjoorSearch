@@ -1,3 +1,4 @@
+import { isPoetRecordedAsInstalled } from '@/utils/installedPoets';
 import { getPoetManifestUrl } from '@/utils/poetManifest';
 import { getPoetPwaManifestId } from '@/utils/poetPwaPath';
 
@@ -7,7 +8,23 @@ interface InstalledRelatedWebApp {
   url?: string;
 }
 
+function normalizeManifestId(id: string): string {
+  return id.replace(/\/$/, '');
+}
+
+function matchesPoetManifest(app: InstalledRelatedWebApp, poetId: number): boolean {
+  const manifestId = normalizeManifestId(getPoetPwaManifestId(poetId));
+  if (app.id && normalizeManifestId(app.id) === manifestId) return true;
+  const expectedUrl = getPoetManifestUrl(poetId);
+  if (app.url && (app.url === expectedUrl || app.url.endsWith(`poet-${poetId}.webmanifest`))) {
+    return true;
+  }
+  return false;
+}
+
 export async function isPoetPwaInstalled(poetId: number): Promise<boolean> {
+  if (isPoetRecordedAsInstalled(poetId)) return true;
+
   const getInstalled = (
     navigator as Navigator & {
       getInstalledRelatedApps?: () => Promise<InstalledRelatedWebApp[]>;
@@ -20,11 +37,8 @@ export async function isPoetPwaInstalled(poetId: number): Promise<boolean> {
 
   try {
     const apps = await getInstalled();
-    const manifestId = getPoetPwaManifestId(poetId);
     return apps.some(
-      (app) =>
-        app.platform === 'webapp' &&
-        (app.id === manifestId || app.url?.includes(`poet-${poetId}.webmanifest`)),
+      (app) => app.platform === 'webapp' && matchesPoetManifest(app, poetId),
     );
   } catch {
     return false;

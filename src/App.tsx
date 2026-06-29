@@ -40,6 +40,7 @@ import {
   singleFilterId,
 } from '@/utils/filterState';
 import { clearSearchScroll, readSearchScroll, saveSearchScroll } from '@/utils/searchScroll';
+import { parseInstallPoetIdFromUrl } from '@/utils/poetInstallUrl';
 import { PoemReader } from '@/components/browse/PoemReader';
 
 function syncThemeColor() {
@@ -73,7 +74,10 @@ export default function App() {
   const [poemListPage, setPoemListPage] = useState(initial.poemListPage);
   const [searched, setSearched] = useState(Boolean(initial.term));
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [installOpen, setInstallOpen] = useState(false);
+  const [installOpen, setInstallOpen] = useState(() => parseInstallPoetIdFromUrl() != null);
+  const [installPoetId, setInstallPoetId] = useState<number | null>(() =>
+    parseInstallPoetIdFromUrl(),
+  );
   const [readerTitle, setReaderTitle] = useState<string | undefined>();
   const pendingScrollRestore = useRef<number | null>(null);
   const [readerPoetId, setReaderPoetId] = useState<number | null>(() =>
@@ -97,7 +101,14 @@ export default function App() {
       input.trim() !== searchTerm);
 
   useEffect(() => {
-    setInput(urlState.term);
+    const poetId = parseInstallPoetIdFromUrl();
+    if (poetId) {
+      setInstallPoetId(poetId);
+      setInstallOpen(true);
+    }
+  }, []);
+
+  useEffect(() => {
     setPoetId(urlState.poetId);
     setCategoryId(urlState.categoryId);
     setSearchTerm(urlState.term);
@@ -697,8 +708,11 @@ export default function App() {
           open={installOpen}
           poets={poets}
           poetsLoading={poetsQuery.isLoading}
-          initialPoetId={poetAppPoet?.id}
-          onClose={() => setInstallOpen(false)}
+          initialPoetId={installPoetId ?? poetAppPoet?.id}
+          onClose={() => {
+            setInstallOpen(false);
+            setInstallPoetId(null);
+          }}
           onPoetInstalled={handlePoetInstalled}
           onBrowseWithoutInstall={handleBrowseWithoutInstall}
         />
@@ -742,7 +756,11 @@ export default function App() {
         open={installOpen}
         poets={poets}
         poetsLoading={poetsQuery.isLoading}
-        onClose={() => setInstallOpen(false)}
+        initialPoetId={installPoetId ?? undefined}
+        onClose={() => {
+          setInstallOpen(false);
+          setInstallPoetId(null);
+        }}
         onPoetInstalled={handlePoetInstalled}
         onBrowseWithoutInstall={handleBrowseWithoutInstall}
       />
