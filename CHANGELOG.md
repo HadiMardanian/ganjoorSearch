@@ -2,6 +2,20 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.10.0] - 2026-06-29
+
+### Added
+- Random poem card on poet browse home
+- In-poem search in reader (find + highlight via `matchCore`)
+- App deep links: copy/share `?poet=&poem=` from reader; general mode opens reader from URL
+- Search results scroll position restored when returning from reader
+- Network error retry in browse and poem reader
+- Playwright E2E tests for poet app URL flows (`npm run test:e2e`)
+- Unit tests for `poetAppState`, `poetManifest`, `deepLink`, `searchScroll`
+
+### Fixed
+- Quoted phrase search (`"..."`) now matches contiguous text (including across adjacent lines)
+
 ## [2.9.0] - 2026-06-29
 
 ### Added

@@ -1,7 +1,7 @@
 {
   "name": "ganjoorsearch",
   "private": true,
-  "version": "2.9.0",
+  "version": "2.10.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "test:unit": "vitest run",
+    "test:e2e": "playwright test",
     "verify": "node scripts/verify.mjs && npm run test:unit",
     "verify:integration": "node scripts/verify.mjs",
     "generate:poet-icons": "node scripts/generate-poet-icons.mjs",
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.61.1",
     "@tailwindcss/vite": "^4.0.7",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",

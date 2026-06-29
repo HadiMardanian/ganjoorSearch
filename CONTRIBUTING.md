@@ -83,6 +83,8 @@ public/icons/   prebuilt poet PWA icons (192/512 PNG)
 
 Run through these on a real device or emulator before release.
 
+**Automated coverage:** `npm run test:e2e` (Playwright) verifies poet browse home, category → poem list → reader, random poem, search tab, and poem deep links via URL state. It does **not** replace install/offline/Android-back/iOS checks below.
+
 #### Android (Chrome)
 
 - [ ] Header shows «نصب اپ شاعر» when not installed

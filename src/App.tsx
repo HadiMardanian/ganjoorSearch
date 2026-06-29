@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowUp, Link2 } from 'lucide-react';
 import { useCategoriesQuery, usePoetsQuery, useSearchQuery } from '@/api/queries';
 import { ExportButtons } from '@/components/export/ExportButtons';
@@ -33,6 +33,7 @@ import { Button } from '@/components/ui/Button';
 import type { CategoryFilter, Poet, PoetFilter, ViewMode } from '@/types/ganjoor';
 import { injectPoetManifest } from '@/utils/poetManifest';
 import { clearBrowseSession, saveBrowseSession } from '@/utils/browseSession';
+import { clearSearchScroll, readSearchScroll, saveSearchScroll } from '@/utils/searchScroll';
 import { PoemReader } from '@/components/browse/PoemReader';
 
 function syncThemeColor() {
@@ -68,6 +69,7 @@ export default function App() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [installOpen, setInstallOpen] = useState(false);
   const [readerTitle, setReaderTitle] = useState<string | undefined>();
+  const pendingScrollRestore = useRef<number | null>(null);
 
   const poetsQuery = usePoetsQuery();
   const poets = poetsQuery.data ?? [];
@@ -267,6 +269,7 @@ export default function App() {
       return;
     }
 
+    clearSearchScroll();
     setSearchTerm(trimmed);
     setAppliedPoetId(poetId);
     setAppliedCategoryId(categoryId);
@@ -398,6 +401,9 @@ export default function App() {
   }
 
   function handleOpenPoem(url: string, title?: string) {
+    if (searched && (!isPoetApp || appTab === 'search')) {
+      saveSearchScroll(searchTerm, appliedPoetId, appliedCategoryId, page, window.scrollY);
+    }
     setPoemUrl(url);
     setReaderTitle(title);
     setAppTab(appTab);
@@ -406,6 +412,15 @@ export default function App() {
 
   function handleBrowseBack() {
     if (poemUrl) {
+      if (searched && appTab === 'search') {
+        const restored = readSearchScroll(
+          searchTerm,
+          appliedPoetId,
+          appliedCategoryId,
+          page,
+        );
+        if (restored != null) pendingScrollRestore.current = restored;
+      }
       setPoemUrl(null);
       setReaderTitle(undefined);
       syncUrl({ poemUrl: null }, true);
@@ -418,6 +433,15 @@ export default function App() {
       syncUrl({ browsePath: nextPath, poemListPage: 1 }, true);
     }
   }
+
+  useEffect(() => {
+    if (poemUrl || pendingScrollRestore.current == null) return;
+    const scrollY = pendingScrollRestore.current;
+    pendingScrollRestore.current = null;
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: scrollY, behavior: 'auto' });
+    });
+  }, [poemUrl, appTab]);
 
   const showBrowse = isPoetApp && appTab === 'browse' && !poemUrl;
   const showSearch = !isPoetApp || (appTab === 'search' && !poemUrl);
@@ -574,6 +598,7 @@ export default function App() {
             <PoemReader
               poetId={poetAppPoet.id}
               poemUrl={poemUrl}
+              shareSource="pwa"
               onBack={handleBrowseBack}
             />
           ) : null}
@@ -611,6 +636,9 @@ export default function App() {
     );
   }
 
+  const showGeneralPoemReader =
+    !isPoetApp && Boolean(poemUrl) && typeof appliedPoetId === 'number';
+
   return (
     <div className="flex min-h-screen flex-col">
       <a
@@ -627,7 +655,15 @@ export default function App() {
       />
 
       <main id="main-content" className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6">
-        {searchSection}
+        {showGeneralPoemReader && poemUrl ? (
+          <PoemReader
+            poetId={appliedPoetId}
+            poemUrl={poemUrl}
+            onBack={handleBrowseBack}
+          />
+        ) : (
+          searchSection
+        )}
       </main>
 
       <Footer />
