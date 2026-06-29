@@ -9,6 +9,7 @@ interface PoetInstallPreviewProps {
   isIos: boolean;
   installing?: boolean;
   onInstall: () => void;
+  onUseWithoutInstall: () => void;
   onIosGuide: () => void;
   onBack: () => void;
 }
@@ -25,6 +26,7 @@ export function PoetInstallPreview({
   isIos,
   installing,
   onInstall,
+  onUseWithoutInstall,
   onIosGuide,
   onBack,
 }: PoetInstallPreviewProps) {
@@ -61,6 +63,16 @@ export function PoetInstallPreview({
         </ul>
 
         <div className="mt-8 space-y-3">
+          <Button
+            type="button"
+            variant="secondary"
+            className="w-full py-3 text-base"
+            onClick={onUseWithoutInstall}
+            disabled={installing}
+          >
+            شروع مرور آثار {name}
+          </Button>
+
           {canInstall ? (
             <Button
               type="button"

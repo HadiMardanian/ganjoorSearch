@@ -75,7 +75,7 @@ export default function App() {
     poet: poetAppPoet,
     saveInstalledPoet,
     clearInstalledPoet,
-  } = usePoetApp(poets);
+  } = usePoetApp(poets, urlState.poetId, urlState.source);
 
   const filtersDirty =
     searched &&
@@ -296,6 +296,9 @@ export default function App() {
       name: poet.name || poet.fullName || 'شاعر',
       imageUrl: poet.imageUrl,
     });
+    setInput('');
+    setSearchTerm('');
+    setSearched(false);
     setPoetId(poet.id);
     setAppliedPoetId(poet.id);
     setCategoryId('all');

@@ -35,6 +35,7 @@ export function PoetInstallFlow({
     if (!open) {
       setStep('gallery');
       setSelectedPoet(null);
+      setInstalling(false);
       restoreDefaultManifest();
       return;
     }
@@ -78,23 +79,35 @@ export function PoetInstallFlow({
   }
 
   async function handleInstall() {
-    if (!selectedPoet) return;
+    if (!selectedPoet || installing) return;
     setInstalling(true);
+
     try {
+      onPoetInstalled(selectedPoet);
+      onClose();
+
       await injectPoetManifest(selectedPoet);
       const outcome = await promptInstall();
+
       if (outcome === 'accepted') {
-        onPoetInstalled(selectedPoet);
         showToast(`اپ ${selectedPoet.name} نصب شد.`, 'success');
-        onClose();
       } else if (outcome === 'dismissed') {
-        showToast('نصب لغو شد.', 'info');
+        showToast('نصب لغو شد — می‌توانید از مرور آثار استفاده کنید.', 'info');
       } else {
-        showToast('نصب در این مرورگر در دسترس نیست.', 'info');
+        showToast('از منوی مرورگر «نصب اپ» را انتخاب کنید.', 'info');
       }
+    } catch {
+      showToast('خطا در نصب — اپ شاعر در مرورگر فعال است.', 'error');
     } finally {
       setInstalling(false);
     }
+  }
+
+  function handleUseWithoutInstall() {
+    if (!selectedPoet) return;
+    onPoetInstalled(selectedPoet);
+    onClose();
+    showToast(`مرور آثار ${selectedPoet.name} آماده است.`, 'success');
   }
 
   function handleIosInstalled() {
@@ -142,6 +155,7 @@ export function PoetInstallFlow({
             isIos={isIos}
             installing={installing}
             onInstall={handleInstall}
+            onUseWithoutInstall={handleUseWithoutInstall}
             onIosGuide={() => setStep('ios')}
             onBack={() => setStep('gallery')}
           />

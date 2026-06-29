@@ -1,5 +1,5 @@
 import type { Poet } from '@/types/ganjoor';
-import { resolvePoetIconUrl } from '@/utils/poetIcon';
+import { resolveManifestIconUrls } from '@/utils/poetIcon';
 
 const BASE = import.meta.env.BASE_URL;
 const MANIFEST_LINK_ID = 'app-manifest';
@@ -78,8 +78,7 @@ function ensureLink(rel: string, id: string, href: string) {
 
 export async function injectPoetManifest(poet: Poet): Promise<void> {
   const poetName = poet.name || poet.fullName || 'شاعر';
-  const icon192 = await resolvePoetIconUrl(poet.id, poetName, poet.imageUrl, 192);
-  const icon512 = await resolvePoetIconUrl(poet.id, poetName, poet.imageUrl, 512);
+  const { icon192, icon512 } = await resolveManifestIconUrls(poet.id);
 
   const manifest = buildPoetManifest(poet, icon192, icon512);
   const json = JSON.stringify(manifest);
@@ -94,7 +93,7 @@ export async function injectPoetManifest(poet: Poet): Promise<void> {
   ensureLink('apple-touch-icon', APPLE_ICON_ID, icon192);
 
   revokeIfBlob(appleIconObjectUrl);
-  if (icon192.startsWith('blob:')) appleIconObjectUrl = icon192;
+  appleIconObjectUrl = null;
 
   document.title = `${poetName} — گنجورسرچ`;
   const themeMeta = document.querySelector('meta[name="theme-color"]');

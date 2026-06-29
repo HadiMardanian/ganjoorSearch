@@ -61,7 +61,13 @@ function readFromUrl(): SearchState {
   const term = params.get('q') ?? '';
 
   const tab: PoetAppTab =
-    tabParam === 'search' || (term && tabParam !== 'browse') ? 'search' : 'browse';
+    tabParam === 'search'
+      ? 'search'
+      : tabParam === 'browse' || sourceParam === 'pwa'
+        ? 'browse'
+        : term
+          ? 'search'
+          : 'browse';
 
   let browsePath = parseBrowsePath(params.get('bpath'));
   if (browsePath.length === 0) {

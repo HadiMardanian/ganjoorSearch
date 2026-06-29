@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Poet } from '@/types/ganjoor';
+import type { PoetFilter } from '@/types/ganjoor';
 
 const STORAGE_KEY = 'ganjoorsearch-installed-poet';
 
@@ -28,40 +29,51 @@ function isStandaloneDisplay(): boolean {
   return Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
 }
 
-function readUrlPoetId(): number | null {
+function readPoetIdParam(): number | null {
   if (typeof window === 'undefined') return null;
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('source') !== 'pwa') return null;
-  const poet = Number(params.get('poet'));
+  const poet = Number(new URLSearchParams(window.location.search).get('poet'));
   return Number.isFinite(poet) && poet > 0 ? poet : null;
 }
 
-export function usePoetApp(poets: Poet[]) {
+export function usePoetApp(
+  poets: Poet[],
+  urlPoetId: PoetFilter = 'all',
+  urlSource: 'pwa' | null = null,
+) {
   const [storedPoet, setStoredPoet] = useState<StoredPoet | null>(() => readStoredPoet());
-  const [urlPoetId, setUrlPoetId] = useState<number | null>(() => readUrlPoetId());
   const [standalone, setStandalone] = useState(isStandaloneDisplay);
 
-  useEffect(() => {
-    function sync() {
-      setUrlPoetId(readUrlPoetId());
-      setStoredPoet(readStoredPoet());
-    }
+  const resolvedUrlPoetId =
+    urlPoetId !== 'all' && typeof urlPoetId === 'number' ? urlPoetId : null;
 
+  useEffect(() => {
     function handleDisplayMode(event: MediaQueryListEvent) {
       setStandalone(event.matches || isStandaloneDisplay());
     }
 
-    window.addEventListener('popstate', sync);
     const mq = window.matchMedia('(display-mode: standalone)');
     mq.addEventListener('change', handleDisplayMode);
-
-    return () => {
-      window.removeEventListener('popstate', sync);
-      mq.removeEventListener('change', handleDisplayMode);
-    };
+    return () => mq.removeEventListener('change', handleDisplayMode);
   }, []);
 
-  const activePoetId = urlPoetId ?? (standalone ? storedPoet?.id ?? null : null) ?? null;
+  useEffect(() => {
+    if (!standalone || !storedPoet) return;
+    if (resolvedUrlPoetId === storedPoet.id && urlSource === 'pwa') return;
+
+    const base = import.meta.env.BASE_URL;
+    const target = `${base}?poet=${storedPoet.id}&source=pwa&tab=browse`;
+    const current = `${window.location.pathname}${window.location.search}`;
+    if (current !== target) {
+      window.location.replace(target);
+    }
+  }, [standalone, storedPoet, resolvedUrlPoetId, urlSource]);
+
+  const activePoetId =
+    resolvedUrlPoetId ??
+    (urlSource === 'pwa' ? readPoetIdParam() : null) ??
+    (standalone ? storedPoet?.id ?? null : null) ??
+    storedPoet?.id ??
+    null;
 
   const poet = useMemo(() => {
     if (!activePoetId) return null;
@@ -78,7 +90,7 @@ export function usePoetApp(poets: Poet[]) {
   }, [activePoetId, poets, storedPoet]);
 
   useEffect(() => {
-    if (!urlPoetId || !poet || !standalone) return;
+    if (!resolvedUrlPoetId || !poet || !standalone) return;
     const next = {
       id: poet.id,
       name: poet.name || poet.fullName || 'شاعر',
@@ -87,13 +99,17 @@ export function usePoetApp(poets: Poet[]) {
     if (storedPoet?.id === next.id && storedPoet.name === next.name) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     setStoredPoet(next);
-  }, [urlPoetId, poet, standalone, storedPoet]);
+  }, [resolvedUrlPoetId, poet, standalone, storedPoet]);
 
   const isPoetApp = Boolean(
-    activePoetId && (urlPoetId != null || (standalone && storedPoet != null)),
+    activePoetId &&
+      (urlSource === 'pwa' ||
+        resolvedUrlPoetId != null ||
+        (standalone && storedPoet != null) ||
+        storedPoet?.id === activePoetId),
   );
 
-  const lockPoet = Boolean(isPoetApp && (standalone || urlPoetId != null));
+  const lockPoet = Boolean(isPoetApp && (standalone || urlSource === 'pwa' || resolvedUrlPoetId != null));
 
   const saveInstalledPoet = useCallback((next: StoredPoet) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
