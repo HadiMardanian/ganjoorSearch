@@ -1,10 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Poet } from '@/types/ganjoor';
 import { PoetInstallGallery } from '@/components/install/PoetInstallGallery';
 import { PoetInstallPreview } from '@/components/install/PoetInstallPreview';
 import { IosInstallGuide } from '@/components/install/IosInstallGuide';
 import { usePwaInstall } from '@/hooks/usePwaInstall';
-import { injectPoetManifest, restoreDefaultManifest } from '@/utils/poetManifest';
+import {
+  injectPoetManifest,
+  lockPoetManifestForInstall,
+  restoreDefaultManifest,
+  unlockPoetManifestForInstall,
+} from '@/utils/poetManifest';
 import { showToast } from '@/components/ui/Toast';
 
 type Step = 'gallery' | 'preview' | 'ios';
@@ -30,17 +35,25 @@ export function PoetInstallFlow({
   const [step, setStep] = useState<Step>('gallery');
   const [selectedPoet, setSelectedPoet] = useState<Poet | null>(null);
   const [installing, setInstalling] = useState(false);
+  const userPickedPoetRef = useRef(false);
+  const activatedPoetRef = useRef(false);
 
   useEffect(() => {
     if (!open) {
+      const wasActivated = activatedPoetRef.current;
       setStep('gallery');
       setSelectedPoet(null);
       setInstalling(false);
-      restoreDefaultManifest();
+      userPickedPoetRef.current = false;
+      activatedPoetRef.current = false;
+      unlockPoetManifestForInstall();
+      if (!wasActivated) {
+        restoreDefaultManifest();
+      }
       return;
     }
 
-    if (initialPoetId) {
+    if (initialPoetId && !userPickedPoetRef.current) {
       const poet = poets.find((p) => p.id === initialPoetId) ?? null;
       if (poet) {
         setSelectedPoet(poet);
@@ -53,7 +66,7 @@ export function PoetInstallFlow({
     if (!open) return;
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape' && !installing) onClose();
     }
 
     document.addEventListener('keydown', handleKeyDown);
@@ -62,18 +75,25 @@ export function PoetInstallFlow({
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
     };
-  }, [open, onClose]);
+  }, [open, onClose, installing]);
 
   useEffect(() => {
-    if (!selectedPoet || step === 'gallery') return;
+    if (!open || !selectedPoet || step === 'gallery') return;
+    lockPoetManifestForInstall();
     injectPoetManifest(selectedPoet).catch(() => {
       showToast('خطا در آماده‌سازی آیکون شاعر.', 'error');
     });
-  }, [selectedPoet, step]);
+  }, [open, selectedPoet, step]);
 
   if (!open) return null;
 
+  function handleDismiss() {
+    restoreDefaultManifest();
+    onClose();
+  }
+
   function handleSelectPoet(poet: Poet) {
+    userPickedPoetRef.current = true;
     setSelectedPoet(poet);
     setStep('preview');
   }
@@ -81,13 +101,15 @@ export function PoetInstallFlow({
   async function handleInstall() {
     if (!selectedPoet || installing) return;
     setInstalling(true);
+    lockPoetManifestForInstall();
 
     try {
-      onPoetInstalled(selectedPoet);
-      onClose();
-
       await injectPoetManifest(selectedPoet);
       const outcome = await promptInstall();
+
+      activatedPoetRef.current = true;
+      onPoetInstalled(selectedPoet);
+      onClose();
 
       if (outcome === 'accepted') {
         showToast(`اپ ${selectedPoet.name} نصب شد.`, 'success');
@@ -97,14 +119,19 @@ export function PoetInstallFlow({
         showToast('از منوی مرورگر «نصب اپ» را انتخاب کنید.', 'info');
       }
     } catch {
+      activatedPoetRef.current = true;
+      onPoetInstalled(selectedPoet);
+      onClose();
       showToast('خطا در نصب — اپ شاعر در مرورگر فعال است.', 'error');
     } finally {
       setInstalling(false);
+      unlockPoetManifestForInstall();
     }
   }
 
   function handleUseWithoutInstall() {
     if (!selectedPoet) return;
+    activatedPoetRef.current = true;
     onPoetInstalled(selectedPoet);
     onClose();
     showToast(`مرور آثار ${selectedPoet.name} آماده است.`, 'success');
@@ -112,6 +139,7 @@ export function PoetInstallFlow({
 
   function handleIosInstalled() {
     if (selectedPoet) {
+      activatedPoetRef.current = true;
       onPoetInstalled(selectedPoet);
       showToast(`اپ ${selectedPoet.name} آماده است.`, 'success');
     }
@@ -119,7 +147,7 @@ export function PoetInstallFlow({
   }
 
   function handleIosDismiss() {
-    onClose();
+    handleDismiss();
   }
 
   return (
@@ -128,7 +156,7 @@ export function PoetInstallFlow({
       role="dialog"
       aria-modal="true"
       aria-labelledby="poet-install-title"
-      onClick={onClose}
+      onClick={installing ? undefined : handleDismiss}
     >
       <div
         className="surface-card flex h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl border shadow-2xl sm:h-[min(720px,90vh)] sm:rounded-3xl"
@@ -145,7 +173,7 @@ export function PoetInstallFlow({
             poets={poets}
             loading={poetsLoading}
             onSelect={handleSelectPoet}
-            onClose={onClose}
+            onClose={handleDismiss}
           />
         )}
         {step === 'preview' && selectedPoet && (

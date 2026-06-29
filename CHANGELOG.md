@@ -2,6 +2,14 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.7.2] - 2026-06-29
+
+### Fixed
+- Poet install no longer installs the wrong poet (e.g. حافظ → فردوسی): manifest race between install modal and active poet app resolved
+- Install modal no longer resets gallery selection when poet list refetches (`initialPoetId` vs user pick)
+- Install prompt runs before modal close so manifest is not restored to default mid-install
+- Per-poet static manifest files (`manifests/poet-{id}.webmanifest`) for reliable Chrome PWA install
+
 ## [2.7.1] - 2026-06-29
 
 ### Fixed

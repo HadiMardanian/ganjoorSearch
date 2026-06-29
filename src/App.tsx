@@ -108,9 +108,9 @@ export default function App() {
   }, [isPoetApp, poetAppPoet, poetId]);
 
   useEffect(() => {
-    if (!poetAppPoet || !lockPoet) return;
+    if (!poetAppPoet || !lockPoet || installOpen) return;
     injectPoetManifest(poetAppPoet).catch(() => {});
-  }, [poetAppPoet, lockPoet]);
+  }, [poetAppPoet, lockPoet, installOpen]);
 
   useEffect(() => {
     syncThemeColor();

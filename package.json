@@ -1,11 +1,12 @@
 {
   "name": "ganjoorsearch",
   "private": true,
-  "version": "2.7.1",
+  "version": "2.7.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
+    "build:poet-assets": "node scripts/generate-poet-icons.mjs && node scripts/generate-poet-manifests.mjs",
     "preview": "vite preview",
     "lint": "eslint .",
     "test:unit": "vitest run",
