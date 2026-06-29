@@ -1,12 +1,17 @@
 import type {
   Category,
+  GroupedResult,
   Poem,
   Poet,
   SearchResponse,
 } from '@/types/ganjoor';
 import { mapSearchHitsToGrouped } from '@/utils/searchMap';
 import { parsePagingHeaders } from '@/utils/paging';
+import { mapWithConcurrency } from '@/utils/parallel';
 import { apiFetch, buildApiUrl } from './client';
+
+const EXPORT_PAGE_SIZE = 200;
+const EXPORT_PAGE_CONCURRENCY = 4;
 
 export async function fetchPoets(signal?: AbortSignal): Promise<Poet[]> {
   const data = await apiFetch<Poet[]>(buildApiUrl('/poets'), signal);
@@ -18,12 +23,11 @@ export async function fetchCategories(
   signal?: AbortSignal,
 ): Promise<Category[]> {
   try {
-    const data = await apiFetch<{ cat?: { children?: Category[] } } | { children?: Category[] }>(
-      buildApiUrl(`/cat/${poetId}`, { poems: 'false' }),
+    const data = await apiFetch<{ cat?: { children?: Category[] } }>(
+      buildApiUrl(`/poet/${poetId}`),
       signal,
     );
-    const cat = 'cat' in data && data.cat ? data.cat : (data as { children?: Category[] });
-    return (cat.children ?? []).filter((item) => item?.id);
+    return (data.cat?.children ?? []).filter((item) => item?.id);
   } catch {
     return [];
   }
@@ -117,4 +121,51 @@ export async function searchPoems(
     totalCount: paging?.totalCount ?? 0,
     totalPages: paging?.totalPages ?? 0,
   };
+}
+
+export async function fetchAllSearchResults(
+  term: string,
+  options: {
+    poetId?: number | 'all';
+    categoryId?: number | 'all';
+    signal?: AbortSignal;
+    onProgress?: (loaded: number, total: number) => void;
+  } = {},
+): Promise<GroupedResult[]> {
+  const first = await searchPoems(term, {
+    poetId: options.poetId,
+    categoryId: options.categoryId,
+    page: 1,
+    pageSize: EXPORT_PAGE_SIZE,
+    signal: options.signal,
+  });
+
+  options.onProgress?.(1, Math.max(first.totalPages, 1));
+
+  if (first.totalPages <= 1) {
+    return first.results;
+  }
+
+  const remainingPages = Array.from(
+    { length: first.totalPages - 1 },
+    (_, index) => index + 2,
+  );
+
+  const pageResults = await mapWithConcurrency(
+    remainingPages,
+    EXPORT_PAGE_CONCURRENCY,
+    async (page) => {
+      const response = await searchPoems(term, {
+        poetId: options.poetId,
+        categoryId: options.categoryId,
+        page,
+        pageSize: EXPORT_PAGE_SIZE,
+        signal: options.signal,
+      });
+      options.onProgress?.(page, first.totalPages);
+      return response.results;
+    },
+  );
+
+  return first.results.concat(...pageResults);
 }

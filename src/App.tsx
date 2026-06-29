@@ -152,6 +152,7 @@ export default function App() {
             term={searchTerm}
             poetId={appliedPoetId}
             categoryId={appliedCategoryId}
+            totalCount={searchQuery.data?.totalCount ?? 0}
             disabled={searchQuery.isFetching || !searchTerm}
           />
         </div>
