@@ -1,4 +1,4 @@
-import { highlightText } from '@/utils/highlight';
+import { HighlightedText } from './HighlightedText';
 import type { Verse } from '@/types/ganjoor';
 
 interface VerseHighlightProps {
@@ -10,12 +10,11 @@ export function VerseHighlight({ verses, searchTerm }: VerseHighlightProps) {
   return (
     <div className="space-y-2">
       {verses.map((verse) => (
-        <p
+        <HighlightedText
           key={verse.id}
-          className="verse-text text-base text-stone-800"
-          dangerouslySetInnerHTML={{
-            __html: highlightText(verse.text || '', searchTerm),
-          }}
+          text={verse.text || ''}
+          term={searchTerm}
+          className="verse-text block text-base text-stone-800 dark:text-stone-100"
         />
       ))}
     </div>
