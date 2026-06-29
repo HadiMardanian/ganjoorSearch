@@ -80,14 +80,14 @@ export const ResultCard = memo(function ResultCard({
     }
   }, [expanded, result.fullUrl, viewMode]);
 
-  async function handleCopy(id: string) {
+  async function handleCopy(id: string, text: string) {
     try {
-      await navigator.clipboard.writeText(copyText);
+      await navigator.clipboard.writeText(text);
       setCopiedId(id);
       window.setTimeout(() => setCopiedId(null), 2000);
     } catch {
       const textarea = document.createElement('textarea');
-      textarea.value = copyText;
+      textarea.value = text;
       textarea.style.position = 'fixed';
       textarea.style.opacity = '0';
       document.body.appendChild(textarea);
@@ -102,6 +102,10 @@ export const ResultCard = memo(function ResultCard({
   const poemUrl = result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : GANJOOR_SITE;
   const copyKey = `${result.poemId}-${viewMode}`;
   const title = formatDisplayTitle(result.fullTitle || result.poemTitle);
+
+  const richCopyText = useMemo(() => {
+    return `${title}\n\n${copyText}\n\n${poemUrl}`;
+  }, [copyText, poemUrl, title]);
 
   return (
     <article className="fade-in rounded-2xl border border-stone-300 bg-white p-5 shadow-sm transition-shadow hover:shadow-md sm:p-6">
@@ -197,8 +201,11 @@ export const ResultCard = memo(function ResultCard({
         </div>
       )}
 
-      <div className="mt-4 flex justify-end">
-        <Button variant="secondary" onClick={() => handleCopy(copyKey)}>
+      <div className="mt-4 flex flex-wrap justify-end gap-2">
+        <span className="sr-only" aria-live="polite">
+          {copiedId === copyKey ? 'متن در حافظه کپی شد' : ''}
+        </span>
+        <Button variant="secondary" onClick={() => handleCopy(copyKey, copyText)}>
           {copiedId === copyKey ? (
             <>
               <Check size={16} />
@@ -207,9 +214,13 @@ export const ResultCard = memo(function ResultCard({
           ) : (
             <>
               <Copy size={16} />
-              کپی کردن
+              کپی متن
             </>
           )}
+        </Button>
+        <Button variant="secondary" onClick={() => handleCopy(`${copyKey}-rich`, richCopyText)}>
+          <Copy size={16} />
+          کپی با لینک
         </Button>
       </div>
     </article>

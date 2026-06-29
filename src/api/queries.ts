@@ -18,7 +18,6 @@ export function useCategoriesQuery(poetId: PoetFilter) {
       poetId === 'all' ? Promise.resolve([]) : fetchCategories(poetId, signal),
     enabled: poetId !== 'all' && Number.isFinite(poetId),
     staleTime: STALE_TIMES.categories,
-    placeholderData: (previous) => previous,
   });
 }
 

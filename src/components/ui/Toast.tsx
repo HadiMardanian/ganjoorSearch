@@ -55,6 +55,7 @@ export function ToastContainer() {
       {items.map((item) => (
         <div
           key={item.id}
+          role={item.type === 'error' ? 'alert' : 'status'}
           className={`fade-in flex items-start justify-between gap-3 rounded-xl border px-4 py-3 shadow-lg ${typeClasses[item.type]}`}
         >
           <span className="text-sm">{item.message}</span>

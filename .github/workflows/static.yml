@@ -35,8 +35,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Verify
-        run: npm run verify
+      - name: Unit tests
+        run: npm run test:unit
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

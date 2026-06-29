@@ -7,7 +7,7 @@
 - جستجوی کلمه در اشعار با فیلتر شاعر و قالب
 - دو حالت نمایش: بیت matching / متن کامل
 - کش هوشمند با TanStack Query
-- fetch موازی برای سرعت بیشتر
+- export موازی صفحات برای جستجوهای بزرگ
 - لیست مجازی برای scroll روان
 - خروجی CSV و Excel (همه صفحات نتایج)
 - کپی متن و لینک به گنجور
@@ -47,11 +47,22 @@ npm run preview
 در development از proxy داخلی Vite استفاده می‌شود. در production می‌توانید:
 
 - مستقیم به `https://api.ganjoor.net` (پیش‌فرض)
-- یا Worker پروکسی در [`workers/api-proxy.js`](workers/api-proxy.js) با متغیر build:
+- یا Worker پروکسی در [`workers/api-proxy.js`](workers/api-proxy.js):
 
 ```bash
-VITE_API_BASE=https://your-worker.example.com npm run build
+cd workers && npx wrangler deploy
+VITE_API_BASE=https://your-worker.workers.dev npm run build
 ```
+
+## تست
+
+```bash
+npm run test:unit      # Vitest — بدون شبکه
+npm run verify         # integration + unit
+npm run verify:integration  # فقط API زنده گنجور
+```
+
+CI: deploy فقط `test:unit`؛ verify زنده هفتگی در workflow `integration.yml`.
 
 ## لایسنس
 

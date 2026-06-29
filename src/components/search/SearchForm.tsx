@@ -102,6 +102,9 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
           disabled={disabled}
           aria-autocomplete="list"
           aria-label="جستجوی نام شاعر"
+          aria-activedescendant={
+            activeIndex >= 0 ? `poet-option-${activeIndex}` : undefined
+          }
           dir="rtl"
         />
         {(value !== 'all' || query) && !disabled && (
@@ -132,6 +135,7 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
             options.map((option, index) => (
               <button
                 key={String(option.id)}
+                id={`poet-option-${index}`}
                 type="button"
                 role="option"
                 aria-selected={value === option.id}
@@ -155,6 +159,7 @@ interface CategorySelectProps {
   value: number | 'all';
   onChange: (value: number | 'all') => void;
   poetSelected: boolean;
+  loading?: boolean;
 }
 
 export function CategorySelect({
@@ -162,7 +167,10 @@ export function CategorySelect({
   value,
   onChange,
   poetSelected,
+  loading = false,
 }: CategorySelectProps) {
+  const disabled = !poetSelected || loading;
+
   return (
     <div className="w-full sm:w-44">
       <label htmlFor="category-select" className="field-label">
@@ -176,15 +184,17 @@ export function CategorySelect({
           const next = event.target.value;
           onChange(next === 'all' ? 'all' : Number(next));
         }}
-        disabled={!poetSelected}
+        disabled={disabled}
         aria-label="انتخاب قالب شعر"
+        aria-busy={loading}
       >
-        <option value="all">همه قالب‌ها</option>
-        {categories.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.title}
-          </option>
-        ))}
+        <option value="all">{loading ? 'در حال بارگذاری…' : 'همه قالب‌ها'}</option>
+        {!loading &&
+          categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.title}
+            </option>
+          ))}
       </select>
     </div>
   );

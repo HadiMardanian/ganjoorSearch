@@ -1,0 +1,6 @@
+name = "ganjoorsearch-api-proxy"
+main = "api-proxy.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+# Set at deploy time if needed
