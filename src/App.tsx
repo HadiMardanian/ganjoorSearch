@@ -1,44 +1,62 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ArrowUp } from 'lucide-react';
-import { usePoetsQuery, useSearchQuery } from '@/api/queries';
+import { useCategoriesQuery, usePoetsQuery, useSearchQuery } from '@/api/queries';
 import { ExportButtons } from '@/components/export/ExportButtons';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { ResultsList } from '@/components/results/ResultsList';
-import { PoetPicker, SearchBar } from '@/components/search/SearchForm';
+import {
+  CategorySelect,
+  PoetPicker,
+  SearchBar,
+} from '@/components/search/SearchForm';
 import { Pagination } from '@/components/ui/Pagination';
 import { showToast, ToastContainer } from '@/components/ui/Toast';
 import { ViewModeToggle } from '@/components/ui/ViewModeToggle';
 import { useSearchState } from '@/hooks/useSearchParams';
-import type { PoetFilter, ViewMode } from '@/types/ganjoor';
+import type { CategoryFilter, PoetFilter, ViewMode } from '@/types/ganjoor';
 
 export default function App() {
   const { initial, urlState, updateUrl } = useSearchState();
 
   const [input, setInput] = useState(initial.term);
   const [poetId, setPoetId] = useState<PoetFilter>(initial.poetId);
+  const [categoryId, setCategoryId] = useState<CategoryFilter>(initial.categoryId);
   const [searchTerm, setSearchTerm] = useState(initial.term);
   const [appliedPoetId, setAppliedPoetId] = useState<PoetFilter>(initial.poetId);
+  const [appliedCategoryId, setAppliedCategoryId] = useState<CategoryFilter>(
+    initial.categoryId,
+  );
   const [page, setPage] = useState(initial.page);
   const [viewMode, setViewMode] = useState<ViewMode>(initial.viewMode);
   const [searched, setSearched] = useState(Boolean(initial.term));
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   const filtersDirty =
-    searched && (poetId !== appliedPoetId || input.trim() !== searchTerm);
+    searched &&
+    (poetId !== appliedPoetId || categoryId !== appliedCategoryId || input.trim() !== searchTerm);
 
   useEffect(() => {
     setInput(urlState.term);
     setPoetId(urlState.poetId);
+    setCategoryId(urlState.categoryId);
     setSearchTerm(urlState.term);
     setAppliedPoetId(urlState.poetId);
+    setAppliedCategoryId(urlState.categoryId);
     setPage(urlState.page);
     setViewMode(urlState.viewMode);
     setSearched(Boolean(urlState.term));
   }, [urlState]);
 
   const poetsQuery = usePoetsQuery();
-  const searchQuery = useSearchQuery(searchTerm, appliedPoetId, page, searched);
+  const categoriesQuery = useCategoriesQuery(poetId);
+  const searchQuery = useSearchQuery(
+    searchTerm,
+    appliedPoetId,
+    appliedCategoryId,
+    page,
+    searched,
+  );
 
   const groupedResults = searchQuery.data?.results ?? [];
 
@@ -46,17 +64,19 @@ export default function App() {
     (overrides: Partial<{
       term: string;
       poetId: PoetFilter;
+      categoryId: CategoryFilter;
       page: number;
       viewMode: ViewMode;
     }> = {}) => {
       updateUrl({
         term: overrides.term ?? searchTerm,
         poetId: overrides.poetId ?? appliedPoetId,
+        categoryId: overrides.categoryId ?? appliedCategoryId,
         page: overrides.page ?? page,
         viewMode: overrides.viewMode ?? viewMode,
       });
     },
-    [appliedPoetId, page, searchTerm, updateUrl, viewMode],
+    [appliedCategoryId, appliedPoetId, page, searchTerm, updateUrl, viewMode],
   );
 
   useEffect(() => {
@@ -92,9 +112,15 @@ export default function App() {
 
     setSearchTerm(trimmed);
     setAppliedPoetId(poetId);
+    setAppliedCategoryId(categoryId);
     setPage(1);
     setSearched(true);
-    syncUrl({ term: trimmed, poetId, page: 1 });
+    syncUrl({ term: trimmed, poetId, categoryId, page: 1 });
+  }
+
+  function handlePoetChange(value: PoetFilter) {
+    setPoetId(value);
+    setCategoryId('all');
   }
 
   return (
@@ -118,8 +144,16 @@ export default function App() {
             <PoetPicker
               poets={poetsQuery.data ?? []}
               value={poetId}
-              onChange={setPoetId}
+              onChange={handlePoetChange}
               disabled={poetsQuery.isLoading}
+            />
+          }
+          categorySelect={
+            <CategorySelect
+              categories={categoriesQuery.data ?? []}
+              value={categoryId}
+              onChange={setCategoryId}
+              poetSelected={poetId !== 'all'}
             />
           }
         />
@@ -138,6 +172,7 @@ export default function App() {
           <ExportButtons
             term={searchTerm}
             poetId={appliedPoetId}
+            categoryId={appliedCategoryId}
             totalCount={searchQuery.data?.totalCount ?? 0}
             disabled={searchQuery.isFetching || !searchTerm}
           />
