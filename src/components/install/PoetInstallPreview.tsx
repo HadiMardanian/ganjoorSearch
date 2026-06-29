@@ -1,5 +1,6 @@
-import { ArrowRight, Check, Download, RefreshCw, Smartphone } from 'lucide-react';
+import { ArrowRight, Check, Download, Loader2, RefreshCw, Smartphone } from 'lucide-react';
 import type { Poet } from '@/types/ganjoor';
+import { InstallPromptWaiting } from '@/components/install/InstallPromptWaiting';
 import { PoetAvatar } from '@/components/install/PoetAvatar';
 import { Button } from '@/components/ui/Button';
 
@@ -9,6 +10,8 @@ interface PoetInstallPreviewProps {
   isIos: boolean;
   alreadyInstalled?: boolean;
   installing?: boolean;
+  waitingForInstall?: boolean;
+  installWaitPhase?: 'manifest' | 'prompt';
   onInstall: () => void;
   onReloadForInstall: () => void;
   onUseWithoutInstall: () => void;
@@ -28,6 +31,8 @@ export function PoetInstallPreview({
   isIos,
   alreadyInstalled,
   installing,
+  waitingForInstall,
+  installWaitPhase = 'prompt',
   onInstall,
   onReloadForInstall,
   onUseWithoutInstall,
@@ -43,6 +48,7 @@ export function PoetInstallPreview({
           type="button"
           className="text-muted hover:text-[var(--color-ink)] mb-3 inline-flex items-center gap-1 text-sm"
           onClick={onBack}
+          disabled={installing}
         >
           <ArrowRight size={16} />
           بازگشت به گالری
@@ -74,6 +80,8 @@ export function PoetInstallPreview({
                 از آیکون صفحهٔ اصلی همان شاعر را باز کنید، یا شاعر دیگری را از گالری نصب کنید.
               </p>
             </div>
+          ) : waitingForInstall ? (
+            <InstallPromptWaiting poet={poet} phase={installWaitPhase} />
           ) : canInstall ? (
             <Button
               type="button"
@@ -81,7 +89,11 @@ export function PoetInstallPreview({
               onClick={onInstall}
               disabled={installing}
             >
-              <Download size={18} />
+              {installing ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
+                <Download size={18} />
+              )}
               {installing ? 'در حال نصب…' : `نصب اپ ${name}`}
             </Button>
           ) : isIos ? (
@@ -101,11 +113,11 @@ export function PoetInstallPreview({
             </Button>
           )}
 
-          {!alreadyInstalled && !canInstall && !isIos ? (
+          {!alreadyInstalled && !waitingForInstall && !canInstall && !isIos ? (
             <div className="surface-muted rounded-xl border p-4 text-sm">
               <p className="text-muted">
-                برای نصب شاعر بعدی، صفحه با مانیفست همان شاعر بارگذاری می‌شود تا دکمهٔ نصب
-                مرورگر دوباره فعال شود.
+                اگر دکمهٔ نصب ظاهر نشد، «آماده‌سازی نصب» را بزنید تا صفحه با مانیفست همان شاعر
+                دوباره بارگذاری شود.
               </p>
             </div>
           ) : null}
@@ -115,7 +127,7 @@ export function PoetInstallPreview({
             variant="secondary"
             className="w-full py-3 text-base"
             onClick={onUseWithoutInstall}
-            disabled={installing}
+            disabled={installing || waitingForInstall}
           >
             مرور در مرورگر (بدون نصب)
           </Button>

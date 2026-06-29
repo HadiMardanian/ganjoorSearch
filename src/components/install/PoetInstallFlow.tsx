@@ -17,6 +17,8 @@ import { showToast } from '@/components/ui/Toast';
 
 type Step = 'gallery' | 'preview' | 'ios';
 
+const INSTALL_PROMPT_WAIT_MS = 12_000;
+
 interface PoetInstallFlowProps {
   open: boolean;
   poets: Poet[];
@@ -41,6 +43,8 @@ export function PoetInstallFlow({
   const [selectedPoet, setSelectedPoet] = useState<Poet | null>(null);
   const [installing, setInstalling] = useState(false);
   const [poetAlreadyInstalled, setPoetAlreadyInstalled] = useState(false);
+  const [manifestReady, setManifestReady] = useState(false);
+  const [installPromptTimedOut, setInstallPromptTimedOut] = useState(false);
   const userPickedPoetRef = useRef(false);
   const activatedPoetRef = useRef(false);
 
@@ -50,6 +54,8 @@ export function PoetInstallFlow({
       setStep('gallery');
       setSelectedPoet(null);
       setInstalling(false);
+      setManifestReady(false);
+      setInstallPromptTimedOut(false);
       userPickedPoetRef.current = false;
       activatedPoetRef.current = false;
       unlockPoetManifestForInstall();
@@ -100,12 +106,62 @@ export function PoetInstallFlow({
   }, [open, onClose, installing]);
 
   useEffect(() => {
-    if (!open || !selectedPoet || step === 'gallery') return;
+    if (!open || !selectedPoet || step === 'gallery') {
+      setManifestReady(false);
+      return;
+    }
+
+    let cancelled = false;
+    setManifestReady(false);
     lockPoetManifestForInstall();
-    injectPoetManifest(selectedPoet).catch(() => {
-      showToast('خطا در آماده‌سازی آیکون شاعر.', 'error');
-    });
+    injectPoetManifest(selectedPoet)
+      .then(() => {
+        if (!cancelled) setManifestReady(true);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          showToast('خطا در آماده‌سازی آیکون شاعر.', 'error');
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [open, selectedPoet, step]);
+
+  useEffect(() => {
+    if (
+      !open ||
+      step !== 'preview' ||
+      isIos ||
+      poetAlreadyInstalled ||
+      canInstall ||
+      installing
+    ) {
+      setInstallPromptTimedOut(false);
+      return;
+    }
+
+    setInstallPromptTimedOut(false);
+    const timer = window.setTimeout(() => setInstallPromptTimedOut(true), INSTALL_PROMPT_WAIT_MS);
+    return () => window.clearTimeout(timer);
+  }, [
+    open,
+    step,
+    isIos,
+    poetAlreadyInstalled,
+    canInstall,
+    installing,
+    selectedPoet?.id,
+  ]);
+
+  const waitingForInstallButton =
+    step === 'preview' &&
+    !poetAlreadyInstalled &&
+    !isIos &&
+    !canInstall &&
+    !installing &&
+    (!manifestReady || !installPromptTimedOut);
 
   if (!open) return null;
 
@@ -211,6 +267,8 @@ export function PoetInstallFlow({
             isIos={isIos}
             alreadyInstalled={poetAlreadyInstalled}
             installing={installing}
+            waitingForInstall={waitingForInstallButton}
+            installWaitPhase={manifestReady ? 'prompt' : 'manifest'}
             onInstall={handleInstall}
             onReloadForInstall={handleReloadForInstall}
             onUseWithoutInstall={handleUseWithoutInstall}

@@ -2,6 +2,11 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.14.6] - 2026-06-29
+
+### Added
+- Install preview: waiting animation with status text while the browser prepares the install button (manifest load + `beforeinstallprompt`)
+
 ## [2.14.5] - 2026-06-29
 
 ### Fixed
