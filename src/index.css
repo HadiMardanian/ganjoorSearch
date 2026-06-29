@@ -111,4 +111,21 @@ body {
 
 .verse-text {
   line-height: 2.2;
+  font-variant-ligatures: contextual;
+}
+
+.poetry-highlight-host {
+  unicode-bidi: plaintext;
+}
+
+::highlight(ganjoor-search) {
+  background-color: var(--color-highlight);
+  color: #92400e;
+}
+
+@media (prefers-color-scheme: dark) {
+  ::highlight(ganjoor-search) {
+    background-color: #fbbf24;
+    color: #1c1917;
+  }
 }

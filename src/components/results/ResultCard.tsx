@@ -1,7 +1,7 @@
 import { memo, useMemo, useState } from 'react';
 import { Check, Copy, ExternalLink } from 'lucide-react';
 import { GANJOOR_SITE } from '@/api/client';
-import { highlightText } from '@/utils/highlight';
+import { HighlightedText } from './HighlightedText';
 import { VerseHighlight } from './VerseHighlight';
 import type { GroupedResult, ViewMode } from '@/types/ganjoor';
 import { Button } from '@/components/ui/Button';
@@ -96,12 +96,11 @@ export const ResultCard = memo(function ResultCard({
             className={`space-y-2 ${expanded ? '' : 'max-h-48 overflow-hidden relative'}`}
           >
             {(result.allVerses ?? []).map((verse) => (
-              <p
+              <HighlightedText
                 key={verse.id}
-                className="verse-text text-base text-stone-800"
-                dangerouslySetInnerHTML={{
-                  __html: highlightText(verse.text || '', searchTerm),
-                }}
+                text={verse.text || ''}
+                term={searchTerm}
+                className="verse-text block text-base text-stone-800 dark:text-stone-100"
               />
             ))}
             {!expanded && (result.allVerses?.length ?? 0) > 6 && (
