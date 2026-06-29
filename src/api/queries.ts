@@ -9,6 +9,19 @@ import {
 } from '@/api/ganjoor';
 import { STALE_TIMES } from '@/lib/queryClient';
 import type { CategoryFilter, PoetFilter } from '@/types/ganjoor';
+import { readOfflinePoem, saveOfflinePoem } from '@/utils/poemOfflineCache';
+
+export async function fetchPoemWithOfflineFallback(poemUrl: string, signal?: AbortSignal) {
+  try {
+    const poem = await fetchPoem(poemUrl, signal);
+    saveOfflinePoem(poemUrl, poem);
+    return { poem, fromCache: false as const };
+  } catch (error) {
+    const cached = readOfflinePoem(poemUrl);
+    if (cached) return { poem: cached, fromCache: true as const };
+    throw error;
+  }
+}
 
 export function usePoetsQuery() {
   return useQuery({
@@ -44,7 +57,7 @@ export function useCategoryDetailQuery(
 export function usePoemDetailQuery(poemUrl: string | null, enabled = true) {
   return useQuery({
     queryKey: ['poem-detail', poemUrl],
-    queryFn: ({ signal }) => fetchPoem(poemUrl!, signal),
+    queryFn: ({ signal }) => fetchPoemWithOfflineFallback(poemUrl!, signal),
     enabled: enabled && Boolean(poemUrl),
     staleTime: STALE_TIMES.poem,
   });

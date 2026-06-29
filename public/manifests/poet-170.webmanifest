@@ -1,0 +1,33 @@
+{
+  "id": "/ganjoorSearch/poet-app/170",
+  "name": "میرزا حبیب خراسانی — گنجورسرچ",
+  "short_name": "میرزا حبیب خراسانی",
+  "description": "جستجوی اشعار میرزا حبیب خراسانی با گنجورسرچ",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "/ganjoorSearch/?poet=170&source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/",
+  "display": "standalone",
+  "background_color": "#f7f4ef",
+  "theme_color": "#9a3412",
+  "icons": [
+    {
+      "src": "/ganjoorSearch/icons/poets/170-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/ganjoorSearch/icons/poets/170-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/ganjoorSearch/icons/poets/170-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

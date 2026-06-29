@@ -20,6 +20,7 @@ import { Pagination } from '@/components/ui/Pagination';
 import { showToast, ToastContainer } from '@/components/ui/Toast';
 import { ViewModeToggle } from '@/components/ui/ViewModeToggle';
 import { usePoetApp } from '@/hooks/usePoetApp';
+import { usePoetAppBackStack } from '@/hooks/usePoetAppBackStack';
 import { usePwaInstall } from '@/hooks/usePwaInstall';
 import { useSearchHistory } from '@/hooks/useSearchHistory';
 import {
@@ -428,6 +429,9 @@ export default function App() {
     if (browsePath.length > 0) return 'category';
     return 'home';
   }, [appTab, browsePath.length, poemUrl]);
+
+  const poetAppAtRoot = isPoetApp && !poemUrl && browsePath.length === 0 && appTab === 'browse';
+  usePoetAppBackStack({ enabled: isPoetApp && lockPoet, atRoot: poetAppAtRoot });
 
   const searchSection = (
     <>

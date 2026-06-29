@@ -1,0 +1,33 @@
+{
+  "id": "/ganjoorSearch/poet-app/217",
+  "name": "بلعمی — گنجورسرچ",
+  "short_name": "بلعمی",
+  "description": "جستجوی اشعار بلعمی با گنجورسرچ",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "/ganjoorSearch/?poet=217&source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/",
+  "display": "standalone",
+  "background_color": "#f7f4ef",
+  "theme_color": "#9a3412",
+  "icons": [
+    {
+      "src": "/ganjoorSearch/icons/poets/217-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/ganjoorSearch/icons/poets/217-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/ganjoorSearch/icons/poets/217-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import {
+  Bookmark,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -12,8 +13,7 @@ import {
   Type,
 } from 'lucide-react';
 import { GANJOOR_SITE } from '@/api/client';
-import { fetchPoem } from '@/api/ganjoor';
-import { usePoemDetailQuery } from '@/api/queries';
+import { fetchPoemWithOfflineFallback, usePoemDetailQuery } from '@/api/queries';
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { showToast } from '@/components/ui/Toast';
@@ -24,6 +24,7 @@ import {
   type ReaderFontSize,
 } from '@/hooks/useReaderPrefs';
 import type { PoemSummary } from '@/types/ganjoor';
+import { isFavorite, toggleFavorite } from '@/utils/favorites';
 import { linesToCouplets, poemToCouplets, poemToLines } from '@/utils/poemText';
 import { saveLastRead } from '@/utils/lastRead';
 import { STALE_TIMES } from '@/lib/queryClient';
@@ -52,46 +53,65 @@ export function PoemReader({
   const { prefs, setFontSize, setLineHeight } = useReaderPrefs();
   const [copied, setCopied] = useState(false);
   const [showPrefs, setShowPrefs] = useState(false);
+  const [favorited, setFavorited] = useState(() => isFavorite(poemUrl));
   const touchStartX = useRef<number | null>(null);
 
-  const couplets = useMemo(() => {
-    if (!poemQuery.data) return [];
-    const fromVerses = poemToCouplets(poemQuery.data.verses);
-    if (fromVerses.length > 0) return fromVerses;
-    return linesToCouplets(poemToLines(poemQuery.data));
-  }, [poemQuery.data]);
+  const poem = poemQuery.data?.poem;
+  const fromCache = poemQuery.data?.fromCache ?? false;
 
-  const currentIndex = poems.findIndex((poem) => poem.fullUrl === poemUrl);
+  const couplets = useMemo(() => {
+    if (!poem) return [];
+    const fromVerses = poemToCouplets(poem.verses);
+    if (fromVerses.length > 0) return fromVerses;
+    return linesToCouplets(poemToLines(poem));
+  }, [poem]);
+
+  const currentIndex = poems.findIndex((item) => item.fullUrl === poemUrl);
   const prevPoem = currentIndex > 0 ? poems[currentIndex - 1] : null;
   const nextPoem =
     currentIndex >= 0 && currentIndex < poems.length - 1
       ? poems[currentIndex + 1]
       : null;
 
-  const title = poemQuery.data?.title || poemQuery.data?.fullTitle || 'در حال بارگذاری…';
-  const displayTitle = poemQuery.data?.fullTitle || title;
+  const title = poem?.title || poem?.fullTitle || 'در حال بارگذاری…';
+  const displayTitle = poem?.fullTitle || title;
   const externalUrl = `${GANJOOR_SITE}${poemUrl}`;
   const plainText = couplets.flatMap((group) => group.lines).join('\n');
 
   useEffect(() => {
-    if (!poemQuery.data) return;
+    setFavorited(isFavorite(poemUrl));
+  }, [poemUrl]);
+
+  useEffect(() => {
+    if (!poem) return;
     saveLastRead(poetId, {
       poemUrl,
-      poemTitle: poemQuery.data.title || displayTitle,
+      poemTitle: poem.title || displayTitle,
       categoryTitle,
     });
-  }, [categoryTitle, displayTitle, poemQuery.data, poemUrl, poetId]);
+  }, [categoryTitle, displayTitle, poem, poemUrl, poetId]);
 
   useEffect(() => {
     const neighbors = [prevPoem?.fullUrl, nextPoem?.fullUrl].filter(Boolean) as string[];
     for (const url of neighbors) {
       queryClient.prefetchQuery({
         queryKey: ['poem-detail', url],
-        queryFn: ({ signal }) => fetchPoem(url, signal),
+        queryFn: ({ signal }) => fetchPoemWithOfflineFallback(url, signal),
         staleTime: STALE_TIMES.poem,
       });
     }
   }, [nextPoem?.fullUrl, prevPoem?.fullUrl, queryClient]);
+
+  function handleToggleFavorite() {
+    const next = toggleFavorite({
+      poemUrl,
+      poemTitle: poem?.title || displayTitle,
+      categoryTitle,
+      poetId,
+    });
+    setFavorited(next);
+    showToast(next ? 'به علاقه‌مندی‌ها اضافه شد.' : 'از علاقه‌مندی‌ها حذف شد.', 'success');
+  }
 
   async function handleCopy() {
     const text = `${displayTitle}\n\n${plainText}\n\n${externalUrl}`;
@@ -167,6 +187,16 @@ export function PoemReader({
             type="button"
             variant="ghost"
             className="h-10 w-10 px-0"
+            onClick={handleToggleFavorite}
+            aria-label={favorited ? 'حذف از علاقه‌مندی‌ها' : 'افزودن به علاقه‌مندی‌ها'}
+            aria-pressed={favorited}
+          >
+            <Bookmark size={18} className={favorited ? 'fill-current text-accent' : ''} />
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            className="h-10 w-10 px-0"
             onClick={() => setShowPrefs((open) => !open)}
             aria-label="تنظیمات خواندن"
           >
@@ -218,6 +248,9 @@ export function PoemReader({
       ) : (
         <>
           <header className="mb-8 text-center">
+            {fromCache ? (
+              <p className="text-muted mb-2 text-xs">حالت آفلاین — متن ذخیره‌شده</p>
+            ) : null}
             <h2 className="text-lg font-bold leading-relaxed sm:text-xl">{displayTitle}</h2>
             <div className="mt-4 flex flex-wrap justify-center gap-2">
               <Button variant="secondary" onClick={handleCopy}>

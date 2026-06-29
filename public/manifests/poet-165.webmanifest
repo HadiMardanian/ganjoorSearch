@@ -1,0 +1,33 @@
+{
+  "id": "/ganjoorSearch/poet-app/165",
+  "name": "وحیدالزمان قزوینی — گنجورسرچ",
+  "short_name": "وحیدالزمان قزوینی",
+  "description": "جستجوی اشعار وحیدالزمان قزوینی با گنجورسرچ",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "/ganjoorSearch/?poet=165&source=pwa&tab=browse",
+  "scope": "/ganjoorSearch/",
+  "display": "standalone",
+  "background_color": "#f7f4ef",
+  "theme_color": "#9a3412",
+  "icons": [
+    {
+      "src": "/ganjoorSearch/icons/poets/165-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/ganjoorSearch/icons/poets/165-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/ganjoorSearch/icons/poets/165-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

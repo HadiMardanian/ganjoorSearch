@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { BookOpen } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { BookOpen, Bookmark } from 'lucide-react';
 import { useCategoryDetailQuery, usePoetDetailQuery } from '@/api/queries';
 import { BrowseBreadcrumb } from '@/components/poet-app/BrowseBreadcrumb';
 import type { Category, PoemSummary } from '@/types/ganjoor';
@@ -7,6 +7,7 @@ import { CategoryGrid } from '@/components/browse/CategoryGrid';
 import { PoemList } from '@/components/browse/PoemList';
 import { PoemReader } from '@/components/browse/PoemReader';
 import { activeBrowseCategoryId } from '@/hooks/useSearchParams';
+import { listFavorites } from '@/utils/favorites';
 import { readLastRead } from '@/utils/lastRead';
 
 interface PoetBrowseViewProps {
@@ -41,6 +42,11 @@ export function PoetBrowseView({
   const category = categoryQuery.data;
   const poems = category?.poems ?? [];
   const lastRead = useMemo(() => readLastRead(poetId), [poetId, poemUrl]);
+  const [favoritesVersion, setFavoritesVersion] = useState(0);
+  const favorites = useMemo(
+    () => listFavorites(poetId),
+    [poetId, poemUrl, favoritesVersion],
+  );
 
   const childCategories = useMemo(() => {
     if (!activeCatId) return rootChildren;
@@ -62,7 +68,10 @@ export function PoetBrowseView({
         poemUrl={poemUrl}
         poems={poems}
         categoryTitle={category?.title}
-        onBack={onBrowseBack}
+        onBack={() => {
+          setFavoritesVersion((v) => v + 1);
+          onBrowseBack();
+        }}
         onNavigate={onOpenPoem}
       />
     );
@@ -144,6 +153,31 @@ export function PoetBrowseView({
             ) : null}
           </span>
         </button>
+      ) : null}
+      {favorites.length > 0 && !activeCatId ? (
+        <section className="mb-5">
+          <h3 className="mb-3 text-lg font-bold">علاقه‌مندی‌ها</h3>
+          <div className="space-y-3">
+            {favorites.slice(0, 8).map((item) => (
+              <button
+                key={item.poemUrl}
+                type="button"
+                className="surface-card hover:border-[var(--color-accent)] fade-in flex w-full items-center gap-3 rounded-2xl border p-4 text-start transition-colors"
+                onClick={() => onOpenPoem(item.poemUrl)}
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--color-accent-soft)] text-accent">
+                  <Bookmark size={20} className="fill-current" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-semibold">{item.poemTitle}</span>
+                  {item.categoryTitle ? (
+                    <span className="text-muted mt-1 block text-xs">{item.categoryTitle}</span>
+                  ) : null}
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
       ) : null}
       <CategoryGrid
         title={`آثار ${poetName}`}

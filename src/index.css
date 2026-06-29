@@ -147,7 +147,6 @@ body {
   line-height: 2.2;
   font-variant-ligatures: contextual;
   font-feature-settings: "calt" 1, "liga" 1;
-  text-align: center;
 }
 
 .poem-reader-canvas {
@@ -188,8 +187,6 @@ body {
 .poetry-highlight-host {
   unicode-bidi: plaintext;
 }
-
-/* Poetry verses: centered, not forced to RTL margin edge */
 
 /* Code, URLs, Latin UI labels: never RTL/right-aligned */
 code,

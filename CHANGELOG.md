@@ -2,6 +2,20 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.9.0] - 2026-06-29
+
+### Added
+- Poet favorites: bookmark poems from reader; list on poet browse home
+- Offline poem cache: recently read poems available without network (up to 40)
+- Android hardware Back guard at poet app root (first back stays in app)
+- Build generates icons and manifests for **all** poets (`build:poet-assets --all`)
+
+### Changed
+- README documents poet PWA, browse, reader, favorites, offline, and URL params
+
+### Fixed
+- Reverted forced center alignment on search result verses (`verse-text`)
+
 ## [2.7.4] - 2026-06-29
 
 ### Fixed

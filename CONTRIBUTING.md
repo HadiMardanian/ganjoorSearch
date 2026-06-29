@@ -95,6 +95,8 @@ Run through these on a real device or emulator before release.
 - [ ] Android back button: poem → list → category → home (not exit app)
 - [ ] Search result opens same in-app reader
 - [ ] Continue reading card appears on poet home after reading a poem
+- [ ] Favorites: bookmark in reader, list on poet home
+- [ ] Offline: reopen a recently read poem with network disabled
 - [ ] Bottom nav and content respect safe area (notch / home indicator)
 
 #### iOS (Safari)
