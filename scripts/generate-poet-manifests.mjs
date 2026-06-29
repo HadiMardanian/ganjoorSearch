@@ -56,6 +56,7 @@ function buildManifest(poet) {
     start_url: `${scope}?source=pwa&tab=browse`,
     scope,
     display: 'standalone',
+    capture_links: 'none',
     background_color: '#f7f4ef',
     theme_color: '#9a3412',
     related_applications: [

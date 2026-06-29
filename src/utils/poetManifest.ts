@@ -25,6 +25,7 @@ export interface PoetManifest {
   theme_color: string;
   icons: Array<{ src: string; sizes: string; type: string; purpose?: string }>;
   related_applications?: Array<{ platform: string; url: string; id: string }>;
+  capture_links?: 'none';
 }
 
 let manifestObjectUrl: string | null = null;
@@ -68,6 +69,7 @@ export function buildPoetManifest(
     start_url: buildPoetPwaStartUrl(poet.id),
     scope: getPoetPwaScopePath(poet.id),
     display: 'standalone',
+    capture_links: 'none',
     background_color: '#f7f4ef',
     theme_color: '#9a3412',
     related_applications: [

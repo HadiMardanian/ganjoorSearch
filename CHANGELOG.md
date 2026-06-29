@@ -2,6 +2,11 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.14.3] - 2026-06-29
+
+### Fixed
+- Links to the main website open in the browser instead of hijacking into an installed poet PWA (`capture_links: "none"` on poet manifests; main manifest uses `display: "browser"`)
+
 ## [2.14.2] - 2026-06-29
 
 ### Fixed

@@ -19,6 +19,7 @@ describe('poetManifest', () => {
     expect(manifest.start_url).toContain('/pwa/1/');
     expect(manifest.start_url).toContain('source=pwa');
     expect(manifest.scope).toContain('/pwa/1/');
+    expect(manifest.capture_links).toBe('none');
     expect(manifest.icons).toHaveLength(3);
   });
 

@@ -8,6 +8,7 @@
   "start_url": "/ganjoorSearch/pwa/183/?source=pwa&tab=browse",
   "scope": "/ganjoorSearch/pwa/183/",
   "display": "standalone",
+  "capture_links": "none",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
   "related_applications": [

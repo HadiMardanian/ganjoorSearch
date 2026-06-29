@@ -6,7 +6,9 @@
   "lang": "fa",
   "dir": "rtl",
   "start_url": "/ganjoorSearch/",
-  "display": "standalone",
+  "scope": "/ganjoorSearch/",
+  "display": "browser",
+  "capture_links": "none",
   "background_color": "#f7f4ef",
   "theme_color": "#9a3412",
   "icons": [
