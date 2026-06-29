@@ -20,9 +20,13 @@ export default function App() {
   const { initial, updateUrl } = useSearchState();
 
   const [input, setInput] = useState(initial.term);
-  const [searchTerm, setSearchTerm] = useState(initial.term);
   const [poetId, setPoetId] = useState<PoetFilter>(initial.poetId);
   const [categoryId, setCategoryId] = useState<CategoryFilter>(initial.categoryId);
+  const [searchTerm, setSearchTerm] = useState(initial.term);
+  const [appliedPoetId, setAppliedPoetId] = useState<PoetFilter>(initial.poetId);
+  const [appliedCategoryId, setAppliedCategoryId] = useState<CategoryFilter>(
+    initial.categoryId,
+  );
   const [page, setPage] = useState(initial.page);
   const [viewMode, setViewMode] = useState<ViewMode>(initial.viewMode);
   const [searched, setSearched] = useState(Boolean(initial.term));
@@ -32,8 +36,8 @@ export default function App() {
   const categoriesQuery = useCategoriesQuery(poetId);
   const searchQuery = useSearchQuery(
     searchTerm,
-    poetId,
-    categoryId,
+    appliedPoetId,
+    appliedCategoryId,
     page,
     searched,
   );
@@ -50,13 +54,13 @@ export default function App() {
     }> = {}) => {
       updateUrl({
         term: overrides.term ?? searchTerm,
-        poetId: overrides.poetId ?? poetId,
-        categoryId: overrides.categoryId ?? categoryId,
+        poetId: overrides.poetId ?? appliedPoetId,
+        categoryId: overrides.categoryId ?? appliedCategoryId,
         page: overrides.page ?? page,
         viewMode: overrides.viewMode ?? viewMode,
       });
     },
-    [categoryId, page, poetId, searchTerm, updateUrl, viewMode],
+    [appliedCategoryId, appliedPoetId, page, searchTerm, updateUrl, viewMode],
   );
 
   useEffect(() => {
@@ -91,17 +95,16 @@ export default function App() {
     }
 
     setSearchTerm(trimmed);
+    setAppliedPoetId(poetId);
+    setAppliedCategoryId(categoryId);
     setPage(1);
     setSearched(true);
-    syncUrl({ term: trimmed, page: 1 });
+    syncUrl({ term: trimmed, poetId, categoryId, page: 1 });
   }
 
   function handlePoetChange(value: PoetFilter) {
     setPoetId(value);
     setCategoryId('all');
-    const nextPage = searched && searchTerm ? 1 : page;
-    if (searched && searchTerm) setPage(1);
-    syncUrl({ poetId: value, categoryId: 'all', page: nextPage });
   }
 
   return (
@@ -128,9 +131,6 @@ export default function App() {
               value={categoryId}
               onChange={(value) => {
                 setCategoryId(value);
-                const nextPage = searched ? 1 : page;
-                if (searched) setPage(1);
-                syncUrl({ categoryId: value, page: nextPage });
               }}
               disabled={poetId === 'all' || categoriesQuery.isLoading}
             />
@@ -150,8 +150,8 @@ export default function App() {
         <div className="mt-5">
           <ExportButtons
             term={searchTerm}
-            poetId={poetId}
-            categoryId={categoryId}
+            poetId={appliedPoetId}
+            categoryId={appliedCategoryId}
             disabled={searchQuery.isFetching || !searchTerm}
           />
         </div>
