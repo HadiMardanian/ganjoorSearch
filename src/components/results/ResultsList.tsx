@@ -3,6 +3,7 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { ResultCard } from './ResultCard';
 import { ResultsLoading } from '@/components/ui/Skeleton';
 import { countMatchingBits } from '@/utils/searchMap';
+import { formatPersianNumber, formatResultRange } from '@/utils/paging';
 import type { GroupedResult, ViewMode } from '@/types/ganjoor';
 
 interface ResultsListProps {
@@ -12,6 +13,10 @@ interface ResultsListProps {
   loading: boolean;
   isFetching: boolean;
   searched: boolean;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
 }
 
 export function ResultsList({
@@ -21,6 +26,10 @@ export function ResultsList({
   loading,
   isFetching,
   searched,
+  page,
+  pageSize,
+  totalCount,
+  totalPages,
 }: ResultsListProps) {
   const parentRef = useRef<HTMLDivElement>(null);
 
@@ -30,8 +39,6 @@ export function ResultsList({
     estimateSize: () => (viewMode === 'verse' ? 280 : 360),
     overscan: 4,
   });
-
-  const matchingBits = countMatchingBits(results);
 
   if (loading && results.length === 0) {
     return <ResultsLoading />;
@@ -56,10 +63,19 @@ export function ResultsList({
 
   return (
     <div>
-      <p className="mb-4 text-center text-sm text-stone-600 dark:text-stone-400">
-        {results.length} شعر، {matchingBits} بیت مطابق
-        {isFetching ? ' — در حال به‌روزرسانی...' : ''}
-      </p>
+      <div className="mb-4 space-y-1 text-center text-sm text-stone-600 dark:text-stone-400">
+        {totalCount > 0 ? (
+          <p>تعداد کل نتایج: {formatPersianNumber(totalCount)} قطعه</p>
+        ) : null}
+        <p>
+          {formatResultRange(page, pageSize, results.length, totalCount)}
+          {totalPages > 1 ? ` (صفحه ${formatPersianNumber(page)} از ${formatPersianNumber(totalPages)})` : ''}
+          {isFetching ? ' — در حال به‌روزرسانی...' : ''}
+        </p>
+        <p className="text-xs text-stone-500">
+          {countMatchingBits(results)} بیت مطابق در همین صفحه
+        </p>
+      </div>
 
       <div ref={parentRef} className="max-h-[70vh] overflow-auto rounded-2xl">
         <div

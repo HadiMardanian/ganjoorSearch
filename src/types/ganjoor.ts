@@ -60,6 +60,8 @@ export interface SearchResponse {
   page: number;
   hasMore: boolean;
   pageSize: number;
+  totalCount: number;
+  totalPages: number;
 }
 
 export type ViewMode = 'verse' | 'full';

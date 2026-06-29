@@ -169,6 +169,10 @@ export default function App() {
             loading={searchQuery.isLoading}
             isFetching={searchQuery.isFetching}
             searched={searched}
+            page={page}
+            pageSize={searchQuery.data?.pageSize ?? 20}
+            totalCount={searchQuery.data?.totalCount ?? 0}
+            totalPages={searchQuery.data?.totalPages ?? 0}
           />
         </div>
 
@@ -176,6 +180,7 @@ export default function App() {
           <Pagination
             page={page}
             hasMore={searchQuery.data?.hasMore ?? false}
+            totalPages={searchQuery.data?.totalPages ?? 0}
             onPageChange={(nextPage) => {
               setPage(nextPage);
               syncUrl({ page: nextPage });

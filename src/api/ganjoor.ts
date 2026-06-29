@@ -5,6 +5,7 @@ import type {
   SearchResponse,
 } from '@/types/ganjoor';
 import { mapSearchHitsToGrouped } from '@/utils/searchMap';
+import { parsePagingHeaders } from '@/utils/paging';
 import { apiFetch, buildApiUrl } from './client';
 
 export async function fetchPoets(signal?: AbortSignal): Promise<Poet[]> {
@@ -43,7 +44,7 @@ export async function searchPoems(
   const page = Math.max(options.page ?? 1, 1);
 
   if (!trimmed) {
-    return { results: [], page: 1, hasMore: false, pageSize };
+    return { results: [], page: 1, hasMore: false, pageSize, totalCount: 0, totalPages: 0 };
   }
 
   const params: Record<string, string> = {
@@ -94,15 +95,26 @@ export async function searchPoems(
       [];
 
   if (!Array.isArray(items) || items.length === 0) {
-    return { results: [], page, hasMore: false, pageSize };
+    const paging = parsePagingHeaders(response);
+    return {
+      results: [],
+      page,
+      hasMore: false,
+      pageSize,
+      totalCount: paging?.totalCount ?? 0,
+      totalPages: paging?.totalPages ?? 0,
+    };
   }
 
   const results = mapSearchHitsToGrouped(items, trimmed);
+  const paging = parsePagingHeaders(response);
 
   return {
     results,
     page,
-    hasMore: items.length === pageSize,
+    hasMore: paging?.hasNextPage ?? items.length === pageSize,
     pageSize,
+    totalCount: paging?.totalCount ?? 0,
+    totalPages: paging?.totalPages ?? 0,
   };
 }
