@@ -2,6 +2,15 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.7.1] - 2026-06-29
+
+### Fixed
+- Poet install: button no longer stuck on «در حال نصب» (prompt timeout, manifest icons without blob URLs)
+- Poet app mode activates immediately after selecting a poet (URL state sync with `usePoetApp`)
+- Standalone PWA launch redirects to poet browse when a stored poet exists
+- «شروع مرور آثار» button to use poet app without waiting for install prompt
+- Search state cleared when entering poet app mode
+
 ## [2.7.0] - 2026-06-29
 
 ### Added

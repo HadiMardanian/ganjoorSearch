@@ -90,11 +90,36 @@ export async function resolvePoetIconUrl(
   return URL.createObjectURL(blob);
 }
 
-function checkImageExists(url: string): Promise<boolean> {
+export function getManifestIconUrls(poetId: number): { icon192: string; icon512: string } {
+  return {
+    icon192: getPrebuiltPoetIconUrl(poetId, 192),
+    icon512: getPrebuiltPoetIconUrl(poetId, 512),
+  };
+}
+
+function checkImageExists(url: string, timeoutMs = 2500): Promise<boolean> {
   return new Promise((resolve) => {
     const img = new Image();
-    img.onload = () => resolve(true);
-    img.onerror = () => resolve(false);
+    const timer = window.setTimeout(() => resolve(false), timeoutMs);
+    img.onload = () => {
+      window.clearTimeout(timer);
+      resolve(true);
+    };
+    img.onerror = () => {
+      window.clearTimeout(timer);
+      resolve(false);
+    };
     img.src = url;
   });
+}
+
+export async function resolveManifestIconUrls(
+  poetId: number,
+): Promise<{ icon192: string; icon512: string }> {
+  const prebuilt = getManifestIconUrls(poetId);
+  const hasPrebuilt = await checkImageExists(prebuilt.icon192);
+  if (hasPrebuilt) return prebuilt;
+
+  const fallback = `${BASE}icon.svg`;
+  return { icon192: fallback, icon512: fallback };
 }

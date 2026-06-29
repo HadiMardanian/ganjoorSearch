@@ -5,12 +5,20 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
+const PROMPT_TIMEOUT_MS = 20_000;
+
 function isStandaloneDisplay(): boolean {
   if (typeof window === 'undefined') return false;
   const mq = window.matchMedia('(display-mode: standalone)');
   if (mq.matches) return true;
-  // iOS Safari
   return Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
+}
+
+function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((resolve) => window.setTimeout(() => resolve(fallback), ms)),
+  ]);
 }
 
 export function usePwaInstall() {
@@ -55,11 +63,21 @@ export function usePwaInstall() {
 
   const promptInstall = useCallback(async (): Promise<'accepted' | 'dismissed' | 'unavailable'> => {
     if (!deferredPrompt) return 'unavailable';
-    await deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    setDeferredPrompt(null);
-    if (outcome === 'accepted') setIsInstalled(true);
-    return outcome;
+
+    try {
+      await deferredPrompt.prompt();
+      const { outcome } = await withTimeout(
+        deferredPrompt.userChoice,
+        PROMPT_TIMEOUT_MS,
+        { outcome: 'dismissed' as const },
+      );
+      setDeferredPrompt(null);
+      if (outcome === 'accepted') setIsInstalled(true);
+      return outcome;
+    } catch {
+      setDeferredPrompt(null);
+      return 'unavailable';
+    }
   }, [deferredPrompt]);
 
   return {
