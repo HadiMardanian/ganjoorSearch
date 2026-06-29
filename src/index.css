@@ -12,6 +12,36 @@
   --color-border: #e7e5e4;
 }
 
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-cream: #1c1917;
+    --color-ink: #fafaf9;
+    --color-accent: #f59e0b;
+    --color-accent-dark: #fb7185;
+    --color-highlight: #854d0e;
+    --color-card: #292524;
+    --color-muted: #a8a29e;
+    --color-border: #44403c;
+  }
+
+  body {
+    background:
+      radial-gradient(circle at top right, rgb(245 158 11 / 10%), transparent 35%),
+      radial-gradient(circle at bottom left, rgb(251 113 133 / 8%), transparent 30%),
+      var(--color-cream);
+  }
+
+  .highlight {
+    background: #fbbf24;
+    color: #1c1917;
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, #292524 25%, #44403c 50%, #292524 75%);
+    background-size: 200% 100%;
+  }
+}
+
 * {
   box-sizing: border-box;
 }

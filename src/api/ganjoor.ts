@@ -1,4 +1,3 @@
-import pLimit from 'p-limit';
 import type {
   Category,
   GroupedResult,
@@ -8,9 +7,9 @@ import type {
   SearchResult,
   Verse,
 } from '@/types/ganjoor';
+import { STALE_TIMES, queryClient } from '@/lib/queryClient';
+import { poemFetchLimiter } from '@/utils/parallel';
 import { apiFetch, buildApiUrl } from './client';
-
-const poemFetchLimit = pLimit(5);
 
 function getCoupletIndex(verse: Verse): number {
   return verse.coupletIndex ?? Math.floor(verse.vOrder / 2);
@@ -41,6 +40,14 @@ export async function fetchPoem(url: string, signal?: AbortSignal): Promise<Poem
   return apiFetch<Poem>(buildApiUrl('/poem', { url }), signal);
 }
 
+async function getCachedPoem(url: string, signal?: AbortSignal): Promise<Poem> {
+  return queryClient.fetchQuery({
+    queryKey: ['poem', url],
+    queryFn: () => fetchPoem(url, signal),
+    staleTime: STALE_TIMES.poem,
+  });
+}
+
 async function enrichSearchResults(
   items: Poem[],
   term: string,
@@ -48,10 +55,11 @@ async function enrichSearchResults(
 ): Promise<SearchResult[]> {
   const normalizedTerm = term.toLowerCase();
   const results: SearchResult[] = [];
+  const fetchedUrls = new Set<string>();
 
   const enriched = await Promise.all(
     items.map((item) =>
-      poemFetchLimit(async () => {
+      poemFetchLimiter(async () => {
         if (item.verses && item.verses.length > 0) {
           return item;
         }
@@ -63,8 +71,23 @@ async function enrichSearchResults(
           return null;
         }
 
+        if (fetchedUrls.has(poemUrl)) {
+          const cached = queryClient.getQueryData<Poem>(['poem', poemUrl]);
+          if (cached) {
+            return {
+              ...cached,
+              id: cached.id ?? item.id,
+              title: cached.title ?? item.title,
+              fullUrl: cached.fullUrl ?? item.fullUrl,
+              urlSlug: cached.urlSlug ?? item.urlSlug,
+            };
+          }
+        }
+
+        fetchedUrls.add(poemUrl);
+
         try {
-          const full = await fetchPoem(poemUrl, signal);
+          const full = await getCachedPoem(poemUrl, signal);
           return {
             ...full,
             id: full.id ?? item.id,

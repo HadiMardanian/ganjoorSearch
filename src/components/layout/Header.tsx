@@ -1,6 +1,6 @@
 export function Header() {
   return (
-    <header className="border-b border-stone-200/80 bg-white/70 backdrop-blur-md">
+    <header className="border-b border-stone-200/80 bg-white/70 backdrop-blur-md dark:border-stone-700/80 dark:bg-stone-900/70">
       <div className="mx-auto max-w-5xl px-4 py-10 text-center sm:px-6">
         <p className="mb-2 text-sm font-medium tracking-wide text-accent">✦ گنجور سرچ</p>
         <h1 className="text-3xl font-bold text-stone-900 sm:text-4xl">

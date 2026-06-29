@@ -62,7 +62,7 @@ export const ResultCard = memo(function ResultCard({
   const copyKey = `${result.poemId}-${viewMode}`;
 
   return (
-    <article className="fade-in rounded-2xl border border-stone-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md sm:p-6">
+    <article className="fade-in rounded-2xl border border-stone-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-stone-700 dark:bg-stone-800 sm:p-6">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <h3 className="text-lg font-semibold text-stone-900">{result.poemTitle}</h3>
         <a
@@ -81,7 +81,7 @@ export const ResultCard = memo(function ResultCard({
           {result.matchingCouplets.map((couplet) => (
             <div
               key={`${result.poemId}-${couplet.coupletIndex}`}
-              className="rounded-xl border-r-4 border-accent bg-stone-50 p-4"
+              className="rounded-xl border-r-4 border-accent bg-stone-50 p-4 dark:bg-stone-900/50"
             >
               <VerseHighlight verses={couplet.verses} searchTerm={searchTerm} />
             </div>
