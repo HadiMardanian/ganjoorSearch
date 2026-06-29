@@ -130,7 +130,7 @@ export function PoetBrowseView({
       {lastRead && !activeCatId ? (
         <button
           type="button"
-          className="surface-card hover:border-[var(--color-accent)] fade-in mb-5 flex w-full items-center gap-3 rounded-2xl border p-4 text-right transition-colors"
+          className="surface-card hover:border-[var(--color-accent)] fade-in mb-5 flex w-full items-center gap-3 rounded-2xl border p-4 text-start transition-colors"
           onClick={() => onOpenPoem(lastRead.poemUrl)}
         >
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--color-accent-soft)] text-accent">

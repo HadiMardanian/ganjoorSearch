@@ -87,7 +87,7 @@ export function CategoryGrid({
               <button
                 key={category.id}
                 type="button"
-                className="surface-card hover:border-[var(--color-accent)] fade-in flex min-h-[88px] items-center gap-3 rounded-2xl border p-4 text-right transition-colors"
+                className="surface-card hover:border-[var(--color-accent)] fade-in flex min-h-[88px] items-center gap-3 rounded-2xl border p-4 text-start transition-colors"
                 style={{ animationDelay: `${Math.min(index, 8) * 40}ms` }}
                 onClick={() => onSelect(category)}
               >

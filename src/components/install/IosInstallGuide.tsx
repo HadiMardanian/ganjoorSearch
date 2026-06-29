@@ -61,8 +61,15 @@ export function IosInstallGuide({ poet, onDismiss, onInstalled, onBack }: IosIns
               </div>
               <div>
                 <p className="text-subtle text-xs font-semibold">مرحله {index + 1}</p>
-                <h3 className="mt-1 font-semibold">{step.title}</h3>
-                <p className="text-muted mt-1 text-sm leading-6">{step.description}</p>
+                <h3 className="mt-1 font-semibold" dir={/[A-Za-z]/.test(step.title) ? 'ltr' : undefined}>
+                  {step.title}
+                </h3>
+                <p
+                  className="text-muted mt-1 text-sm leading-6"
+                  dir={/[A-Za-z]/.test(step.description) ? 'ltr' : undefined}
+                >
+                  {step.description}
+                </p>
               </div>
             </div>
           );

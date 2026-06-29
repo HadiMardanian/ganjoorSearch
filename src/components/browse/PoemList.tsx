@@ -65,7 +65,7 @@ export function PoemList({
             <button
               key={poem.id}
               type="button"
-              className="surface-card hover:border-[var(--color-accent)] fade-in flex min-h-[56px] w-full items-center gap-3 rounded-2xl border p-4 text-right transition-colors"
+              className="surface-card hover:border-[var(--color-accent)] fade-in flex min-h-[56px] w-full items-center gap-3 rounded-2xl border p-4 text-start transition-colors"
               style={{ animationDelay: `${Math.min(index, 10) * 30}ms` }}
               onClick={() => onSelect(poem)}
             >

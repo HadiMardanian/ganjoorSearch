@@ -19,7 +19,7 @@ interface ResultsListProps {
 
 function SearchGuide() {
   return (
-    <div className="surface-muted mt-4 rounded-xl p-4 text-right text-sm leading-7 text-muted">
+    <div className="surface-muted mt-4 rounded-xl p-4 text-start text-sm leading-7 text-muted">
       <p className="font-medium">راهنمای جستجو</p>
       <ul className="mt-2 list-inside list-disc space-y-1">
         <li>یک کلمه یا عبارت کوتاه وارد کنید (مثلاً «جام»).</li>

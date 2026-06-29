@@ -2,6 +2,13 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.7.4] - 2026-06-29
+
+### Fixed
+- Poetry verses are center-aligned (not forced to the RTL margin edge)
+- Latin/technical UI strings (CSV, Excel, iOS install labels, page number input) render LTR
+- Replaced physical `text-right` with logical `text-start` on Persian list items
+
 ## [2.7.3] - 2026-06-29
 
 ### Added

@@ -139,7 +139,7 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
                 type="button"
                 role="option"
                 aria-selected={value === option.id}
-                className={`w-full rounded-lg px-3 py-2 text-right text-sm hover:bg-[var(--color-surface)] ${
+                className={`w-full rounded-lg px-3 py-2 text-start text-sm hover:bg-[var(--color-surface)] ${
                   value === option.id ? 'bg-[var(--color-accent-soft)] font-semibold text-accent' : ''
                 } ${activeIndex === index ? 'ring-1 ring-[var(--color-accent)]' : ''}`}
                 onClick={() => selectOption(option.id)}

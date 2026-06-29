@@ -68,7 +68,7 @@ export function PoetAppHeader({
               <div className="surface-card absolute end-0 top-11 z-50 min-w-[200px] rounded-xl border p-2 shadow-lg">
                 <button
                   type="button"
-                  className="hover:bg-[var(--color-surface)] w-full rounded-lg px-3 py-2.5 text-right text-sm"
+                  className="hover:bg-[var(--color-surface)] w-full rounded-lg px-3 py-2.5 text-start text-sm"
                   onClick={() => {
                     setMenuOpen(false);
                     onChangePoet();

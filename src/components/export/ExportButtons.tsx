@@ -227,7 +227,7 @@ export function ExportButtons({
               onClick={() => handleExport(button.id)}
             >
               <Icon size={16} />
-              {isActive ? 'در حال آماده‌سازی…' : button.label}
+              <span dir="auto">{isActive ? 'در حال آماده‌سازی…' : button.label}</span>
             </Button>
           );
         })}
@@ -235,7 +235,7 @@ export function ExportButtons({
 
       {activeExport && (
         <div className="text-muted flex flex-wrap items-center justify-center gap-3 text-sm">
-          <span>در حال تهیه {EXPORT_LABELS[activeExport]}…</span>
+          <span dir="auto">در حال تهیه {EXPORT_LABELS[activeExport]}…</span>
           {progress ? <span>{formatProgressText(progress)}</span> : <span>در حال دریافت نتایج…</span>}
           <Button variant="secondary" onClick={cancelExport}>
             <X size={16} />
@@ -246,7 +246,7 @@ export function ExportButtons({
 
       <ConfirmModal
         open={confirmOpen}
-        title="export حجم بالا"
+        title="حجم بالای export"
         message={`این جستجو ${formatPersianNumber(scope === 'page' ? currentPageResults.length : totalCount)} قطعه دارد. دریافت و export ممکن است چند دقیقه طول بکشد. ادامه می‌دهید؟`}
         confirmLabel="ادامه"
         cancelLabel="انصراف"
