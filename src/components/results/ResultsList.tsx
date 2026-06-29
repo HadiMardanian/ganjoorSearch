@@ -2,6 +2,8 @@ import { useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { ResultCard } from './ResultCard';
 import { ResultsLoading } from '@/components/ui/Skeleton';
+import { countMatchingBits } from '@/utils/searchMap';
+import { formatPersianNumber, formatResultRange } from '@/utils/paging';
 import type { GroupedResult, ViewMode } from '@/types/ganjoor';
 
 interface ResultsListProps {
@@ -10,6 +12,10 @@ interface ResultsListProps {
   viewMode: ViewMode;
   loading: boolean;
   searched: boolean;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
 }
 
 export function ResultsList({
@@ -18,6 +24,10 @@ export function ResultsList({
   viewMode,
   loading,
   searched,
+  page,
+  pageSize,
+  totalCount,
+  totalPages,
 }: ResultsListProps) {
   const parentRef = useRef<HTMLDivElement>(null);
 
@@ -34,16 +44,16 @@ export function ResultsList({
 
   if (searched && !loading && results.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-stone-300 bg-white/70 px-6 py-16 text-center">
-        <p className="text-lg text-stone-700">نتیجه‌ای یافت نشد.</p>
-        <p className="mt-2 text-sm text-stone-500">لطفاً کلمهٔ دیگری را امتحان کنید.</p>
+      <div className="rounded-2xl border border-dashed border-stone-300 bg-white px-6 py-16 text-center">
+        <p className="text-lg text-stone-800">نتیجه‌ای یافت نشد.</p>
+        <p className="mt-2 text-sm text-stone-600">لطفاً کلمهٔ دیگری را امتحان کنید.</p>
       </div>
     );
   }
 
   if (results.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-stone-300 bg-white/70 px-6 py-16 text-center text-stone-500">
+      <div className="rounded-2xl border border-dashed border-stone-300 bg-white px-6 py-16 text-center text-stone-600">
         برای شروع، یک کلمه جستجو کنید.
       </div>
     );
@@ -51,10 +61,21 @@ export function ResultsList({
 
   return (
     <div>
-      <p className="mb-4 text-center text-sm text-stone-600">
-        {results.length} غزل یافت شد
-        {loading ? ' — در حال به‌روزرسانی...' : ''}
-      </p>
+      <div className="mb-4 space-y-1 text-center text-sm text-stone-700">
+        {totalCount > 0 ? (
+          <p>تعداد کل نتایج: {formatPersianNumber(totalCount)} قطعه</p>
+        ) : null}
+        <p>
+          {formatResultRange(page, pageSize, results.length, totalCount)}
+          {totalPages > 1
+            ? ` (صفحه ${formatPersianNumber(page)} از ${formatPersianNumber(totalPages)})`
+            : ''}
+          {loading ? ' — در حال به‌روزرسانی...' : ''}
+        </p>
+        <p className="text-xs text-stone-600">
+          {countMatchingBits(results)} بیت مطابق در همین صفحه
+        </p>
+      </div>
 
       <div ref={parentRef} className="max-h-[70vh] overflow-auto rounded-2xl">
         <div

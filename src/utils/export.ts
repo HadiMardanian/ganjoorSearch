@@ -1,21 +1,102 @@
 import { GANJOOR_SITE } from '@/api/client';
-import type { GroupedResult } from '@/types/ganjoor';
-import type { ViewMode } from '@/types/ganjoor';
+import type { GroupedResult, ViewMode } from '@/types/ganjoor';
 
-function escapeCsv(value: string): string {
+export type ExportFormat = 'csv' | 'excel';
+
+export function escapeCsv(value: string): string {
   if (value.includes('"') || value.includes(',') || value.includes('\n')) {
     return `"${value.replace(/"/g, '""')}"`;
   }
   return value;
 }
 
-function downloadCsv(filename: string, headers: string[], rows: string[][]) {
-  const content = [
-    headers.join(','),
-    ...rows.map((row) => row.map(escapeCsv).join(',')),
-  ].join('\n');
+function escapeXml(value: string): string {
+  return value
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
 
-  const blob = new Blob(['\uFEFF', content], { type: 'text/csv;charset=utf-8;' });
+export function buildExcelSpreadsheet(headers: string[], rows: string[][]): string {
+  const headerCells = headers
+    .map(
+      (header) =>
+        `<Cell ss:StyleID="Header"><Data ss:Type="String">${escapeXml(header)}</Data></Cell>`,
+    )
+    .join('');
+
+  const dataRows = rows
+    .map((row) => {
+      const cells = row
+        .map((cell) => `<Cell><Data ss:Type="String">${escapeXml(cell)}</Data></Cell>`)
+        .join('');
+      return `<Row>${cells}</Row>`;
+    })
+    .join('');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+  </Style>
+  <Style ss:ID="Header">
+   <Font ss:Bold="1"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Results">
+  <Table>
+   <Row>${headerCells}</Row>
+   ${dataRows}
+  </Table>
+ </Worksheet>
+</Workbook>`;
+}
+
+function getPoemText(result: GroupedResult): string {
+  if (result.plainText) return result.plainText;
+  return (result.allVerses ?? [])
+    .map((verse) => verse.text || '')
+    .filter(Boolean)
+    .join('\n');
+}
+
+export function buildVerseExportRows(results: GroupedResult[]): string[][] {
+  const rows: string[][] = [];
+
+  for (const result of results) {
+    for (const couplet of result.matchingCouplets) {
+      const lines = couplet.verses.map((verse) => verse.text || '');
+      rows.push([
+        result.fullTitle || result.poemTitle,
+        lines[0] ?? '',
+        lines[1] ?? '',
+        result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : '',
+      ]);
+    }
+  }
+
+  return rows;
+}
+
+export function buildFullExportRows(results: GroupedResult[]): string[][] {
+  return results
+    .map((result) => [
+      result.fullTitle || result.poemTitle,
+      getPoemText(result),
+      result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : '',
+    ])
+    .filter((row) => row[0] || row[1]);
+}
+
+function downloadBlob(filename: string, blob: Blob) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
@@ -26,53 +107,52 @@ function downloadCsv(filename: string, headers: string[], rows: string[][]) {
   URL.revokeObjectURL(url);
 }
 
-export function exportResults(results: GroupedResult[], mode: ViewMode) {
-  if (mode === 'verse') {
-    const rows: string[][] = [];
+function downloadCsv(filename: string, headers: string[], rows: string[][]) {
+  const content = [
+    headers.join(','),
+    ...rows.map((row) => row.map(escapeCsv).join(',')),
+  ].join('\n');
 
-    for (const result of results) {
-      for (const couplet of result.matchingCouplets) {
-        const lines = couplet.verses.map((verse) => verse.text || '');
-        rows.push([
-          result.poemTitle,
-          lines[0] ?? '',
-          lines[1] ?? '',
-          result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : '',
-        ]);
-      }
-    }
+  downloadBlob(
+    filename,
+    new Blob(['\uFEFF', content], { type: 'text/csv;charset=utf-8;' }),
+  );
+}
 
-    if (rows.length === 0) return false;
+function downloadExcel(filename: string, headers: string[], rows: string[][]) {
+  const xml = buildExcelSpreadsheet(headers, rows);
 
-    downloadCsv(
-      'verse-results.csv',
-      ['title', 'line1', 'line2', 'url'],
-      rows,
-    );
-    return true;
-  }
+  downloadBlob(
+    filename,
+    new Blob(['\uFEFF', xml], {
+      type: 'application/vnd.ms-excel',
+    }),
+  );
+}
 
-  const rows = results
-    .map((result) => {
-      const poem =
-        result.plainText ??
-        (result.allVerses?.length
-          ? result.allVerses
-              .map((verse) => verse.text || '')
-              .filter(Boolean)
-              .join('\n')
-          : '');
+export function exportResults(
+  results: GroupedResult[],
+  mode: ViewMode,
+  format: ExportFormat = 'csv',
+) {
+  const headers =
+    mode === 'verse'
+      ? ['title', 'line1', 'line2', 'url']
+      : ['title', 'poem', 'url'];
 
-      return [
-        result.poemTitle,
-        poem,
-        result.fullUrl ? `${GANJOOR_SITE}${result.fullUrl}` : '',
-      ];
-    })
-    .filter((row) => row[0] || row[1]);
+  const rows = mode === 'verse' ? buildVerseExportRows(results) : buildFullExportRows(results);
 
   if (rows.length === 0) return false;
 
-  downloadCsv('ghazal-results.csv', ['title', 'poem', 'url'], rows);
+  const baseName = mode === 'verse' ? 'verse-results' : 'ghazal-results';
+  const filename =
+    format === 'excel' ? `${baseName}.xls` : `${baseName}.csv`;
+
+  if (format === 'excel') {
+    downloadExcel(filename, headers, rows);
+  } else {
+    downloadCsv(filename, headers, rows);
+  }
+
   return true;
 }

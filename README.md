@@ -9,7 +9,7 @@
 - کش هوشمند با TanStack Query
 - fetch موازی برای سرعت بیشتر
 - لیست مجازی برای scroll روان
-- خروجی CSV
+- خروجی CSV و Excel (همه صفحات نتایج)
 - کپی متن و لینک به گنجور
 - RTL و UI فارسی
 
@@ -28,6 +28,7 @@ npm run dev
 
 ```bash
 npm run build
+npm run verify
 npm run preview
 ```
 

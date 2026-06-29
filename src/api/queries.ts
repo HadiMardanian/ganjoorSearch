@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchCategories, fetchPoem, fetchPoets, searchPoems } from '@/api/ganjoor';
+import { fetchCategories, fetchPoets, searchPoems } from '@/api/ganjoor';
 import { STALE_TIMES } from '@/lib/queryClient';
 import type { CategoryFilter, PoetFilter } from '@/types/ganjoor';
 
@@ -16,8 +16,9 @@ export function useCategoriesQuery(poetId: PoetFilter) {
     queryKey: ['categories', poetId],
     queryFn: ({ signal }) =>
       poetId === 'all' ? Promise.resolve([]) : fetchCategories(poetId, signal),
-    enabled: poetId !== 'all',
+    enabled: poetId !== 'all' && Number.isFinite(poetId),
     staleTime: STALE_TIMES.categories,
+    placeholderData: (previous) => previous,
   });
 }
 
@@ -41,14 +42,5 @@ export function useSearchQuery(
     enabled: enabled && term.trim().length > 0,
     staleTime: STALE_TIMES.search,
     placeholderData: (previous) => previous,
-  });
-}
-
-export function usePoemQuery(url: string | null) {
-  return useQuery({
-    queryKey: ['poem', url],
-    queryFn: ({ signal }) => fetchPoem(url!, signal),
-    enabled: Boolean(url),
-    staleTime: STALE_TIMES.poem,
   });
 }

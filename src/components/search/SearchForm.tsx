@@ -39,11 +39,11 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
 
   return (
     <div ref={containerRef} className="relative w-full sm:w-56">
-      <label className="mb-1.5 block text-sm font-medium text-stone-700">شاعر</label>
-      <div className="flex items-center rounded-xl border border-stone-200 bg-white shadow-sm focus-within:border-accent focus-within:ring-2 focus-within:ring-amber-100">
+      <label className="field-label">شاعر</label>
+      <div className="field-control flex items-center px-1 focus-within:border-[#9a3412] focus-within:shadow-[0_0_0_3px_rgb(154_52_18_/_15%)]">
         <input
           type="text"
-          className="w-full rounded-xl bg-transparent px-3 py-3 text-sm outline-none"
+          className="w-full rounded-xl bg-transparent px-3 py-3 text-sm text-stone-900 outline-none placeholder:text-stone-500"
           placeholder="همه شاعران"
           value={open ? query : selectedPoet?.name ?? ''}
           onChange={(event) => {
@@ -58,7 +58,7 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
         {(value !== 'all' || query) && !disabled && (
           <button
             type="button"
-            className="px-3 text-stone-400 hover:text-stone-700"
+            className="px-3 text-stone-500 hover:text-stone-800"
             onClick={() => {
               onChange('all');
               setQuery('');
@@ -72,11 +72,11 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
       </div>
 
       {open && !disabled && (
-        <div className="absolute z-20 mt-2 max-h-60 w-full overflow-y-auto rounded-xl border border-stone-200 bg-white p-2 shadow-xl">
+        <div className="absolute z-20 mt-2 max-h-60 w-full overflow-y-auto rounded-xl border border-stone-300 bg-white p-2 shadow-lg">
           <button
             type="button"
-            className={`w-full rounded-lg px-3 py-2 text-right text-sm hover:bg-stone-50 ${
-              value === 'all' ? 'bg-amber-50 font-medium text-accent' : ''
+            className={`w-full rounded-lg px-3 py-2 text-right text-sm text-stone-900 hover:bg-stone-100 ${
+              value === 'all' ? 'bg-orange-50 font-semibold text-[#9a3412]' : ''
             }`}
             onClick={() => {
               onChange('all');
@@ -87,14 +87,14 @@ export function PoetPicker({ poets, value, onChange, disabled }: PoetPickerProps
             همه شاعران
           </button>
           {filtered.length === 0 ? (
-            <p className="px-3 py-4 text-center text-sm text-stone-500">شاعری یافت نشد</p>
+            <p className="px-3 py-4 text-center text-sm text-stone-600">شاعری یافت نشد</p>
           ) : (
             filtered.map((poet) => (
               <button
                 key={poet.id}
                 type="button"
-                className={`w-full rounded-lg px-3 py-2 text-right text-sm hover:bg-stone-50 ${
-                  value === poet.id ? 'bg-amber-50 font-medium text-accent' : ''
+                className={`w-full rounded-lg px-3 py-2 text-right text-sm text-stone-900 hover:bg-stone-100 ${
+                  value === poet.id ? 'bg-orange-50 font-semibold text-[#9a3412]' : ''
                 }`}
                 onClick={() => {
                   onChange(poet.id);
@@ -116,29 +116,29 @@ interface CategorySelectProps {
   categories: Array<{ id: number; title: string }>;
   value: number | 'all';
   onChange: (value: number | 'all') => void;
-  disabled?: boolean;
+  poetSelected: boolean;
 }
 
 export function CategorySelect({
   categories,
   value,
   onChange,
-  disabled,
+  poetSelected,
 }: CategorySelectProps) {
   return (
     <div className="w-full sm:w-44">
-      <label htmlFor="category-select" className="mb-1.5 block text-sm font-medium text-stone-700">
+      <label htmlFor="category-select" className="field-label">
         قالب
       </label>
       <select
         id="category-select"
-        className="w-full rounded-xl border border-stone-200 bg-white px-3 py-3 text-sm shadow-sm outline-none focus:border-accent focus:ring-2 focus:ring-amber-100 disabled:opacity-60"
+        className="field-control px-3 py-3 text-sm"
         value={value === 'all' ? 'all' : String(value)}
         onChange={(event) => {
           const next = event.target.value;
           onChange(next === 'all' ? 'all' : Number(next));
         }}
-        disabled={disabled || categories.length === 0}
+        disabled={!poetSelected}
         aria-label="انتخاب قالب شعر"
       >
         <option value="all">همه قالب‌ها</option>
@@ -171,7 +171,7 @@ export function SearchBar({
 }: SearchBarProps) {
   return (
     <form
-      className="rounded-2xl border border-stone-200 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-stone-700 dark:bg-stone-900/90 sm:p-5"
+      className="rounded-2xl border border-stone-300 bg-white p-4 shadow-md sm:p-5"
       onSubmit={(event) => {
         event.preventDefault();
         onSearch();
@@ -181,14 +181,14 @@ export function SearchBar({
         {poetPicker}
         {categorySelect}
         <div className="flex-1">
-          <label htmlFor="search-input" className="mb-1.5 block text-sm font-medium text-stone-700">
+          <label htmlFor="search-input" className="field-label">
             کلمهٔ جستجو
           </label>
           <div className="flex gap-2">
             <input
               id="search-input"
               type="search"
-              className="w-full rounded-xl border border-stone-200 px-4 py-3 text-base shadow-sm outline-none focus:border-accent focus:ring-2 focus:ring-amber-100"
+              className="field-control px-4 py-3 text-base"
               placeholder="جستجوی کلمه در اشعار..."
               value={value}
               onChange={(event) => onChange(event.target.value)}
