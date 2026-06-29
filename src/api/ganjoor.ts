@@ -1,13 +1,10 @@
 import type {
   Category,
-  GroupedResult,
   Poem,
   Poet,
   SearchResponse,
-  SearchResult,
-  Verse,
 } from '@/types/ganjoor';
-import { mapSearchHitsToResults } from '@/utils/searchMap';
+import { mapSearchHitsToGrouped } from '@/utils/searchMap';
 import { apiFetch, buildApiUrl } from './client';
 
 export async function fetchPoets(signal?: AbortSignal): Promise<Poet[]> {
@@ -29,14 +26,6 @@ export async function fetchCategories(
   } catch {
     return [];
   }
-}
-
-export async function fetchPoemVerses(
-  poemId: number,
-  signal?: AbortSignal,
-): Promise<Verse[]> {
-  const data = await apiFetch<Verse[]>(buildApiUrl(`/poem/${poemId}/verses`), signal);
-  return Array.isArray(data) ? data : [];
 }
 
 export async function searchPoems(
@@ -108,7 +97,7 @@ export async function searchPoems(
     return { results: [], page, hasMore: false, pageSize };
   }
 
-  const results = mapSearchHitsToResults(items, trimmed);
+  const results = mapSearchHitsToGrouped(items, trimmed);
 
   return {
     results,
@@ -116,35 +105,4 @@ export async function searchPoems(
     hasMore: items.length === pageSize,
     pageSize,
   };
-}
-
-export function groupSearchResults(results: SearchResult[]): GroupedResult[] {
-  const map = new Map<number, GroupedResult>();
-
-  for (const result of results) {
-    const existing = map.get(result.poemId);
-
-    if (!existing) {
-      map.set(result.poemId, {
-        poemId: result.poemId,
-        poemTitle: result.poemTitle,
-        fullUrl: result.fullUrl,
-        urlSlug: result.urlSlug,
-        allVerses: result.allVerses,
-        plainText: result.plainText,
-        htmlText: result.htmlText,
-        matchingCouplets: [
-          { coupletIndex: result.coupletIndex, verses: result.matchingVerses },
-        ],
-      });
-      continue;
-    }
-
-    existing.matchingCouplets.push({
-      coupletIndex: result.coupletIndex,
-      verses: result.matchingVerses,
-    });
-  }
-
-  return Array.from(map.values());
 }

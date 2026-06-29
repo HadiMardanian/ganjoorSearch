@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ArrowUp } from 'lucide-react';
-import { groupSearchResults } from '@/api/ganjoor';
 import { useCategoriesQuery, usePoetsQuery, useSearchQuery } from '@/api/queries';
 import { ExportButtons } from '@/components/export/ExportButtons';
 import { Footer } from '@/components/layout/Footer';
@@ -39,10 +38,7 @@ export default function App() {
     searched,
   );
 
-  const groupedResults = useMemo(
-    () => groupSearchResults(searchQuery.data?.results ?? []),
-    [searchQuery.data?.results],
-  );
+  const groupedResults = searchQuery.data?.results ?? [];
 
   const syncUrl = useCallback(
     (overrides: Partial<{
@@ -161,6 +157,11 @@ export default function App() {
         </div>
 
         <div className="mt-8">
+          {searchQuery.isFetching && groupedResults.length === 0 && searched && (
+            <p className="mb-4 text-center text-sm text-stone-500">
+              در حال جستجو در گنجور…
+            </p>
+          )}
           <ResultsList
             results={groupedResults}
             searchTerm={searchTerm}

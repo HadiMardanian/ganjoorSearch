@@ -57,7 +57,7 @@ export function ResultsList({
   return (
     <div>
       <p className="mb-4 text-center text-sm text-stone-600 dark:text-stone-400">
-        {results.length} شعر، {matchingBits} بیت matching
+        {results.length} شعر، {matchingBits} بیت مطابق
         {isFetching ? ' — در حال به‌روزرسانی...' : ''}
       </p>
 
@@ -89,7 +89,6 @@ export function ResultsList({
                   result={result}
                   searchTerm={searchTerm}
                   viewMode={viewMode}
-                  eagerLoad={virtualItem.index < 3}
                 />
               </div>
             );

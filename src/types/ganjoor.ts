@@ -56,7 +56,7 @@ export interface GroupedResult {
 }
 
 export interface SearchResponse {
-  results: SearchResult[];
+  results: GroupedResult[];
   page: number;
   hasMore: boolean;
   pageSize: number;

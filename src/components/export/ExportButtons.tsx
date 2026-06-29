@@ -1,5 +1,5 @@
 import { Download } from 'lucide-react';
-import { searchPoems, groupSearchResults } from '@/api/ganjoor';
+import { searchPoems } from '@/api/ganjoor';
 import { exportResults } from '@/utils/export';
 import { showToast } from '@/components/ui/Toast';
 import type { CategoryFilter, PoetFilter, ViewMode } from '@/types/ganjoor';
@@ -32,8 +32,7 @@ export function ExportButtons({
         pageSize: 200,
       });
 
-      const grouped = groupSearchResults(response.results);
-      const success = exportResults(grouped, mode);
+      const success = exportResults(response.results, mode);
 
       if (!success) {
         showToast('نتیجه‌ای برای خروجی وجود ندارد.', 'info');
