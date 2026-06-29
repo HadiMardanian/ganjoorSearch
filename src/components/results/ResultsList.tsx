@@ -14,6 +14,7 @@ interface ResultsListProps {
   pageSize: number;
   totalCount: number;
   totalPages: number;
+  onOpenPoem?: (result: GroupedResult) => void;
 }
 
 function SearchGuide() {
@@ -40,6 +41,7 @@ export function ResultsList({
   pageSize,
   totalCount,
   totalPages,
+  onOpenPoem,
 }: ResultsListProps) {
   if (loading && results.length === 0) {
     return <ResultsLoading />;
@@ -90,7 +92,12 @@ export function ResultsList({
       <div className="space-y-4" role="list" aria-label="نتایج جستجو">
         {results.map((result) => (
           <div key={result.poemId} role="listitem">
-            <ResultCard result={result} searchTerm={searchTerm} viewMode={viewMode} />
+            <ResultCard
+              result={result}
+              searchTerm={searchTerm}
+              viewMode={viewMode}
+              onOpenPoem={onOpenPoem ? () => onOpenPoem(result) : undefined}
+            />
           </div>
         ))}
       </div>

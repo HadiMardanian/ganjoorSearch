@@ -149,6 +149,41 @@ body {
   font-feature-settings: "calt" 1, "liga" 1;
 }
 
+.poem-reader-canvas {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+}
+
+.verse-couplet + .verse-couplet {
+  padding-top: 0.25rem;
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.pb-safe-nav {
+  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+.poet-app-bottom-nav {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.max-w-prose {
+  max-width: 36ch;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fade-in {
+    animation-fill-mode: both;
+  }
+}
+
 .poetry-highlight-host {
   unicode-bidi: plaintext;
 }

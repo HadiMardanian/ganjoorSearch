@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/Button';
 
 interface IosInstallGuideProps {
   poet: Poet;
-  onDone: () => void;
+  onDismiss: () => void;
+  onInstalled: () => void;
   onBack: () => void;
 }
 
@@ -27,7 +28,7 @@ const steps = [
   },
 ];
 
-export function IosInstallGuide({ poet, onDone, onBack }: IosInstallGuideProps) {
+export function IosInstallGuide({ poet, onDismiss, onInstalled, onBack }: IosInstallGuideProps) {
   const name = poet.name || poet.fullName || 'شاعر';
 
   return (
@@ -70,15 +71,20 @@ export function IosInstallGuide({ poet, onDone, onBack }: IosInstallGuideProps) 
         <div className="surface-muted rounded-xl border p-4 text-sm">
           <p>
             پس از افزودن، آیکون <strong>{name}</strong> روی صفحهٔ اصلی ظاهر می‌شود و با باز کردن
-            آن مستقیم وارد جستجوی همان شاعر می‌شوید.
+            آن مستقیم وارد مرور و مطالعهٔ آثار همان شاعر می‌شوید.
           </p>
         </div>
       </div>
 
       <div className="border-t px-4 py-4 sm:px-6">
-        <Button type="button" className="w-full py-3" onClick={onDone}>
-          متوجه شدم
-        </Button>
+        <div className="flex flex-col gap-2">
+          <Button type="button" className="w-full py-3" onClick={onInstalled}>
+            به صفحهٔ اصلی اضافه کردم
+          </Button>
+          <Button type="button" variant="secondary" className="w-full py-3" onClick={onDismiss}>
+            متوجه شدم — بعداً
+          </Button>
+        </div>
       </div>
     </div>
   );

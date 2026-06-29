@@ -1,58 +1,74 @@
 import { useMemo } from 'react';
+import { BookOpen } from 'lucide-react';
 import { useCategoryDetailQuery, usePoetDetailQuery } from '@/api/queries';
+import { BrowseBreadcrumb } from '@/components/poet-app/BrowseBreadcrumb';
 import type { Category, PoemSummary } from '@/types/ganjoor';
 import { CategoryGrid } from '@/components/browse/CategoryGrid';
 import { PoemList } from '@/components/browse/PoemList';
 import { PoemReader } from '@/components/browse/PoemReader';
+import { activeBrowseCategoryId } from '@/hooks/useSearchParams';
+import { readLastRead } from '@/utils/lastRead';
 
 interface PoetBrowseViewProps {
   poetId: number;
-  browseCatId: number | null;
+  browsePath: number[];
   poemUrl: string | null;
   poemListPage: number;
   onOpenCategory: (categoryId: number) => void;
+  onNavigatePath: (pathIndex: number | null) => void;
   onOpenPoem: (poemUrl: string) => void;
   onPoemListPageChange: (page: number) => void;
-  onBrowseHome: () => void;
   onBrowseBack: () => void;
 }
 
 export function PoetBrowseView({
   poetId,
-  browseCatId,
+  browsePath,
   poemUrl,
   poemListPage,
   onOpenCategory,
+  onNavigatePath,
   onOpenPoem,
   onPoemListPageChange,
-  onBrowseHome,
   onBrowseBack,
 }: PoetBrowseViewProps) {
   const poetQuery = usePoetDetailQuery(poetId);
-  const categoryQuery = useCategoryDetailQuery(browseCatId, true, browseCatId != null);
+  const activeCatId = activeBrowseCategoryId(browsePath);
+  const categoryQuery = useCategoryDetailQuery(activeCatId, true, activeCatId != null);
 
   const poetName = poetQuery.data?.poet.name ?? 'شاعر';
   const rootChildren = poetQuery.data?.rootCategory.children ?? [];
   const category = categoryQuery.data;
   const poems = category?.poems ?? [];
+  const lastRead = useMemo(() => readLastRead(poetId), [poetId, poemUrl]);
 
   const childCategories = useMemo(() => {
-    if (!browseCatId) return rootChildren;
+    if (!activeCatId) return rootChildren;
     return category?.children ?? [];
-  }, [browseCatId, category?.children, rootChildren]);
+  }, [activeCatId, category?.children, rootChildren]);
+
+  const breadcrumbSegments = useMemo(() => {
+    const segments = [{ id: null as number | null, title: poetName }];
+    if (!activeCatId || !category) return segments;
+
+    segments.push({ id: activeCatId, title: category.title });
+    return segments;
+  }, [activeCatId, category, poetName]);
 
   if (poemUrl) {
     return (
       <PoemReader
+        poetId={poetId}
         poemUrl={poemUrl}
         poems={poems}
+        categoryTitle={category?.title}
         onBack={onBrowseBack}
         onNavigate={onOpenPoem}
       />
     );
   }
 
-  if (browseCatId && categoryQuery.isLoading) {
+  if (activeCatId && categoryQuery.isLoading) {
     return (
       <CategoryGrid
         title="در حال بارگذاری…"
@@ -64,41 +80,79 @@ export function PoetBrowseView({
     );
   }
 
-  if (browseCatId && category) {
-    if (childCategories.length > 0) {
+  const breadcrumb = (
+    <BrowseBreadcrumb segments={breadcrumbSegments} onNavigate={onNavigatePath} />
+  );
+
+  if (activeCatId && category) {
+    const hasChildren = childCategories.length > 0;
+    const hasPoems = poems.length > 0;
+
+    if (hasChildren || hasPoems) {
       return (
-        <CategoryGrid
-          title={category.title}
-          categories={childCategories}
-          onSelect={(item) => onOpenCategory(item.id)}
-          onBack={onBrowseBack}
-        />
+        <div>
+          {breadcrumb}
+          {hasChildren ? (
+            <CategoryGrid
+              title={category.title}
+              categories={childCategories}
+              onSelect={(item) => onOpenCategory(item.id)}
+              onBack={onBrowseBack}
+            />
+          ) : null}
+          {hasPoems ? (
+            <div className={hasChildren ? 'mt-8' : ''}>
+              {hasChildren ? (
+                <h3 className="mb-3 text-lg font-bold">قطعات این بخش</h3>
+              ) : null}
+              <PoemList
+                title={hasChildren ? '' : category.title}
+                poems={poems}
+                loading={categoryQuery.isLoading}
+                page={poemListPage}
+                onPageChange={onPoemListPageChange}
+                onSelect={(poem: PoemSummary) => {
+                  if (poem.fullUrl) onOpenPoem(poem.fullUrl);
+                }}
+                onBack={onBrowseBack}
+                showBack={!hasChildren}
+              />
+            </div>
+          ) : null}
+        </div>
       );
     }
-
-    return (
-      <PoemList
-        title={category.title}
-        poems={poems}
-        loading={categoryQuery.isLoading}
-        page={poemListPage}
-        onPageChange={onPoemListPageChange}
-        onSelect={(poem: PoemSummary) => {
-          if (poem.fullUrl) onOpenPoem(poem.fullUrl);
-        }}
-        onBack={onBrowseBack}
-      />
-    );
   }
 
   return (
-    <CategoryGrid
-      title={`آثار ${poetName}`}
-      subtitle={poetQuery.data?.poet.description?.slice(0, 280)}
-      categories={rootChildren}
-      loading={poetQuery.isLoading}
-      onSelect={(item: Category) => onOpenCategory(item.id)}
-      onBack={browseCatId ? onBrowseHome : undefined}
-    />
+    <div>
+      {breadcrumb}
+      {lastRead && !activeCatId ? (
+        <button
+          type="button"
+          className="surface-card hover:border-[var(--color-accent)] fade-in mb-5 flex w-full items-center gap-3 rounded-2xl border p-4 text-right transition-colors"
+          onClick={() => onOpenPoem(lastRead.poemUrl)}
+        >
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--color-accent-soft)] text-accent">
+            <BookOpen size={20} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="text-subtle block text-xs">ادامه مطالعه</span>
+            <span className="block font-semibold">{lastRead.poemTitle}</span>
+            {lastRead.categoryTitle ? (
+              <span className="text-muted mt-1 block text-xs">{lastRead.categoryTitle}</span>
+            ) : null}
+          </span>
+        </button>
+      ) : null}
+      <CategoryGrid
+        title={`آثار ${poetName}`}
+        subtitle={poetQuery.data?.poet.description}
+        categories={rootChildren}
+        loading={poetQuery.isLoading}
+        onSelect={(item: Category) => onOpenCategory(item.id)}
+        showBack={false}
+      />
+    </div>
   );
 }

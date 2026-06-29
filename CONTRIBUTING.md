@@ -89,9 +89,13 @@ Run through these on a real device or emulator before release.
 - [ ] Open install flow → gallery loads poets with images / letter fallback
 - [ ] Select a poet (e.g. حافظ) → preview shows benefits and install button
 - [ ] Install completes → home screen icon uses poet image or fallback
-- [ ] Launch from icon → opens with poet locked, header shows poet name
-- [ ] Search works scoped to that poet; poet picker is hidden
-- [ ] «تغییر شاعر» opens gallery again
+- [ ] Launch from icon → browse home with bottom nav (مرور / جستجو)
+- [ ] Browse: غزلیات → poem list → immersive reader with font controls
+- [ ] Swipe or prev/next between poems in a category
+- [ ] Android back button: poem → list → category → home (not exit app)
+- [ ] Search result opens same in-app reader
+- [ ] Continue reading card appears on poet home after reading a poem
+- [ ] Bottom nav and content respect safe area (notch / home indicator)
 
 #### iOS (Safari)
 
@@ -212,7 +216,12 @@ public/icons/   آیکون‌های ازپیش‌ساخته PWA شاعر (PNG 19
 - [ ] گالری شاعران با عکس / fallback حرف اول
 - [ ] انتخاب شاعر → پیش‌نمایش و دکمه نصب
 - [ ] پس از نصب آیکون با عکس شاعر روی صفحهٔ اصلی
-- [ ] باز کردن از آیکون → حالت قفل‌شده روی همان شاعر
+- [ ] باز کردن از آیکون → صفحه آثار با bottom nav
+- [ ] مرور: غزلیات → فهرست → خواننده تمام‌صفحه با تنظیم قلم
+- [ ] swipe یا قبلی/بعدی بین اشعار
+- [ ] دکمه back اندروید: شعر → فهرست → بخش → خانه
+- [ ] نتیجه جستجو همان reader درون‌اپ را باز می‌کند
+- [ ] کارت «ادامه مطالعه» روی صفحه آثار
 
 #### iOS (Safari)
 

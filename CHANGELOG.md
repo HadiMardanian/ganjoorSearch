@@ -2,6 +2,22 @@
 
 All notable changes to GanjoorSearch are documented here.
 
+## [2.7.0] - 2026-06-29
+
+### Added
+- Premium poet app shell: compact sticky header, fixed bottom navigation, safe-area support
+- Category path navigation (`bpath`) with breadcrumbs and correct back stack (`pushState`)
+- Immersive poem reader: couplet layout, font size controls, share sheet, swipe prev/next
+- Continue reading card on poet home from last-read position
+- Search results in poet app open the same in-app reader
+- iOS install guide: separate «added to home» vs «dismiss» actions
+
+### Changed
+- Poet PWA hides site footer; attribution moved to header menu
+- `theme-color` meta syncs with light/dark theme
+- Manifest `start_url` includes `tab=browse` explicitly
+- Category and poem lists: icons, fade-in animations, larger touch targets
+
 ## [2.6.0] - 2026-06-29
 
 ### Added
